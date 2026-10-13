@@ -3,10 +3,21 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\ckeditor.js" LogicalName="ckeditor.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />
     <ProjectReference Include="..\Pickstack.RichTextEditor\Pickstack.RichTextEditor.csproj" />
+    <ProjectReference Include="..\Pickstack\Pickstack.csproj" />
   </ItemGroup>
 
 </Project>

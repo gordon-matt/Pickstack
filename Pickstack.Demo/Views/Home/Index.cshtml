@@ -1,8 +1,58 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model ArticleForm
+@inject IFileManager FileManager
+@inject IRichTextEditor Editor
+@{
+    ViewData["Title"] = "Compose";
+    var posted = ViewData["Posted"] as bool? == true;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row g-4">
+    <div class="col-lg-8">
+        <h1 class="h3">Compose</h1>
+        <p class="text-muted">The file field and the editor call Pickstack. They do not name the file manager, so replacing that package changes every picker on the page.</p>
+
+        <form method="post">
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <label asp-for="CoverImage" class="form-label"></label>
+            <pickstack-file asp-for="CoverImage" file-type="Image" />
+
+            <label asp-for="Body" class="form-label"></label>
+            <pickstack-editor asp-for="Body" height="360" />
+
+            <button type="submit" class="btn btn-primary">Save draft</button>
+        </form>
+
+        @if (posted)
+        {
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h2 class="h5">Posted values</h2>
+                    <p class="mb-1"><strong>Title:</strong> @Model.Title</p>
+                    <p class="mb-1"><strong>Cover image:</strong> @Model.CoverImage</p>
+                    @if (!string.IsNullOrWhiteSpace(Model.CoverImage))
+                    {
+                        <img src="@Model.CoverImage" alt="" class="pickstack-posted-image" />
+                    }
+                    <p class="mb-1 mt-3"><strong>Body HTML:</strong></p>
+                    <pre class="pickstack-posted-html mb-0">@Model.Body</pre>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5">This stack</h2>
+                <p class="mb-1"><strong>File manager:</strong> @FileManager.Name</p>
+                <p class="mb-3"><strong>Editor:</strong> @Editor.Name</p>
+                <p class="mb-2">Change <code>Pickstack:FileManager</code> or <code>Pickstack:RichTextEditor</code> in appsettings.json and restart. Uploads stay in <code>wwwroot/media</code>.</p>
+                <a asp-action="Files">Open the file manager</a>
+            </div>
+        </div>
+    </div>
 </div>

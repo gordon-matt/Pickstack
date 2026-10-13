@@ -3,14 +3,26 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- The Responsive File Manager packages currently target net9.0. -->
+    <AssetTargetFallback>$(AssetTargetFallback);net9.0</AssetTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ResponsiveFileManager" Version="2.0.1" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\responsive-file-manager.js" LogicalName="responsive-file-manager.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ResponsiveFileManager.AspNetCore" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />
+    <ProjectReference Include="..\Pickstack\Pickstack.csproj" />
   </ItemGroup>
 
 </Project>

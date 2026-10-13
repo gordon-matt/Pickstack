@@ -3,7 +3,16 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\pickstack.js" LogicalName="pickstack.js" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />

@@ -3,15 +3,24 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\elfinder.js" LogicalName="elfinder.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="elFinder.NetCore" Version="1.6.0" />
-    <PackageReference Include="Extenso.Core" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />
+    <ProjectReference Include="..\Pickstack\Pickstack.csproj" />
   </ItemGroup>
 
 </Project>

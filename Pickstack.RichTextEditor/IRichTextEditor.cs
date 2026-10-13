@@ -1,12 +1,14 @@
-﻿using Pickstack.FileManager;
+﻿namespace Pickstack.RichTextEditor;
 
-namespace Pickstack.RichTextEditor;
-
+/// <summary>
+/// A replaceable rich text editor. File browsing goes through <c>Pickstack.files</c>,
+/// so the editor does not know which file manager is installed.
+/// </summary>
 public interface IRichTextEditor
 {
     string Name { get; }
 
-    string GetEditorScript(EditorConfig config);
+    IReadOnlyList<ClientAsset> GetClientAssets();
 
-    object GetEditorConfiguration(EditorConfig config, IFileManager fileManager);
+    string ProviderScriptUrl { get; }
 }

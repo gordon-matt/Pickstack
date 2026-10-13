@@ -29,3 +29,28 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.pickstack-files {
+  height: 70vh;
+  min-height: 560px;
+}
+
+.pickstack-preview img,
+.pickstack-posted-image {
+  display: block;
+  max-height: 140px;
+  margin-top: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+}
+
+.pickstack-posted-html {
+  white-space: pre-wrap;
+  background: #f8f9fa;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+}
+
+.elfinder-cwd table td {
+  box-sizing: content-box;
+}

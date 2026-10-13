@@ -406,3 +406,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 Pickstack.Demo/wwwroot/lib
+Pickstack.Demo/wwwroot/media/
+Pickstack.Demo/wwwroot/media-thumbs/
