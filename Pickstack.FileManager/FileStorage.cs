@@ -30,13 +30,9 @@ public sealed class FileStorage : IFileStorage
 
     public string RequestPath => NormalizeRequestPath(_options.RequestPath, "/media/");
 
-    public string PhysicalPhpPath => ToPhpPath(PhysicalPath);
-
     public string ThumbnailPhysicalPath => Path.Combine(_webRoot, NormalizeFolder(_options.ThumbnailWebRootFolder, "media-thumbs"));
 
     public string ThumbnailRequestPath => NormalizeRequestPath(_options.ThumbnailRequestPath, "/media-thumbs/");
-
-    public string ThumbnailPhysicalPhpPath => ToPhpPath(ThumbnailPhysicalPath);
 
     public void EnsureCreated()
     {
@@ -85,11 +81,5 @@ public sealed class FileStorage : IFileStorage
         }
 
         return path;
-    }
-
-    internal static string ToPhpPath(string physicalPath)
-    {
-        string full = Path.GetFullPath(physicalPath).Replace('\\', '/');
-        return full.EndsWith('/') ? full : full + "/";
     }
 }

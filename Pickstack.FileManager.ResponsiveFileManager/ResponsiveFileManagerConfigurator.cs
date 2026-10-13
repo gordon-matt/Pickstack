@@ -16,9 +16,12 @@ internal sealed class ResponsiveFileManagerConfigurator : IConfigureOptions<glob
 
     public void Configure(global::ResponsiveFileManager.ResponsiveFileManagerOptions options)
     {
+        // upload.php joins these onto the /filemanager/ script directory, and the dialog
+        // uses the same thumbnail path as the image address. Absolute filesystem paths
+        // break both. ../media/ from /filemanager/dialog.php is wwwroot/media.
         options.UploadDirectory = _storage.RequestPath;
-        options.CurrentPath = _storage.PhysicalPhpPath;
-        options.ThumbsBasePath = _storage.ThumbnailPhysicalPhpPath;
+        options.CurrentPath = ToFileManagerRelativePath(_storage.RequestPath);
+        options.ThumbsBasePath = ToFileManagerRelativePath(_storage.ThumbnailRequestPath);
         options.ThumbsUploadDir = _storage.ThumbnailRequestPath;
         if (options.MaxSizeUpload <= 0)
         {
@@ -26,5 +29,17 @@ internal sealed class ResponsiveFileManagerConfigurator : IConfigureOptions<glob
         }
 
         _configure?.Invoke(options);
+    }
+
+    internal static string ToFileManagerRelativePath(string requestPath)
+    {
+        string segment = requestPath.Trim('/');
+        if (segment.Length == 0 || segment.Contains('/'))
+        {
+            throw new InvalidOperationException(
+                $"Responsive File Manager needs '{requestPath}' to be a single folder directly under the site root.");
+        }
+
+        return "../" + segment + "/";
     }
 }
