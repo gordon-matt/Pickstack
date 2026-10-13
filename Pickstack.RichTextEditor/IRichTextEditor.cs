@@ -11,4 +11,7 @@ public interface IRichTextEditor
     IReadOnlyList<ClientAsset> GetClientAssets();
 
     string ProviderScriptUrl { get; }
+
+    /// <summary>JSON read by the provider script. Must be produced with a serializer that escapes HTML.</summary>
+    string GetProviderConfiguration();
 }

@@ -86,6 +86,42 @@ elFinder's browser needs jQuery on the page before the picker scripts. The demo 
 
 To swap elFinder for Responsive File Manager, change the package reference and `.AddElFinder()` to `.AddResponsiveFileManager()`. Leave the views alone.
 
+## Configure an adapter
+
+Each `Add` method accepts a fluent options object for that product. These settings apply to every instance. A `<pickstack-editor height="360" />` attribute overrides the registered height for that field. The file picker stays connected to Pickstack, so a custom toolbar can still add Image or Link and the registered file manager opens.
+
+```csharp
+builder.Services.AddPickstack(builder.Configuration)
+    .AddElFinder(files => files
+        .DisableCommands("extract", "archive")
+        .AddToolbarGroup("fullscreen"))
+    .AddTinyMce(editor => editor
+        .AddPlugins("codesample", "charmap")
+        .WithToolbar("undo redo | bold italic | codesample charmap | link image")
+        .Set("branding", false));
+```
+
+`Set` passes a value through to the underlying init object. Named settings such as `WithToolbar` are applied after it.
+
+CKEditor groups buttons the same way. An empty toolbar leaves CKEditor's default toolbar in place.
+
+```csharp
+.AddCkEditor(editor => editor
+    .WithoutPlugins("elementspath")
+    .WithToolbar(
+        ["Bold", "Italic", "Underline"],
+        ["Link", "Image"]));
+```
+
+Responsive File Manager's dialog options are fluent too. `Server` configures the PHP package, including upload limits:
+
+```csharp
+.AddResponsiveFileManager(files => files
+    .WithLanguage("en_EN")
+    .UseRelativeUrls()
+    .Server(server => server.MaxSizeUpload = 16));
+```
+
 ## Add another implementation
 
 A file manager implements `IFileManager`:

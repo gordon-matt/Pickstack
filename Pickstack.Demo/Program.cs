@@ -13,16 +13,22 @@ var pickstack = builder.Services.AddPickstack(builder.Configuration);
 
 pickstack = stack["FileManager"] switch
 {
-    ResponsiveFileManagerAdapter.Key => pickstack.AddResponsiveFileManager(),
-    null or "" or ElFinderFileManager.Key => pickstack.AddElFinder(),
+    ResponsiveFileManagerAdapter.Key => pickstack.AddResponsiveFileManager(fileManager => fileManager
+        .WithLanguage("en_EN")
+        .Server(server => server.MaxSizeUpload = 16)),
+    null or "" or ElFinderFileManager.Key => pickstack.AddElFinder(fileManager => fileManager
+        .DisableCommands("extract", "archive")),
     var name => throw new InvalidOperationException(
         $"Unknown Pickstack file manager '{name}'. Use '{ElFinderFileManager.Key}' or '{ResponsiveFileManagerAdapter.Key}'.")
 };
 
 pickstack = stack["RichTextEditor"] switch
 {
-    CkEditorEditor.Key => pickstack.AddCkEditor(),
-    null or "" or TinyMceEditor.Key => pickstack.AddTinyMce(),
+    CkEditorEditor.Key => pickstack.AddCkEditor(editor => editor
+        .WithoutPlugins("elementspath")),
+    null or "" or TinyMceEditor.Key => pickstack.AddTinyMce(editor => editor
+        .AddPlugins("codesample", "charmap")
+        .WithToolbar("undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media charmap codesample | code")),
     var name => throw new InvalidOperationException(
         $"Unknown Pickstack rich text editor '{name}'. Use '{TinyMceEditor.Key}' or '{CkEditorEditor.Key}'.")
 };

@@ -8,6 +8,7 @@ public static class EditorAssets
 {
     public const string RuntimeScriptUrl = "/pickstack/assets/pickstack.js";
     public const string RuntimeItemKey = "Pickstack.RuntimeIncluded";
+    public const string ProviderElementId = "pickstack-editor-provider";
 
     private const string StartupItemKey = "Pickstack.Editor.Startup";
 
@@ -42,6 +43,9 @@ public static class EditorAssets
             }
         }
 
+        builder.Append("<script type=\"application/json\" id=\"").Append(ProviderElementId).Append("\">");
+        builder.Append(editor.GetProviderConfiguration());
+        builder.Append("</script>");
         builder.Append("<script src=\"").Append(WebUtility.HtmlEncode(editor.ProviderScriptUrl)).Append("\"></script>");
     }
 }

@@ -1,11 +1,8 @@
+using System.Text.Json;
 using Microsoft.Extensions.Options;
+using Pickstack;
 
 namespace Pickstack.RichTextEditor.CkEditor;
-
-public sealed class CkEditorOptions
-{
-    public string ScriptUrl { get; set; } = "https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.17.1/ckeditor.js";
-}
 
 public sealed class CkEditorEditor : IRichTextEditor, IPickstackAssetSource
 {
@@ -22,11 +19,15 @@ public sealed class CkEditorEditor : IRichTextEditor, IPickstackAssetSource
 
     public string ProviderScriptUrl => "/pickstack/assets/ckeditor.js";
 
-    public IReadOnlyList<ClientAsset> GetClientAssets() => [
+    public IReadOnlyList<ClientAsset> GetClientAssets() =>
+    [
         new ClientAsset { Url = _options.ScriptUrl, Kind = ClientAssetKind.Script }
     ];
 
-    public IEnumerable<PickstackAsset> GetAssets() => [
+    public string GetProviderConfiguration() => JsonSerializer.Serialize(_options.CreateConfig());
+
+    public IEnumerable<PickstackAsset> GetAssets() =>
+    [
         PickstackAssets.Script(typeof(CkEditorEditor).Assembly, "ckeditor.js", "ckeditor.js")
     ];
 }

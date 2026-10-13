@@ -1,6 +1,9 @@
 (function (window, document) {
     "use strict";
 
+    var configElement = document.getElementById("pickstack-editor-provider");
+    var config = configElement ? JSON.parse(configElement.textContent || "{}") : {};
+
     if (!window.Pickstack || !window.tinymce) {
         console.error("Pickstack TinyMCE could not find tinymce.");
         return;
@@ -10,29 +13,24 @@
         init: function (element, options) {
             var script = document.querySelector("script[src*='tinymce']");
             var baseUrl = script ? script.src.replace(/\/tinymce(\.min)?\.js.*$/, "") : undefined;
+            var init = Object.assign({}, config);
 
-            window.tinymce.init({
-                target: element,
-                license_key: "gpl",
-                promotion: false,
-                base_url: baseUrl,
-                height: options.height || 420,
-                menubar: false,
-                plugins: "autolink lists link image media table code fullscreen",
-                toolbar: "undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media | code",
-                relative_urls: false,
-                remove_script_host: false,
-                convert_urls: true,
-                file_picker_types: "file image media",
-                file_picker_callback: function (callback, value, meta) {
-                    window.Pickstack.files.open({
-                        type: meta && meta.filetype ? meta.filetype : "file",
-                        callback: function (file) {
-                            callback(file.url, { alt: file.name || "" });
-                        }
-                    });
-                }
-            });
+            init.target = element;
+            init.base_url = baseUrl;
+            if (options && Object.prototype.hasOwnProperty.call(options, "height")) {
+                init.height = options.height;
+            }
+
+            init.file_picker_callback = function (callback, value, meta) {
+                window.Pickstack.files.open({
+                    type: meta && meta.filetype ? meta.filetype : "file",
+                    callback: function (file) {
+                        callback(file.url, { alt: file.name || "" });
+                    }
+                });
+            };
+
+            window.tinymce.init(init);
         }
     });
 })(window, document);

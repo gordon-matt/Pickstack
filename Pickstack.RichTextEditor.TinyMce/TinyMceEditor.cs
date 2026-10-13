@@ -1,11 +1,8 @@
+using System.Text.Json;
 using Microsoft.Extensions.Options;
+using Pickstack;
 
 namespace Pickstack.RichTextEditor.TinyMce;
-
-public sealed class TinyMceOptions
-{
-    public string ScriptUrl { get; set; } = "https://cdn.jsdelivr.net/npm/tinymce@7.9.0/tinymce.min.js";
-}
 
 public sealed class TinyMceEditor : IRichTextEditor, IPickstackAssetSource
 {
@@ -22,11 +19,15 @@ public sealed class TinyMceEditor : IRichTextEditor, IPickstackAssetSource
 
     public string ProviderScriptUrl => "/pickstack/assets/tinymce.js";
 
-    public IReadOnlyList<ClientAsset> GetClientAssets() => [
+    public IReadOnlyList<ClientAsset> GetClientAssets() =>
+    [
         new ClientAsset { Url = _options.ScriptUrl, Kind = ClientAssetKind.Script }
     ];
 
-    public IEnumerable<PickstackAsset> GetAssets() => [
+    public string GetProviderConfiguration() => JsonSerializer.Serialize(_options.CreateInit());
+
+    public IEnumerable<PickstackAsset> GetAssets() =>
+    [
         PickstackAssets.Script(typeof(TinyMceEditor).Assembly, "tinymce.js", "tinymce.js")
     ];
 }

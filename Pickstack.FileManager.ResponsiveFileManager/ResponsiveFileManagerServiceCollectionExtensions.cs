@@ -18,9 +18,14 @@ public static class ResponsiveFileManagerServiceCollectionExtensions
 {
     public static PickstackBuilder AddResponsiveFileManager(
         this PickstackBuilder builder,
-        Action<global::ResponsiveFileManager.ResponsiveFileManagerOptions>? configure = null)
+        Action<ResponsiveFileManagerOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(builder);
+
+        if (configure is not null)
+        {
+            builder.Services.Configure(configure);
+        }
 
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>
@@ -34,7 +39,9 @@ public static class ResponsiveFileManagerServiceCollectionExtensions
         // mapping last so it is the instance their middleware resolves.
         builder.Services.AddResponsiveFileManager(_ => { });
         builder.Services.AddSingleton<IConfigureOptions<global::ResponsiveFileManager.ResponsiveFileManagerOptions>>(services =>
-            new ResponsiveFileManagerConfigurator(services.GetRequiredService<IFileStorage>(), configure));
+            new ResponsiveFileManagerConfigurator(
+                services.GetRequiredService<IFileStorage>(),
+                services.GetRequiredService<IOptions<ResponsiveFileManagerOptions>>()));
 
         builder.Services.RemoveAll<IFileManager>();
         builder.Services.AddSingleton<ResponsiveFileManagerAdapter>();

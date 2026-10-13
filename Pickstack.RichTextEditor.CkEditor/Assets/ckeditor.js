@@ -1,5 +1,8 @@
-(function (window) {
+(function (window, document) {
     "use strict";
+
+    var configElement = document.getElementById("pickstack-editor-provider");
+    var config = configElement ? JSON.parse(configElement.textContent || "{}") : {};
 
     if (!window.Pickstack || !window.CKEDITOR) {
         console.error("Pickstack CKEditor could not find CKEDITOR.");
@@ -8,13 +11,14 @@
 
     window.Pickstack.editors.use({
         init: function (element, options) {
-            window.CKEDITOR.replace(element, {
-                height: options.height || 420,
-                filebrowserBrowseUrl: "/pickstack/ckeditor/browse?type=file",
-                filebrowserImageBrowseUrl: "/pickstack/ckeditor/browse?type=image",
-                filebrowserWindowWidth: 980,
-                filebrowserWindowHeight: 680
-            });
+            var settings = Object.assign({}, config);
+            if (options && Object.prototype.hasOwnProperty.call(options, "height")) {
+                settings.height = options.height;
+            }
+
+            settings.filebrowserBrowseUrl = "/pickstack/ckeditor/browse?type=file";
+            settings.filebrowserImageBrowseUrl = "/pickstack/ckeditor/browse?type=image";
+            window.CKEDITOR.replace(element, settings);
         }
     });
-})(window);
+})(window, document);

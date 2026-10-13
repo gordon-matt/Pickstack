@@ -32,7 +32,13 @@ public sealed class ElFinderFileManager : IFileManager, IPickstackAssetSource
         return JsonSerializer.Serialize(new
         {
             connectorUrl = ElFinderRoutes.ConnectorPath,
-            baseUrl
+            baseUrl,
+            toolbar = _options.Toolbar,
+            disabledCommands = _options.DisabledCommands,
+            minimumHeight = _options.MinimumHeight,
+            rememberLastDir = _options.RememberLastDir,
+            resizable = _options.Resizable,
+            useBrowserHistory = _options.UseBrowserHistory
         });
     }
 

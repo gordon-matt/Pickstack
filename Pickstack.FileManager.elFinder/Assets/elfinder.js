@@ -21,26 +21,13 @@
             var elfOptions = {
                 baseUrl: config.baseUrl,
                 url: config.connectorUrl,
-                height: Math.max(element.clientHeight || 0, 560),
-                resizable: false,
-                rememberLastDir: false,
-                useBrowserHistory: false,
-                commands: getCommands(),
+                height: Math.max(element.clientHeight || 0, config.minimumHeight || 560),
+                resizable: !!config.resizable,
+                rememberLastDir: !!config.rememberLastDir,
+                useBrowserHistory: !!config.useBrowserHistory,
+                commands: getCommands(config.disabledCommands || []),
                 uiOptions: {
-                    toolbar: [
-                        ["back", "forward"],
-                        ["reload"],
-                        ["home", "up"],
-                        ["mkdir", "mkfile", "upload"],
-                        ["open", "download", "getfile"],
-                        ["info"],
-                        ["quicklook"],
-                        ["copy", "cut", "paste"],
-                        ["rm"],
-                        ["duplicate", "rename", "edit"],
-                        ["view", "sort"],
-                        ["search"]
-                    ]
+                    toolbar: config.toolbar
                 }
             };
 
@@ -64,13 +51,12 @@
         }
     });
 
-    function getCommands() {
+    function getCommands(disabled) {
         if (commands) {
             return commands.slice();
         }
 
         var available = window.elFinder.prototype._options.commands.slice();
-        var disabled = ["callback", "chmod", "editor", "netmount", "ping", "help"];
         disabled.forEach(function (command) {
             var index = available.indexOf(command);
             if (index >= 0) {

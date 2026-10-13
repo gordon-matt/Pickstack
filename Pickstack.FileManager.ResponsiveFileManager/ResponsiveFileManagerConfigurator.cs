@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using Pickstack.FileManager;
 
 namespace Pickstack.FileManager.ResponsiveFileManager;
 
@@ -7,12 +8,10 @@ internal sealed class ResponsiveFileManagerConfigurator : IConfigureOptions<glob
     private readonly IFileStorage _storage;
     private readonly Action<global::ResponsiveFileManager.ResponsiveFileManagerOptions>? _configure;
 
-    public ResponsiveFileManagerConfigurator(
-        IFileStorage storage,
-        Action<global::ResponsiveFileManager.ResponsiveFileManagerOptions>? configure)
+    public ResponsiveFileManagerConfigurator(IFileStorage storage, IOptions<ResponsiveFileManagerOptions> picker)
     {
         _storage = storage;
-        _configure = configure;
+        _configure = picker.Value.ConfigureServer;
     }
 
     public void Configure(global::ResponsiveFileManager.ResponsiveFileManagerOptions options)

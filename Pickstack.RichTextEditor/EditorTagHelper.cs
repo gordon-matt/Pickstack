@@ -22,7 +22,7 @@ public sealed class EditorTagHelper : TagHelper
     [HtmlAttributeName(ForAttribute)]
     public ModelExpression For { get; set; } = default!;
 
-    public int Height { get; set; } = 420;
+    public int? Height { get; set; }
 
     [ViewContext]
     [HtmlAttributeNotBound]
@@ -35,7 +35,9 @@ public sealed class EditorTagHelper : TagHelper
         string fieldName = For.Name;
         string fieldId = TagBuilder.CreateSanitizedId(fieldName, "_");
         string value = For.Model as string ?? string.Empty;
-        string optionsJson = JsonSerializer.Serialize(new { height = Height });
+        string optionsJson = Height is int height
+            ? JsonSerializer.Serialize(new { height })
+            : "{}";
 
         var builder = new StringBuilder();
         EditorAssets.AppendStartup(builder, ViewContext.HttpContext, _editor);

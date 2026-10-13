@@ -21,10 +21,14 @@
                 type = 3;
             }
 
-            var source = config.dialogUrl + "?type=" + type + "&ignore_last_position=1&popup=0&crossdomain=0";
+            var source = config.dialogUrl + "?type=" + type + "&ignore_last_position=1&popup=0&crossdomain=" + (config.crossDomain ? "1" : "0");
+            if (config.language) {
+                source += "&lang=" + encodeURIComponent(config.language);
+            }
+
             if (options.select) {
                 ensureField();
-                source += "&field_id=" + encodeURIComponent(fieldId) + "&relative_url=0";
+                source += "&field_id=" + encodeURIComponent(fieldId) + "&relative_url=" + (config.relativeUrls ? "1" : "0");
                 window.responsive_filemanager_callback = function () {
                     var field = document.getElementById(fieldId);
                     window.Pickstack.files.notify({
