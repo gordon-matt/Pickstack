@@ -25,14 +25,12 @@ public sealed class ResponsiveFileManagerAdapter : IFileManager, IPickstackAsset
 
     public IReadOnlyList<ClientAsset> GetClientAssets() => [];
 
-    public string GetProviderConfiguration() =>
-        JsonSerializer.Serialize(new
-        {
-            dialogUrl = _options.DialogUrl
-        });
+    public string GetProviderConfiguration() => JsonSerializer.Serialize(new
+    {
+        dialogUrl = _options.DialogUrl
+    });
 
-    public IEnumerable<PickstackAsset> GetAssets() =>
-    [
+    public IEnumerable<PickstackAsset> GetAssets() => [
         PickstackAssets.Script(typeof(ResponsiveFileManagerAdapter).Assembly, "responsive-file-manager.js", "responsive-file-manager.js")
     ];
 }

@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Pickstack;
-using Pickstack.FileManager;
 
 namespace Pickstack.FileManager.ResponsiveFileManager;
 

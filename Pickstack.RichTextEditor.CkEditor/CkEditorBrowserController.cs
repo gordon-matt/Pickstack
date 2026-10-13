@@ -23,8 +23,8 @@ public sealed class CkEditorBrowserController : Controller
     [HttpGet("browse")]
     public ContentResult Browse(string? type)
     {
-        var fileType = NormalizeType(type);
-        var html = $$"""
+        string fileType = NormalizeType(type);
+        string html = $$"""
             <!DOCTYPE html>
             <html lang="en">
             <head>

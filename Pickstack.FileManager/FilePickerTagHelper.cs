@@ -31,10 +31,10 @@ public sealed class FilePickerTagHelper : TagHelper
     {
         ArgumentNullException.ThrowIfNull(output);
 
-        var fieldName = For.Name;
-        var fieldId = TagBuilder.CreateSanitizedId(fieldName, "_");
-        var value = For.Model as string ?? string.Empty;
-        var fileType = FileType.ToString().ToLowerInvariant();
+        string fieldName = For.Name;
+        string fieldId = TagBuilder.CreateSanitizedId(fieldName, "_");
+        string value = For.Model as string ?? string.Empty;
+        string fileType = FileType.ToString().ToLowerInvariant();
 
         var builder = new StringBuilder();
         FileManagerAssets.AppendStartup(builder, ViewContext.HttpContext, _fileManager);

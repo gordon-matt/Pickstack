@@ -7,8 +7,7 @@ namespace Pickstack;
 
 public sealed class PickstackRuntimeAssets : IPickstackAssetSource
 {
-    public IEnumerable<PickstackAsset> GetAssets() =>
-    [
+    public IEnumerable<PickstackAsset> GetAssets() => [
         PickstackAssets.Script(typeof(PickstackRuntimeAssets).Assembly, "pickstack.js", "pickstack.js")
     ];
 }

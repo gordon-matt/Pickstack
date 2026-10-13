@@ -2,7 +2,6 @@ using elFinder.NetCore;
 using elFinder.NetCore.Drivers.FileSystem;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Pickstack.FileManager;
 
 namespace Pickstack.FileManager.elFinder;
 
@@ -50,7 +49,7 @@ public sealed class ElFinderConnectorController : Controller
     {
         _storage.EnsureCreated();
 
-        var origin = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+        string origin = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
         var driver = new FileSystemDriver();
         driver.AddRoot(new RootVolume(
             _storage.PhysicalPath,

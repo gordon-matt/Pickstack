@@ -1,7 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Pickstack;
-using Pickstack.RichTextEditor;
 
 namespace Pickstack.RichTextEditor.TinyMce;
 

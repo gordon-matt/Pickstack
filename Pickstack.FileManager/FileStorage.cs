@@ -18,8 +18,8 @@ public sealed class FileStorage : IFileStorage
         _webRoot = environment.WebRootPath;
         _options = options.Value;
 
-        var folder = NormalizeFolder(_options.WebRootFolder, "media");
-        var thumbnailFolder = NormalizeFolder(_options.ThumbnailWebRootFolder, "media-thumbs");
+        string folder = NormalizeFolder(_options.WebRootFolder, "media");
+        string thumbnailFolder = NormalizeFolder(_options.ThumbnailWebRootFolder, "media-thumbs");
         if (string.Equals(folder, thumbnailFolder, StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException("The thumbnail folder must be outside the upload folder.");
@@ -51,17 +51,14 @@ public sealed class FileStorage : IFileStorage
             return fallback;
         }
 
-        var folder = value.Trim();
-        if (folder is "." or ".."
+        string folder = value.Trim();
+        return folder is "." or ".."
             || folder.Contains('/', StringComparison.Ordinal)
             || folder.Contains('\\', StringComparison.Ordinal)
             || folder.Contains(':', StringComparison.Ordinal)
-            || Path.IsPathRooted(folder))
-        {
-            throw new InvalidOperationException($"'{value}' must be a single folder name under wwwroot.");
-        }
-
-        return folder;
+            || Path.IsPathRooted(folder)
+            ? throw new InvalidOperationException($"'{value}' must be a single folder name under wwwroot.")
+            : folder;
     }
 
     internal static string NormalizeRequestPath(string? value, string fallback)
@@ -71,7 +68,7 @@ public sealed class FileStorage : IFileStorage
             value = fallback;
         }
 
-        var path = value.Replace('\\', '/').Trim();
+        string path = value.Replace('\\', '/').Trim();
         if (path.Contains("..", StringComparison.Ordinal))
         {
             throw new InvalidOperationException($"Request path '{value}' is not allowed.");
@@ -92,7 +89,7 @@ public sealed class FileStorage : IFileStorage
 
     internal static string ToPhpPath(string physicalPath)
     {
-        var full = Path.GetFullPath(physicalPath).Replace('\\', '/');
+        string full = Path.GetFullPath(physicalPath).Replace('\\', '/');
         return full.EndsWith('/') ? full : full + "/";
     }
 }

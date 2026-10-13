@@ -1,6 +1,4 @@
 using Microsoft.Extensions.Options;
-using Pickstack;
-using Pickstack.RichTextEditor;
 
 namespace Pickstack.RichTextEditor.CkEditor;
 
@@ -24,13 +22,11 @@ public sealed class CkEditorEditor : IRichTextEditor, IPickstackAssetSource
 
     public string ProviderScriptUrl => "/pickstack/assets/ckeditor.js";
 
-    public IReadOnlyList<ClientAsset> GetClientAssets() =>
-    [
+    public IReadOnlyList<ClientAsset> GetClientAssets() => [
         new ClientAsset { Url = _options.ScriptUrl, Kind = ClientAssetKind.Script }
     ];
 
-    public IEnumerable<PickstackAsset> GetAssets() =>
-    [
+    public IEnumerable<PickstackAsset> GetAssets() => [
         PickstackAssets.Script(typeof(CkEditorEditor).Assembly, "ckeditor.js", "ckeditor.js")
     ];
 }

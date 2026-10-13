@@ -32,10 +32,10 @@ public sealed class EditorTagHelper : TagHelper
     {
         ArgumentNullException.ThrowIfNull(output);
 
-        var fieldName = For.Name;
-        var fieldId = TagBuilder.CreateSanitizedId(fieldName, "_");
-        var value = For.Model as string ?? string.Empty;
-        var optionsJson = JsonSerializer.Serialize(new { height = Height });
+        string fieldName = For.Name;
+        string fieldId = TagBuilder.CreateSanitizedId(fieldName, "_");
+        string value = For.Model as string ?? string.Empty;
+        string optionsJson = JsonSerializer.Serialize(new { height = Height });
 
         var builder = new StringBuilder();
         EditorAssets.AppendStartup(builder, ViewContext.HttpContext, _editor);

@@ -18,8 +18,7 @@ public sealed class ElFinderFileManager : IFileManager, IPickstackAssetSource
 
     public string ProviderScriptUrl => "/pickstack/assets/elfinder.js";
 
-    public IReadOnlyList<ClientAsset> GetClientAssets() =>
-    [
+    public IReadOnlyList<ClientAsset> GetClientAssets() => [
         new ClientAsset { Url = _options.JQueryUiStyleUrl, Kind = ClientAssetKind.Style },
         new ClientAsset { Url = _options.StyleUrl, Kind = ClientAssetKind.Style },
         new ClientAsset { Url = _options.ThemeUrl, Kind = ClientAssetKind.Style },
@@ -29,7 +28,7 @@ public sealed class ElFinderFileManager : IFileManager, IPickstackAssetSource
 
     public string GetProviderConfiguration()
     {
-        var baseUrl = _options.BaseUrl.EndsWith('/') ? _options.BaseUrl : _options.BaseUrl + "/";
+        string baseUrl = _options.BaseUrl.EndsWith('/') ? _options.BaseUrl : _options.BaseUrl + "/";
         return JsonSerializer.Serialize(new
         {
             connectorUrl = ElFinderRoutes.ConnectorPath,
@@ -37,8 +36,7 @@ public sealed class ElFinderFileManager : IFileManager, IPickstackAssetSource
         });
     }
 
-    public IEnumerable<PickstackAsset> GetAssets() =>
-    [
+    public IEnumerable<PickstackAsset> GetAssets() => [
         PickstackAssets.Script(typeof(ElFinderFileManager).Assembly, "elfinder.js", "elfinder.js")
     ];
 }

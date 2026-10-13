@@ -1,6 +1,4 @@
 using Microsoft.Extensions.Options;
-using Pickstack;
-using Pickstack.RichTextEditor;
 
 namespace Pickstack.RichTextEditor.TinyMce;
 
@@ -24,13 +22,11 @@ public sealed class TinyMceEditor : IRichTextEditor, IPickstackAssetSource
 
     public string ProviderScriptUrl => "/pickstack/assets/tinymce.js";
 
-    public IReadOnlyList<ClientAsset> GetClientAssets() =>
-    [
+    public IReadOnlyList<ClientAsset> GetClientAssets() => [
         new ClientAsset { Url = _options.ScriptUrl, Kind = ClientAssetKind.Script }
     ];
 
-    public IEnumerable<PickstackAsset> GetAssets() =>
-    [
+    public IEnumerable<PickstackAsset> GetAssets() => [
         PickstackAssets.Script(typeof(TinyMceEditor).Assembly, "tinymce.js", "tinymce.js")
     ];
 }
