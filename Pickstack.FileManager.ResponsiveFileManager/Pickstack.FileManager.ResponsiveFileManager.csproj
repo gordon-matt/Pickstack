@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ResponsiveFileManager" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />
   </ItemGroup>
 
