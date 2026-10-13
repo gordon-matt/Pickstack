@@ -1,4 +1,4 @@
-namespace Pickstack.FileManager;
+namespace Pickstack.Abstractions;
 
 public enum ClientAssetKind
 {

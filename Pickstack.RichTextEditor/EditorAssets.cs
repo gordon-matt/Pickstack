@@ -1,13 +1,13 @@
-using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Pickstack.Abstractions;
 
 namespace Pickstack.RichTextEditor;
 
 public static class EditorAssets
 {
-    public const string RuntimeScriptUrl = "/pickstack/assets/pickstack.js";
-    public const string RuntimeItemKey = "Pickstack.RuntimeIncluded";
+    public const string RuntimeScriptUrl = ClientAssets.RuntimeScriptUrl;
+    public const string RuntimeItemKey = ClientAssets.RuntimeItemKey;
     public const string ProviderElementId = "pickstack-editor-provider";
 
     private const string StartupItemKey = "Pickstack.Editor.Startup";
@@ -24,28 +24,8 @@ public static class EditorAssets
         }
 
         httpContext.Items[StartupItemKey] = true;
-
-        if (!httpContext.Items.ContainsKey(RuntimeItemKey))
-        {
-            httpContext.Items[RuntimeItemKey] = true;
-            builder.Append("<script src=\"").Append(WebUtility.HtmlEncode(RuntimeScriptUrl)).Append("\"></script>");
-        }
-
-        foreach (var asset in editor.GetClientAssets())
-        {
-            if (asset.Kind == ClientAssetKind.Style)
-            {
-                builder.Append("<link rel=\"stylesheet\" href=\"").Append(WebUtility.HtmlEncode(asset.Url)).Append("\" />");
-            }
-            else
-            {
-                builder.Append("<script src=\"").Append(WebUtility.HtmlEncode(asset.Url)).Append("\"></script>");
-            }
-        }
-
-        builder.Append("<script type=\"application/json\" id=\"").Append(ProviderElementId).Append("\">");
-        builder.Append(editor.GetProviderConfiguration());
-        builder.Append("</script>");
-        builder.Append("<script src=\"").Append(WebUtility.HtmlEncode(editor.ProviderScriptUrl)).Append("\"></script>");
+        ClientAssets.AppendRuntimeOnce(builder, httpContext.Items);
+        ClientAssets.Append(builder, editor.GetClientAssets());
+        ClientAssets.AppendProvider(builder, ProviderElementId, editor.GetProviderConfiguration(), editor.ProviderScriptUrl);
     }
 }

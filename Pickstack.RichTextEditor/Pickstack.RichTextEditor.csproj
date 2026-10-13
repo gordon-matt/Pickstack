@@ -10,4 +10,8 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pickstack.Abstractions\Pickstack.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>

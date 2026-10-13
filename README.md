@@ -24,6 +24,7 @@ The cover-image button calls that. TinyMCE's file picker calls that. CKEditor op
 Both adapters read and write `wwwroot/media` (URL `/media/`). Files uploaded with one manager are still there after the swap.
 
 ```
+Pickstack.Abstractions                        shared client assets and component contract
 Pickstack.FileManager                         contract, storage, tag helpers
   Pickstack.FileManager.elFinder              elFinder.NetCore
   Pickstack.FileManager.ResponsiveFileManager Responsive File Manager
