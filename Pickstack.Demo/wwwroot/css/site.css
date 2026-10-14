@@ -30,6 +30,15 @@ body {
   text-align: start;
 }
 
+.pickstack-demo-field {
+  margin-bottom: 1.5rem;
+}
+
+.pickstack-demo-field .pickstack-file,
+.pickstack-demo-field .pickstack-editor {
+  margin-bottom: 0.35rem;
+}
+
 .pickstack-files {
   height: 70vh;
   min-height: 560px;

@@ -9,20 +9,50 @@
 <div class="row g-4">
     <div class="col-lg-8">
         <h1 class="h3">Compose</h1>
-        <p class="text-muted">The file field and the editor call Pickstack. They do not name the file manager, so replacing that package changes every picker on the page.</p>
+        <p class="text-muted">Each field calls Pickstack. They do not name the file manager or the editor, so replacing a package changes every control on the page.</p>
 
         <form method="post">
-            <div class="mb-3">
+            <div class="pickstack-demo-field">
                 <label asp-for="Title" class="form-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
-            <label asp-for="CoverImage" class="form-label"></label>
-            <pickstack-file asp-for="CoverImage" file-type="Image" />
+            <div class="pickstack-demo-field">
+                <label asp-for="AnyFile" class="form-label"></label>
+                <pickstack-file asp-for="AnyFile" file-type="Any" />
+                <p class="form-text">Browse opens the file manager with files and folders together. Choose a file and its path appears in the box.</p>
+            </div>
 
-            <label asp-for="Body" class="form-label"></label>
-            <pickstack-editor asp-for="Body" height="360" />
+            <div class="pickstack-demo-field">
+                <label asp-for="Document" class="form-label"></label>
+                <pickstack-file asp-for="Document" file-type="File" />
+                <p class="form-text">Browse opens the file manager so you can choose a file. Folders are there to open. Choosing a file puts its path in the box.</p>
+            </div>
+
+            <div class="pickstack-demo-field">
+                <label asp-for="CoverImage" class="form-label"></label>
+                <pickstack-file asp-for="CoverImage" file-type="Image" />
+                <p class="form-text">Browse shows images only. Other files stay hidden. After you choose one, its path appears in the box and a preview appears under it.</p>
+            </div>
+
+            <div class="pickstack-demo-field">
+                <label asp-for="MediaFile" class="form-label"></label>
+                <pickstack-file asp-for="MediaFile" file-type="Media" />
+                <p class="form-text">Browse shows audio and video only. Other files stay hidden. Choosing one puts its path in the box.</p>
+            </div>
+
+            <div class="pickstack-demo-field">
+                <label asp-for="Folder" class="form-label"></label>
+                <pickstack-file asp-for="Folder" file-type="Folder" />
+                <p class="form-text">Browse shows folders only. Files stay hidden. Choosing a folder puts that folder's path in the box.</p>
+            </div>
+
+            <div class="pickstack-demo-field">
+                <label asp-for="Body" class="form-label"></label>
+                <pickstack-editor asp-for="Body" height="360" />
+                <p class="form-text">You should see the registered editor and its toolbar in a 360-pixel area. Image, media, and link commands open the same file manager.</p>
+            </div>
 
             <button type="submit" class="btn btn-primary">Save draft</button>
         </form>
@@ -33,11 +63,15 @@
                 <div class="card-body">
                     <h2 class="h5">Posted values</h2>
                     <p class="mb-1"><strong>Title:</strong> @Model.Title</p>
-                    <p class="mb-1"><strong>Cover image:</strong> @Model.CoverImage</p>
+                    <p class="mb-1"><strong>Any:</strong> @Model.AnyFile</p>
+                    <p class="mb-1"><strong>File:</strong> @Model.Document</p>
+                    <p class="mb-1"><strong>Image:</strong> @Model.CoverImage</p>
                     @if (!string.IsNullOrWhiteSpace(Model.CoverImage))
                     {
                         <img src="@Model.CoverImage" alt="" class="pickstack-posted-image" />
                     }
+                    <p class="mb-1 mt-3"><strong>Media:</strong> @Model.MediaFile</p>
+                    <p class="mb-1"><strong>Folder:</strong> @Model.Folder</p>
                     <p class="mb-1 mt-3"><strong>Body HTML:</strong></p>
                     <pre class="pickstack-posted-html mb-0">@Model.Body</pre>
                 </div>
