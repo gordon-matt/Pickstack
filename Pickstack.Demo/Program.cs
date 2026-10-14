@@ -3,6 +3,9 @@ using Pickstack.FileManager.elFinder;
 using Pickstack.FileManager.ResponsiveFileManager;
 using Pickstack.RichTextEditor.CkEditor;
 using Pickstack.RichTextEditor.TinyMce;
+using Pickstack.RichTextEditor.TinyMce5;
+using Pickstack.RichTextEditor.TinyMce6;
+using Pickstack.RichTextEditor.TinyMce7;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,15 +25,19 @@ pickstack = stack["FileManager"] switch
         $"Unknown Pickstack file manager '{name}'. Use '{ElFinderFileManager.Key}' or '{ResponsiveFileManagerAdapter.Key}'.")
 };
 
+Action<TinyMceOptions> tinymce = editor => editor
+    .AddPlugins("codesample", "charmap")
+    .WithToolbar("undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media charmap codesample | code");
+
 pickstack = stack["RichTextEditor"] switch
 {
     CkEditorEditor.Key => pickstack.AddCkEditor(editor => editor
         .WithoutPlugins("elementspath")),
-    null or "" or TinyMceEditor.Key => pickstack.AddTinyMce(editor => editor
-        .AddPlugins("codesample", "charmap")
-        .WithToolbar("undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media charmap codesample | code")),
+    TinyMce5ServiceCollectionExtensions.Key => pickstack.AddTinyMce5(tinymce),
+    TinyMce6ServiceCollectionExtensions.Key => pickstack.AddTinyMce6(tinymce),
+    null or "" or TinyMceEditor.Key or TinyMce7ServiceCollectionExtensions.Key => pickstack.AddTinyMce7(tinymce),
     var name => throw new InvalidOperationException(
-        $"Unknown Pickstack rich text editor '{name}'. Use '{TinyMceEditor.Key}' or '{CkEditorEditor.Key}'.")
+        $"Unknown Pickstack rich text editor '{name}'. Use '{TinyMce5ServiceCollectionExtensions.Key}', '{TinyMce6ServiceCollectionExtensions.Key}', '{TinyMce7ServiceCollectionExtensions.Key}', or '{CkEditorEditor.Key}'.")
 };
 
 var app = builder.Build();

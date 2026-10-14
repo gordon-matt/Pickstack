@@ -2,15 +2,29 @@ namespace Pickstack.RichTextEditor.TinyMce;
 
 /// <summary>
 /// Site-wide TinyMCE settings. Fluent methods return the same instance so they can be chained
-/// from <c>AddTinyMce</c>. A field's <c>height</c> attribute overrides <see cref="Height"/> for that editor.
+/// from <c>AddTinyMce5</c>, <c>AddTinyMce6</c>, or <c>AddTinyMce7</c>.
+/// A field's <c>height</c> attribute overrides <see cref="Height"/> for that editor.
 /// </summary>
 public sealed class TinyMceOptions
 {
+    /// <summary>Name shown for the registered editor, such as TinyMCE 7.</summary>
+    public string Name { get; set; } = "TinyMCE";
+
+    /// <summary>CDN (or other) URL loaded first.</summary>
     public string ScriptUrl { get; set; } = "https://cdn.jsdelivr.net/npm/tinymce@7.9.0/tinymce.min.js";
+
+    /// <summary>URL of the copy shipped in the version package. Used when <see cref="ScriptUrl"/> fails to load.</summary>
+    public string? FallbackUrl { get; set; }
 
     public int Height { get; set; } = 420;
 
     public bool Menubar { get; set; }
+
+    /// <summary>
+    /// When set, <see cref="LicenseKey"/> and <see cref="Promotion"/> are sent to TinyMCE.
+    /// TinyMCE 7 needs this. TinyMCE 5 and 6 do not.
+    /// </summary>
+    public bool IncludeLicense { get; set; } = true;
 
     public string LicenseKey { get; set; } = "gpl";
 
@@ -47,6 +61,12 @@ public sealed class TinyMceOptions
         return this;
     }
 
+    public TinyMceOptions WithFallback(string? url)
+    {
+        FallbackUrl = url;
+        return this;
+    }
+
     public TinyMceOptions WithHeight(int pixels)
     {
         Height = pixels;
@@ -62,6 +82,7 @@ public sealed class TinyMceOptions
     public TinyMceOptions WithLicenseKey(string licenseKey)
     {
         LicenseKey = licenseKey;
+        IncludeLicense = true;
         return this;
     }
 
@@ -86,7 +107,7 @@ public sealed class TinyMceOptions
     /// <summary>Replaces the plugin list.</summary>
     public TinyMceOptions WithPlugins(params string[] plugins)
     {
-        Plugins = [..plugins];
+        Plugins = [.. plugins];
         return this;
     }
 
@@ -119,19 +140,21 @@ public sealed class TinyMceOptions
 
     internal Dictionary<string, object?> CreateInit()
     {
-        var init = new Dictionary<string, object?>(CustomOptions)
+        var init = new Dictionary<string, object?>(CustomOptions);
+        if (IncludeLicense)
         {
-            ["license_key"] = LicenseKey,
-            ["promotion"] = Promotion,
-            ["height"] = Height,
-            ["menubar"] = Menubar,
-            ["plugins"] = string.Join(' ', Plugins),
-            ["toolbar"] = Toolbar,
-            ["relative_urls"] = RelativeUrls,
-            ["remove_script_host"] = RemoveScriptHost,
-            ["convert_urls"] = ConvertUrls,
-            ["file_picker_types"] = FilePickerTypes
-        };
+            init["license_key"] = LicenseKey;
+            init["promotion"] = Promotion;
+        }
+
+        init["height"] = Height;
+        init["menubar"] = Menubar;
+        init["plugins"] = string.Join(' ', Plugins);
+        init["toolbar"] = Toolbar;
+        init["relative_urls"] = RelativeUrls;
+        init["remove_script_host"] = RemoveScriptHost;
+        init["convert_urls"] = ConvertUrls;
+        init["file_picker_types"] = FilePickerTypes;
 
         return init;
     }

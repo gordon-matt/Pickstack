@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Microsoft.Extensions.Options;
-using Pickstack;
 using Pickstack.Abstractions;
 
 namespace Pickstack.RichTextEditor.TinyMce;
@@ -16,16 +15,22 @@ public sealed class TinyMceEditor : IRichTextEditor, IPickstackAssetSource
         _options = options.Value;
     }
 
-    public string Name => Key;
+    public string Name => string.IsNullOrWhiteSpace(_options.Name) ? Key : _options.Name;
 
     public string ProviderScriptUrl => "/pickstack/assets/tinymce.js";
 
-    public IReadOnlyList<ClientAsset> GetClientAssets() =>
-    [
-        new ClientAsset { Url = _options.ScriptUrl, Kind = ClientAssetKind.Script }
-    ];
+    /// <summary>
+    /// The provider script loads TinyMCE itself so a CDN failure can fall back to the local copy
+    /// before any editor is initialized.
+    /// </summary>
+    public IReadOnlyList<ClientAsset> GetClientAssets() => [];
 
-    public string GetProviderConfiguration() => JsonSerializer.Serialize(_options.CreateInit());
+    public string GetProviderConfiguration() => JsonSerializer.Serialize(new
+    {
+        scriptUrl = _options.ScriptUrl,
+        fallbackUrl = _options.FallbackUrl,
+        init = _options.CreateInit()
+    });
 
     public IEnumerable<PickstackAsset> GetAssets() =>
     [

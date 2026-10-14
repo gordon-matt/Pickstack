@@ -45,7 +45,7 @@ public sealed class CkEditorOptions
     /// <summary>Replaces the toolbar with these groups. Each group is one cluster of buttons.</summary>
     public CkEditorOptions WithToolbar(params string[][] groups)
     {
-        Toolbar = [..groups];
+        Toolbar = [.. groups];
         return this;
     }
 
@@ -70,7 +70,7 @@ public sealed class CkEditorOptions
 
     public CkEditorOptions WithExtraPlugins(params string[] plugins)
     {
-        ExtraPlugins = [..plugins];
+        ExtraPlugins = [.. plugins];
         return this;
     }
 

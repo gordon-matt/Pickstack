@@ -95,7 +95,7 @@ public sealed class ElFinderOptions
     /// <summary>Replaces the toolbar. Each group is one cluster of buttons.</summary>
     public ElFinderOptions WithToolbar(params string[][] groups)
     {
-        Toolbar = [..groups];
+        Toolbar = [.. groups];
         return this;
     }
 

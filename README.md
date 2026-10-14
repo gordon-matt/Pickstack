@@ -29,7 +29,10 @@ Pickstack.FileManager                         contract, storage, tag helpers
   Pickstack.FileManager.elFinder              elFinder.NetCore
   Pickstack.FileManager.ResponsiveFileManager Responsive File Manager
 Pickstack.RichTextEditor                      contract and tag helper
-  Pickstack.RichTextEditor.TinyMce
+  Pickstack.RichTextEditor.TinyMce            shared TinyMCE adapter
+    Pickstack.RichTextEditor.TinyMce5         TinyMCE 5.10.9 and a local copy
+    Pickstack.RichTextEditor.TinyMce6         TinyMCE 6.8.5 and a local copy
+    Pickstack.RichTextEditor.TinyMce7         TinyMCE 7.9.0 and a local copy
   Pickstack.RichTextEditor.CkEditor           browse page that hosts IFileManager
 Pickstack                                     composition, shared browser runtime
 ```
@@ -43,11 +46,13 @@ The demo references every adapter so you can switch without changing project ref
 ```json
 "Pickstack": {
   "FileManager": "elFinder",
-  "RichTextEditor": "TinyMCE"
+  "RichTextEditor": "TinyMCE7"
 }
 ```
 
-`FileManager` is `elFinder` or `ResponsiveFileManager`. `RichTextEditor` is `TinyMCE` or `CKEditor`. Restart the app after changing them.
+`FileManager` is `elFinder` or `ResponsiveFileManager`. `RichTextEditor` is `TinyMCE5`, `TinyMCE6`, `TinyMCE7`, or `CKEditor`. `TinyMCE` still selects TinyMCE 7. Restart the app after changing them.
+
+Each TinyMCE package loads that version from the CDN, then falls back to the copy shipped in the package at `/_content/Pickstack.RichTextEditor.TinyMce7/tinymce.min.js` (and the same path for versions 5 and 6). Skins and plugins are served from that folder, so the editor still starts when the CDN is unreachable.
 
 `Pickstack:Storage` is the shared upload folder. `WebRootFolder` can be nested, such as `Media/Uploads`. Keep the thumbnail folder outside the upload folder; Responsive File Manager requires that.
 
@@ -62,7 +67,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddPickstack(builder.Configuration)
     .AddElFinder()
-    .AddTinyMce();
+    .AddTinyMce7();
 
 var app = builder.Build();
 
@@ -106,7 +111,7 @@ builder.Services.AddPickstack(builder.Configuration)
     .AddElFinder(files => files
         .DisableCommands("extract", "archive")
         .AddToolbarGroup("fullscreen"))
-    .AddTinyMce(editor => editor
+    .AddTinyMce7(editor => editor
         .AddPlugins("codesample", "charmap")
         .WithToolbar("undo redo | bold italic | codesample charmap | link image")
         .Set("branding", false));

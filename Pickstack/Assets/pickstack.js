@@ -85,11 +85,11 @@
         },
         init: function (element, options) {
             if (!editorProvider) {
-                console.error("Pickstack: no rich text editor is registered.");
-                return;
+                return false;
             }
 
             editorProvider.init(element, options || {});
+            return true;
         }
     };
 
@@ -277,8 +277,11 @@
                 return;
             }
 
+            if (Pickstack.editors.init(element, readOptions(element)) === false) {
+                return;
+            }
+
             element.setAttribute("data-pickstack-bound", "true");
-            Pickstack.editors.init(element, readOptions(element));
         });
 
         document.querySelectorAll("[data-pickstack-browser]").forEach(function (element) {
@@ -294,6 +297,8 @@
             });
         });
     }
+
+    Pickstack.bind = bind;
 
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", bind);

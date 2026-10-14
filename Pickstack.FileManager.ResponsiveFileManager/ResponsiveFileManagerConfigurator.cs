@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Options;
-using Pickstack.FileManager;
 
 namespace Pickstack.FileManager.ResponsiveFileManager;
 
