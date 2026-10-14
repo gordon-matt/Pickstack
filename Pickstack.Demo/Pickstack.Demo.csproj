@@ -13,6 +13,8 @@
     <ProjectReference Include="..\Pickstack.FileManager.ResponsiveFileManager\Pickstack.FileManager.ResponsiveFileManager.csproj" />
     <ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />
     <ProjectReference Include="..\Pickstack.RichTextEditor.CkEditor\Pickstack.RichTextEditor.CkEditor.csproj" />
+    <ProjectReference Include="..\Pickstack.RichTextEditor.Froala\Pickstack.RichTextEditor.Froala.csproj" />
+    <ProjectReference Include="..\Pickstack.RichTextEditor.Froala5\Pickstack.RichTextEditor.Froala5.csproj" />
     <ProjectReference Include="..\Pickstack.RichTextEditor.TinyMce\Pickstack.RichTextEditor.TinyMce.csproj" />
     <ProjectReference Include="..\Pickstack.RichTextEditor.TinyMce5\Pickstack.RichTextEditor.TinyMce5.csproj" />
     <ProjectReference Include="..\Pickstack.RichTextEditor.TinyMce6\Pickstack.RichTextEditor.TinyMce6.csproj" />
