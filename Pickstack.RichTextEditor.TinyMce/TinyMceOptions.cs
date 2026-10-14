@@ -18,7 +18,7 @@ public sealed class TinyMceOptions
 
     public bool RelativeUrls { get; set; }
 
-    public bool RemoveScriptHost { get; set; }
+    public bool RemoveScriptHost { get; set; } = true;
 
     public bool ConvertUrls { get; set; } = true;
 

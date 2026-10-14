@@ -5,5 +5,6 @@ public enum FilePickerType
     Any,
     File,
     Image,
-    Media
+    Media,
+    Folder
 }

@@ -22,7 +22,7 @@ public sealed class ElFinderConnectorController : Controller
     {
         try
         {
-            return await CreateConnector().ProcessAsync(Request);
+            return await CreateConnector(ReadRoot()).ProcessAsync(Request);
         }
         catch (Exception exception)
         {
@@ -36,7 +36,8 @@ public sealed class ElFinderConnectorController : Controller
     {
         try
         {
-            return await CreateConnector().GetThumbnailAsync(Request, Response, hash);
+            (string? root, string fileHash) = SplitThumbnail(hash);
+            return await CreateConnector(root).GetThumbnailAsync(Request, Response, fileHash);
         }
         catch (Exception exception)
         {
@@ -45,16 +46,22 @@ public sealed class ElFinderConnectorController : Controller
         }
     }
 
-    private Connector CreateConnector()
+    private Connector CreateConnector(string? root)
     {
-        _storage.EnsureCreated();
+        _storage.EnsureRoot(root);
 
         string origin = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+        string thumbnails = origin + ElFinderRoutes.ThumbnailPath;
+        if (root is not null)
+        {
+            thumbnails += "r/" + FileRoots.ToToken(root) + "/";
+        }
+
         var driver = new FileSystemDriver();
         driver.AddRoot(new RootVolume(
-            _storage.PhysicalPath,
-            origin + _storage.RequestPath,
-            origin + ElFinderRoutes.ThumbnailPath)
+            _storage.ResolvePhysicalPath(root),
+            origin + _storage.ResolveRequestPath(root),
+            thumbnails)
         {
             IsReadOnly = false,
             IsLocked = false,
@@ -65,5 +72,33 @@ public sealed class ElFinderConnectorController : Controller
         {
             MimeDetect = MimeDetectOption.Internal
         };
+    }
+
+    private string? ReadRoot()
+    {
+        string? value = Request.HasFormContentType ? Request.Form["root"].ToString() : null;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            value = Request.Query["root"];
+        }
+
+        return FileRoots.Normalize(value);
+    }
+
+    private static (string? Root, string Hash) SplitThumbnail(string hash)
+    {
+        const string marker = "r/";
+        if (!hash.StartsWith(marker, StringComparison.Ordinal))
+        {
+            return (null, hash);
+        }
+
+        int slash = hash.IndexOf('/', marker.Length);
+        if (slash <= marker.Length || slash >= hash.Length - 1)
+        {
+            return (null, hash);
+        }
+
+        return (FileRoots.FromToken(hash[marker.Length..slash]), hash[(slash + 1)..]);
     }
 }

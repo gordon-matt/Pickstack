@@ -23,6 +23,10 @@ public sealed class FilePickerTagHelper : TagHelper
     [HtmlAttributeName("file-type")]
     public FilePickerType FileType { get; set; } = FilePickerType.Any;
 
+    /// <summary>Relative folder under the upload directory, such as <c>42/7</c>.</summary>
+    [HtmlAttributeName("file-root")]
+    public string? FileRoot { get; set; }
+
     [ViewContext]
     [HtmlAttributeNotBound]
     public ViewContext ViewContext { get; set; } = default!;
@@ -56,6 +60,10 @@ public sealed class FilePickerTagHelper : TagHelper
         output.Attributes.SetAttribute("class", "pickstack-file mb-3");
         output.Attributes.SetAttribute("data-pickstack-file-input", "true");
         output.Attributes.SetAttribute("data-file-type", fileType);
+        if (!string.IsNullOrWhiteSpace(FileRoot))
+        {
+            output.Attributes.SetAttribute("data-file-root", FileRoot);
+        }
         output.Content.SetHtmlContent(builder.ToString());
     }
 

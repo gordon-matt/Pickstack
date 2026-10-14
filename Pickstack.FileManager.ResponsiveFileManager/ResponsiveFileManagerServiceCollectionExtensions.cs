@@ -9,7 +9,11 @@ public sealed class ResponsiveFileManagerStartup : IPickstackStartup
 {
     public void Use(WebApplication app)
     {
-        app.UseSession();
+        if (!app.Services.GetRequiredService<IOptions<ResponsiveFileManagerOptions>>().Value.HostOwnsSession)
+        {
+            app.UseSession();
+        }
+
         app.UseResponsiveFileManager();
     }
 }
@@ -22,18 +26,23 @@ public static class ResponsiveFileManagerServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(builder);
 
+        var probe = new ResponsiveFileManagerOptions();
+        configure?.Invoke(probe);
         if (configure is not null)
         {
             builder.Services.Configure(configure);
         }
 
-        builder.Services.AddDistributedMemoryCache();
-        builder.Services.AddSession(options =>
+        if (!probe.HostOwnsSession)
         {
-            options.IdleTimeout = TimeSpan.FromMinutes(30);
-            options.Cookie.HttpOnly = true;
-            options.Cookie.IsEssential = true;
-        });
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+        }
 
         // The package applies a single IConfigureOptions instance. Register the path
         // mapping last so it is the instance their middleware resolves.

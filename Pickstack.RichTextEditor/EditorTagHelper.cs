@@ -24,6 +24,22 @@ public sealed class EditorTagHelper : TagHelper
 
     public int? Height { get; set; }
 
+    /// <summary>Replaces the registered plugin list for this field.</summary>
+    [HtmlAttributeName("plugins")]
+    public string? Plugins { get; set; }
+
+    /// <summary>Plugins added to the registered list for this field.</summary>
+    [HtmlAttributeName("add-plugins")]
+    public string? AddPlugins { get; set; }
+
+    /// <summary>Replaces the registered toolbar for this field.</summary>
+    [HtmlAttributeName("toolbar")]
+    public string? Toolbar { get; set; }
+
+    /// <summary>Relative upload folder opened by this field's file picker, such as <c>42/7</c>.</summary>
+    [HtmlAttributeName("file-root")]
+    public string? FileRoot { get; set; }
+
     [ViewContext]
     [HtmlAttributeNotBound]
     public ViewContext ViewContext { get; set; } = default!;
@@ -35,9 +51,7 @@ public sealed class EditorTagHelper : TagHelper
         string fieldName = For.Name;
         string fieldId = TagBuilder.CreateSanitizedId(fieldName, "_");
         string value = For.Model as string ?? string.Empty;
-        string optionsJson = Height is int height
-            ? JsonSerializer.Serialize(new { height })
-            : "{}";
+        string optionsJson = JsonSerializer.Serialize(InstanceOptions());
 
         var builder = new StringBuilder();
         EditorAssets.AppendStartup(builder, ViewContext.HttpContext, _editor);
@@ -53,5 +67,36 @@ public sealed class EditorTagHelper : TagHelper
         output.TagMode = TagMode.StartTagAndEndTag;
         output.Attributes.SetAttribute("class", "pickstack-editor mb-3");
         output.Content.SetHtmlContent(builder.ToString());
+    }
+
+    private Dictionary<string, object?> InstanceOptions()
+    {
+        var options = new Dictionary<string, object?>();
+        if (Height is int height)
+        {
+            options["height"] = height;
+        }
+
+        if (!string.IsNullOrWhiteSpace(Plugins))
+        {
+            options["plugins"] = Plugins;
+        }
+
+        if (!string.IsNullOrWhiteSpace(AddPlugins))
+        {
+            options["addPlugins"] = AddPlugins;
+        }
+
+        if (!string.IsNullOrWhiteSpace(Toolbar))
+        {
+            options["toolbar"] = Toolbar;
+        }
+
+        if (!string.IsNullOrWhiteSpace(FileRoot))
+        {
+            options["fileRoot"] = FileRoot;
+        }
+
+        return options;
     }
 }

@@ -31,10 +31,16 @@
                 }
             };
 
+            if (options.root) {
+                elfOptions.customData = { root: options.root };
+            }
+
             if (options.type === "image") {
                 elfOptions.onlyMimes = ["image"];
             } else if (options.type === "media") {
                 elfOptions.onlyMimes = ["video", "audio"];
+            } else if (options.type === "folder") {
+                elfOptions.onlyMimes = ["directory"];
             }
 
             if (options.select) {

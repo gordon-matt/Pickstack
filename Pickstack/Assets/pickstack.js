@@ -53,7 +53,8 @@
 
             mount(body, {
                 type: options.type || "any",
-                select: true
+                select: true,
+                root: options.root || ""
             });
         },
         mount: function (element, options) {
@@ -68,6 +69,7 @@
                 file = { url: file };
             }
 
+            file.url = rootRelativeUrl(file.url);
             listeners.slice().forEach(function (listener) {
                 listener(file);
             });
@@ -111,7 +113,33 @@
             return;
         }
 
-        fileProvider.mount(element, options || {});
+        options = options || {};
+        if (!options.root) {
+            fileProvider.mount(element, options);
+            return;
+        }
+
+        fetch("/pickstack/files/root?root=" + encodeURIComponent(options.root), { cache: "no-store" })
+            .finally(function () {
+                fileProvider.mount(element, options);
+            });
+    }
+
+    function rootRelativeUrl(url) {
+        if (!url || !/^https?:\/\//i.test(url)) {
+            return url || "";
+        }
+
+        try {
+            var parsed = new URL(url);
+            if (parsed.origin === window.location.origin) {
+                return parsed.pathname + parsed.search + parsed.hash;
+            }
+        } catch (error) {
+            return url;
+        }
+
+        return url;
     }
 
     function ensureModal() {
@@ -238,7 +266,8 @@
             button.addEventListener("click", function () {
                 Pickstack.files.open({
                     fieldId: field.id,
-                    type: root.getAttribute("data-file-type") || "any"
+                    type: root.getAttribute("data-file-type") || "any",
+                    root: root.getAttribute("data-file-root") || ""
                 });
             });
         });
@@ -260,7 +289,8 @@
             element.setAttribute("data-pickstack-bound", "true");
             Pickstack.files.mount(element, {
                 type: element.getAttribute("data-file-type") || "any",
-                select: element.getAttribute("data-select") === "true"
+                select: element.getAttribute("data-select") === "true",
+                root: element.getAttribute("data-file-root") || ""
             });
         });
     }

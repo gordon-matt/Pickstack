@@ -20,7 +20,7 @@ public sealed class FileStorage : IFileStorage
 
         string folder = NormalizeFolder(_options.WebRootFolder, "media");
         string thumbnailFolder = NormalizeFolder(_options.ThumbnailWebRootFolder, "media-thumbs");
-        if (string.Equals(folder, thumbnailFolder, StringComparison.OrdinalIgnoreCase))
+        if (Contains(folder, thumbnailFolder) || Contains(thumbnailFolder, folder))
         {
             throw new InvalidOperationException("The thumbnail folder must be outside the upload folder.");
         }
@@ -40,21 +40,50 @@ public sealed class FileStorage : IFileStorage
         Directory.CreateDirectory(ThumbnailPhysicalPath);
     }
 
-    internal static string NormalizeFolder(string? value, string fallback)
+    public void EnsureRoot(string? root) => Directory.CreateDirectory(ResolvePhysicalPath(root));
+
+    public string ResolvePhysicalPath(string? root)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        string? relative = FileRoots.Normalize(root);
+        if (relative is null)
         {
-            return fallback;
+            return PhysicalPath;
         }
 
-        string folder = value.Trim();
-        return folder is "." or ".."
-            || folder.Contains('/', StringComparison.Ordinal)
-            || folder.Contains('\\', StringComparison.Ordinal)
-            || folder.Contains(':', StringComparison.Ordinal)
-            || Path.IsPathRooted(folder)
-            ? throw new InvalidOperationException($"'{value}' must be a single folder name under wwwroot.")
-            : folder;
+        string full = Path.GetFullPath(Path.Combine(PhysicalPath, relative.Replace('/', Path.DirectorySeparatorChar)));
+        string storage = Path.GetFullPath(PhysicalPath);
+        string prefix = storage.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        if (!full.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("The file root must stay inside the upload folder.");
+        }
+
+        return full;
+    }
+
+    public string ResolveRequestPath(string? root)
+    {
+        string? relative = FileRoots.Normalize(root);
+        return relative is null ? RequestPath : RequestPath + relative + "/";
+    }
+
+    internal static string NormalizeFolder(string? value, string fallback)
+    {
+        string path = string.IsNullOrWhiteSpace(value) ? fallback : value;
+        string[] segments = path.Replace('\\', '/').Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (segments.Length == 0 || segments.Any(FileRoots.IsUnsafe))
+        {
+            throw new InvalidOperationException($"'{value}' must be a folder path under wwwroot.");
+        }
+
+        return Path.Combine(segments);
+    }
+
+    private static bool Contains(string parent, string child)
+    {
+        string parentPath = parent.Replace('\\', '/').Trim('/') + "/";
+        string childPath = child.Replace('\\', '/').Trim('/') + "/";
+        return childPath.StartsWith(parentPath, StringComparison.OrdinalIgnoreCase);
     }
 
     internal static string NormalizeRequestPath(string? value, string fallback)

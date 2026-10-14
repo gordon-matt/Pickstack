@@ -21,9 +21,12 @@ public sealed class CkEditorBrowserController : Controller
     }
 
     [HttpGet("browse")]
-    public ContentResult Browse(string? type)
+    public ContentResult Browse(string? type, string? root)
     {
         string fileType = NormalizeType(type);
+        string rootAttribute = string.IsNullOrWhiteSpace(root)
+            ? ""
+            : $" data-file-root=\"{System.Net.WebUtility.HtmlEncode(root)}\"";
         string html = $$"""
             <!DOCTYPE html>
             <html lang="en">
@@ -38,7 +41,7 @@ public sealed class CkEditorBrowserController : Controller
                 {{FileManagerAssets.RenderStandaloneStartup(_fileManager)}}
             </head>
             <body>
-                <div id="pickstack-browser" data-pickstack-browser="true" data-select="true" data-file-type="{{fileType}}"></div>
+                <div id="pickstack-browser" data-pickstack-browser="true" data-select="true" data-file-type="{{fileType}}"{{rootAttribute}}></div>
                 <script>
                     (function () {
                         var funcNum = new URLSearchParams(window.location.search).get("CKEditorFuncNum");
@@ -62,6 +65,7 @@ public sealed class CkEditorBrowserController : Controller
         "image" => "image",
         "media" => "media",
         "file" => "file",
+        "folder" => "folder",
         _ => "any"
     };
 }

@@ -12,13 +12,37 @@
     window.Pickstack.editors.use({
         init: function (element, options) {
             var settings = Object.assign({}, config);
-            if (options && Object.prototype.hasOwnProperty.call(options, "height")) {
+            options = options || {};
+            if (Object.prototype.hasOwnProperty.call(options, "height")) {
                 settings.height = options.height;
             }
 
-            settings.filebrowserBrowseUrl = "/pickstack/ckeditor/browse?type=file";
-            settings.filebrowserImageBrowseUrl = "/pickstack/ckeditor/browse?type=image";
+            if (options.addPlugins) {
+                settings.extraPlugins = joinPlugins(settings.extraPlugins, options.addPlugins);
+            }
+
+            if (Array.isArray(options.toolbar)) {
+                settings.toolbar = options.toolbar;
+            }
+
+            var root = options.fileRoot ? "&root=" + encodeURIComponent(options.fileRoot) : "";
+            settings.filebrowserBrowseUrl = "/pickstack/ckeditor/browse?type=file" + root;
+            settings.filebrowserImageBrowseUrl = "/pickstack/ckeditor/browse?type=image" + root;
             window.CKEDITOR.replace(element, settings);
         }
     });
+
+    function joinPlugins(current, extra) {
+        var items = String(current || "").split(/[\s,]+/).concat(String(extra).split(/[\s,]+/));
+        var seen = {};
+        return items.filter(function (item) {
+            var key = item.toLowerCase();
+            if (!item || seen[key]) {
+                return false;
+            }
+
+            seen[key] = true;
+            return true;
+        }).join(",");
+    }
 })(window, document);

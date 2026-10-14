@@ -11,11 +11,11 @@ public sealed class FileStorageOptions
     /// <summary>Public URL prefix. A leading and trailing slash are added when missing.</summary>
     public string RequestPath { get; set; } = "/media/";
 
-    /// <summary>Single folder name under wwwroot.</summary>
+    /// <summary>Folder path under wwwroot. Nested folders such as <c>Media/Uploads</c> are allowed.</summary>
     public string WebRootFolder { get; set; } = "media";
 
     public string ThumbnailRequestPath { get; set; } = "/media-thumbs/";
 
-    /// <summary>Single folder name under wwwroot, outside <see cref="WebRootFolder"/>.</summary>
+    /// <summary>Folder path under wwwroot, outside <see cref="WebRootFolder"/>.</summary>
     public string ThumbnailWebRootFolder { get; set; } = "media-thumbs";
 }

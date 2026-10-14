@@ -18,6 +18,19 @@ public sealed class PickstackStartup : IPickstackStartup
     {
         app.Services.GetRequiredService<IFileStorage>().EnsureCreated();
 
+        app.MapGet("/pickstack/files/root", (string? root, IFileStorage storage) =>
+        {
+            try
+            {
+                storage.EnsureRoot(root);
+                return Results.NoContent();
+            }
+            catch (InvalidOperationException)
+            {
+                return Results.BadRequest();
+            }
+        });
+
         app.MapGet("/pickstack/assets/{name}", async (HttpContext context, string name, IEnumerable<IPickstackAssetSource> sources) =>
         {
             var asset = sources

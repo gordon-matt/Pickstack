@@ -15,13 +15,20 @@
             var type = 0;
             if (options.type === "image") {
                 type = 1;
-            } else if (options.type === "file") {
+            } else if (options.type === "file" || options.type === "folder") {
                 type = 2;
             } else if (options.type === "media") {
                 type = 3;
             }
 
             var source = config.dialogUrl + "?type=" + type + "&ignore_last_position=1&popup=0&crossdomain=" + (config.crossDomain ? "1" : "0");
+            if (options.type === "folder") {
+                source += "&extensions=" + encodeURIComponent("[\"\"]");
+            }
+
+            if (options.root) {
+                source += "&rootFolder=" + encodeURIComponent(options.root);
+            }
             if (config.language) {
                 source += "&lang=" + encodeURIComponent(config.language);
             }

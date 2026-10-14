@@ -33,13 +33,13 @@ internal sealed class ResponsiveFileManagerConfigurator : IConfigureOptions<glob
 
     internal static string ToFileManagerRelativePath(string requestPath)
     {
-        string segment = requestPath.Trim('/');
-        if (segment.Length == 0 || segment.Contains('/'))
+        string relative = requestPath.Trim('/');
+        string[] segments = relative.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        if (segments.Length == 0 || segments.Any(FileRoots.IsUnsafe))
         {
-            throw new InvalidOperationException(
-                $"Responsive File Manager needs '{requestPath}' to be a single folder directly under the site root.");
+            throw new InvalidOperationException($"'{requestPath}' is not a valid Responsive File Manager folder.");
         }
 
-        return "../" + segment + "/";
+        return "../" + string.Join('/', segments) + "/";
     }
 }

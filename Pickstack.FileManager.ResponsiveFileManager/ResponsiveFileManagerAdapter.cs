@@ -18,6 +18,11 @@ public sealed class ResponsiveFileManagerOptions
 
     public string? Language { get; set; }
 
+    /// <summary>
+    /// The host already calls <c>UseSession</c>. Pickstack then only enables the file manager middleware.
+    /// </summary>
+    public bool HostOwnsSession { get; private set; }
+
     internal Action<global::ResponsiveFileManager.ResponsiveFileManagerOptions>? ConfigureServer { get; private set; }
 
     public ResponsiveFileManagerOptions WithDialogUrl(string url)
@@ -41,6 +46,12 @@ public sealed class ResponsiveFileManagerOptions
     public ResponsiveFileManagerOptions WithLanguage(string language)
     {
         Language = language;
+        return this;
+    }
+
+    public ResponsiveFileManagerOptions UseHostSession()
+    {
+        HostOwnsSession = true;
         return this;
     }
 
