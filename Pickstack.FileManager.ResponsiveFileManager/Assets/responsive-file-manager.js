@@ -4,6 +4,7 @@
     var configElement = document.getElementById("pickstack-file-provider");
     var config = configElement ? JSON.parse(configElement.textContent || "{}") : {};
     var fieldId = "pickstack-selected-file";
+    var frame = null;
 
     if (!window.Pickstack) {
         return;
@@ -44,12 +45,22 @@
                 };
             }
 
-            var frame = document.createElement("iframe");
+            frame = document.createElement("iframe");
             frame.title = "File manager";
             frame.src = source;
             frame.style.cssText = "width:100%;height:100%;min-height:560px;border:0;";
             element.innerHTML = "";
             element.appendChild(frame);
+        },
+        currentFolder: function () {
+            var doc = frame && frame.contentDocument;
+            if (!doc) {
+                return "";
+            }
+
+            var base = inputValue(doc, "base_url");
+            var dir = inputValue(doc, "cur_dir");
+            return dir ? base + dir : "";
         }
     });
 
@@ -63,5 +74,10 @@
         }
 
         field.value = "";
+    }
+
+    function inputValue(doc, id) {
+        var field = doc.getElementById(id);
+        return field ? field.value || "" : "";
     }
 })(window, document);

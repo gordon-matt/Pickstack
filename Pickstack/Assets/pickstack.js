@@ -21,7 +21,12 @@
             var modal = ensureModal();
             var body = modal.querySelector("[data-pickstack-modal-body]");
             var title = modal.querySelector("[data-pickstack-modal-title]");
-            title.textContent = options.title || "Select a file";
+            var useFolder = modal.querySelector("[data-pickstack-use-folder]");
+            var selectingFolder = options.type === "folder";
+            title.textContent = options.title || (selectingFolder ? "Select a folder" : "Select a file");
+            if (useFolder) {
+                useFolder.hidden = !selectingFolder;
+            }
             body.innerHTML = "";
             modal.hidden = false;
 
@@ -160,7 +165,10 @@
             "<div class=\"pickstack-modal-dialog\" role=\"document\">" +
             "<div class=\"pickstack-modal-header\">" +
             "<strong data-pickstack-modal-title>Select a file</strong>" +
+            "<span class=\"pickstack-modal-actions\">" +
+            "<button type=\"button\" class=\"pickstack-modal-use-folder\" data-pickstack-use-folder hidden>Use this folder</button>" +
             "<button type=\"button\" class=\"pickstack-modal-close\" data-pickstack-modal-close aria-label=\"Close\">&times;</button>" +
+            "</span>" +
             "</div>" +
             "<div class=\"pickstack-modal-body\" data-pickstack-modal-body></div>" +
             "</div>";
@@ -171,6 +179,19 @@
             }
         });
         modal.querySelector("[data-pickstack-modal-close]").addEventListener("click", closeModal);
+        modal.querySelector("[data-pickstack-use-folder]").addEventListener("click", function () {
+            if (!fileProvider || typeof fileProvider.currentFolder !== "function") {
+                return;
+            }
+
+            var folder = fileProvider.currentFolder();
+            var url = folder && (typeof folder === "string" ? folder : folder.url);
+            if (!url) {
+                return;
+            }
+
+            Pickstack.files.notify(typeof folder === "string" ? { url: url } : folder);
+        });
         document.addEventListener("keydown", function (event) {
             if (event.key === "Escape" && !modal.hidden) {
                 closeModal();
@@ -211,7 +232,10 @@
             ".pickstack-modal{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:1rem;}" +
             ".pickstack-modal[hidden]{display:none !important;}" +
             ".pickstack-modal-dialog{background:#fff;width:min(1100px,96vw);height:min(760px,92vh);display:flex;flex-direction:column;border-radius:8px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.2);}" +
-            ".pickstack-modal-header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-bottom:1px solid #dee2e6;}" +
+            ".pickstack-modal-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 1rem;border-bottom:1px solid #dee2e6;}" +
+            ".pickstack-modal-actions{display:flex;align-items:center;gap:.75rem;}" +
+            ".pickstack-modal-use-folder{border:1px solid #0d6efd;background:#0d6efd;color:#fff;border-radius:4px;padding:.25rem .65rem;font-size:.875rem;cursor:pointer;}" +
+            ".pickstack-modal-use-folder[hidden]{display:none;}" +
             ".pickstack-modal-close{border:0;background:transparent;font-size:1.5rem;line-height:1;padding:0 .25rem;}" +
             ".pickstack-modal-body{flex:1;min-height:0;}" +
             ".pickstack-preview img{display:block;max-height:140px;margin-top:.5rem;border:1px solid #dee2e6;border-radius:.25rem;}";

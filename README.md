@@ -102,7 +102,7 @@ Each `Add` method accepts a fluent options object for that product. These settin
 <pickstack-editor asp-for="Body" file-root="42/7" add-plugins="contentzone" toolbar="undo redo | contentzone" />
 ```
 
-`file-root` is a relative folder under the upload directory. `42/7` is a tenant and user; a single segment works the same way. `file-type="Folder"` shows directories. A `<pickstack-editor>` `height`, `plugins`, `add-plugins`, or `toolbar` attribute applies to that field only. The file picker stays connected to Pickstack.
+`file-root` is a relative folder under the upload directory. `42/7` is a tenant and user; a single segment works the same way. `file-type="Folder"` shows directories. Clicking a folder opens it, and Use this folder writes the open folder's path into the field. A `<pickstack-editor>` `height`, `plugins`, `add-plugins`, or `toolbar` attribute applies to that field only. The file picker stays connected to Pickstack.
 
 Same-origin file URLs are stored as root-relative paths, such as `/media/42/7/photo.png`. TinyMCE keeps that form by removing the script host.
 

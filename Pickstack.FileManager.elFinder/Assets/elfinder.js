@@ -4,6 +4,7 @@
     var configElement = document.getElementById("pickstack-file-provider");
     var config = configElement ? JSON.parse(configElement.textContent || "{}") : {};
     var commands = null;
+    var finder = null;
 
     if (!window.Pickstack || !window.elFinder || !window.jQuery) {
         console.error("Pickstack elFinder requires jQuery, jQuery UI, and elFinder.");
@@ -43,6 +44,12 @@
                 elfOptions.onlyMimes = ["directory"];
             }
 
+            if (options.type === "folder") {
+                elfOptions.commandsOptions = {
+                    getfile: { folders: true }
+                };
+            }
+
             if (options.select) {
                 elfOptions.getFileCallback = function (file) {
                     window.Pickstack.files.notify({
@@ -53,7 +60,23 @@
                 };
             }
 
-            window.jQuery(host).elfinder(elfOptions).elfinder("instance");
+            finder = window.jQuery(host).elfinder(elfOptions).elfinder("instance");
+        },
+        currentFolder: function () {
+            if (!finder) {
+                return "";
+            }
+
+            var cwd = finder.cwd();
+            if (!cwd) {
+                return "";
+            }
+
+            if (cwd.url) {
+                return cwd.url;
+            }
+
+            return typeof finder.url === "function" ? finder.url(cwd.hash) || "" : "";
         }
     });
 
