@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\webfilez.js" LogicalName="webfilez.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />
+    <ProjectReference Include="..\Pickstack\Pickstack.csproj" />
+    <!-- Project references until WebFilez is published. Replace these with PackageReference. -->
+    <ProjectReference Include="..\..\..\Components\WebFilez\WebFilez.AspNetCore\WebFilez.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\Components\WebFilez\WebFilez.Components\WebFilez.Components.csproj" />
+  </ItemGroup>
+
+</Project>

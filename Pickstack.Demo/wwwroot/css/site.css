@@ -39,9 +39,38 @@ body {
   margin-bottom: 0.35rem;
 }
 
-.pickstack-files {
-  height: 70vh;
+.pickstack-files-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 10.1rem);
   min-height: 560px;
+}
+
+.pickstack-files-page .pickstack-files,
+.pickstack-modal .pickstack-modal-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.pickstack-files {
+  height: auto;
+  min-height: 0;
+}
+
+.pickstack-modal .pickstack-modal-dialog {
+  height: calc(100vh - 2rem);
+  max-height: calc(100vh - 2rem);
+}
+
+.pickstack-files > iframe,
+.pickstack-modal-body > iframe {
+  flex: 1 1 0;
+  width: 100%;
+  height: 100% !important;
+  min-height: 0 !important;
+  border: 0;
 }
 
 .pickstack-preview img,

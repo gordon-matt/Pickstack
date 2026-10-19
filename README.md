@@ -1,6 +1,6 @@
 <img src="https://github.com/gordon-matt/Pickstack/blob/master/_Misc/Logo.png" alt="Logo" width="300" />
 
-Pickstack is a set of replaceable ASP.NET Core components. An app picks a file manager and a rich text editor, and can later swap either one by changing a package reference and a registration. File fields and editors keep working because they talk to Pickstack, not to elFinder, Responsive File Manager, TinyMCE, or CKEditor.
+Pickstack is a set of replaceable ASP.NET Core components. An app picks a file manager and a rich text editor, and can later swap either one by changing a package reference and a registration. File fields and editors keep working because they talk to Pickstack, not to elFinder, Responsive File Manager, WebFilez, TinyMCE, or CKEditor.
 
 ## How a swap stays invisible
 
@@ -28,6 +28,7 @@ Pickstack.Abstractions                        shared client assets and component
 Pickstack.FileManager                         contract, storage, tag helpers
   Pickstack.FileManager.elFinder              elFinder.NetCore
   Pickstack.FileManager.ResponsiveFileManager Responsive File Manager
+  Pickstack.FileManager.WebFilez              WebFilez, referenced as projects until the package is published
 Pickstack.RichTextEditor                      contract and tag helper
   Pickstack.RichTextEditor.TinyMce            shared TinyMCE adapter
     Pickstack.RichTextEditor.TinyMce5         TinyMCE 5.10.9 and a local copy
@@ -39,7 +40,7 @@ Pickstack.RichTextEditor                      contract and tag helper
 Pickstack                                     composition, shared browser runtime
 ```
 
-An editor package does not reference an elFinder or Responsive File Manager package. It only uses `Pickstack.files`.
+An editor package does not reference an elFinder, Responsive File Manager, or WebFilez package. It only uses `Pickstack.files`.
 
 ## Demo
 
@@ -52,7 +53,7 @@ The demo references every adapter so you can switch without changing project ref
 }
 ```
 
-`FileManager` is `elFinder` or `ResponsiveFileManager`. `RichTextEditor` is `TinyMCE5`, `TinyMCE6`, `TinyMCE7`, `Froala5`, or `CKEditor`. `TinyMCE` still selects TinyMCE 7, and `Froala` selects Froala 5. Restart the app after changing them.
+`FileManager` is `elFinder`, `ResponsiveFileManager`, or `WebFilez`. `RichTextEditor` is `TinyMCE5`, `TinyMCE6`, `TinyMCE7`, `Froala5`, or `CKEditor`. `TinyMCE` still selects TinyMCE 7, and `Froala` selects Froala 5. Restart the app after changing them.
 
 Each version package loads that editor from the CDN, then falls back to the copy shipped in the package. TinyMCE serves `/_content/Pickstack.RichTextEditor.TinyMce7/tinymce.min.js` (and the same path for versions 5 and 6), including skins and plugins. Froala 5 serves `/_content/Pickstack.RichTextEditor.Froala5/froala_editor.pkgd.min.js` and its stylesheet. The editor still starts when the CDN is unreachable.
 
@@ -92,7 +93,9 @@ Add the tag helpers in `_ViewImports.cshtml`:
 
 elFinder's browser needs jQuery on the page before the picker scripts. The demo loads it in the layout head. The CKEditor browse window loads its own copy.
 
-To swap elFinder for Responsive File Manager, change the package reference and `.AddElFinder()` to `.AddResponsiveFileManager()`. Leave the views alone.
+WebFilez runs in a frame, so the host page does not load Blazor. `AddWebFilez()` registers the Blazor Server circuit, and `UsePickstack()` maps that circuit and the WebFilez API. The web app must set `<RequiresAspNetWebAssets>true</RequiresAspNetWebAssets>`. .NET 10 otherwise omits `blazor.server.js`. The adapter references the WebFilez projects. When the packages are published, replace those project references with package references.
+
+To swap elFinder for another manager, change the package reference and `.AddElFinder()` to `.AddResponsiveFileManager()` or `.AddWebFilez()`. Leave the views alone.
 
 ## Configure an adapter
 
@@ -148,6 +151,14 @@ Responsive File Manager's dialog options are fluent too. `Server` configures the
 ```
 
 Call `.UseHostSession()` when the host already calls `UseSession()`, as Mantle does. Pickstack then leaves that session in place.
+
+WebFilez uses the same upload folder. `file-root` opens a folder inside it. Image fields ask for `image/*`. Folder fields show directories, and Use this folder writes the open folder. `.Server` configures WebFilez itself, including the upload limit. `.UseHostBlazor()` and `.UseHostApi()` leave an existing Blazor circuit or `MapWebFilezApi()` call in place.
+
+```csharp
+.AddWebFilez(files => files
+    .WithTheme("auto")
+    .Server(server => server.MaxUploadBytes = 32 * 1024 * 1024));
+```
 
 
 ## Add another implementation

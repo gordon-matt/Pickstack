@@ -1,0 +1,92 @@
+@model WebFilezBrowserModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="@Url.Content("~/")" />
+    <title>Files</title>
+    <link rel="stylesheet" href="~/_content/WebFilez.Components/webfilez.css" />
+    <style>
+        html, body { height: 100%; margin: 0; }
+        body { display: flex; flex-direction: column; }
+        .wf-root { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+        .wf-shell { flex: 1 1 auto; height: auto !important; min-height: 0; }
+    </style>
+</head>
+<body>
+    <component type="typeof(WebFilez.Components.FileManager)" render-mode="Server"
+               param-Root="@Model.RootId"
+               param-Path="@Model.Path"
+               param-Theme="@Model.Theme"
+               param-Language="@Model.Language"
+               param-Height="@("100%")"
+               param-SelectionMode="@Model.SelectionMode"
+               param-Kind="@Model.Kind"
+               param-Accept="@Model.Accept"
+               param-SelectLabel="@Model.SelectLabel"
+               param-ShowTree="@Model.ShowTree" />
+    <script src="~/_framework/blazor.server.js"></script>
+    <script>
+        (function () {
+            var lastUrl = null;
+
+            function publish(url) {
+                url = url || "";
+                if (url === lastUrl) {
+                    return;
+                }
+
+                lastUrl = url;
+                parent.postMessage({
+                    source: "pickstack-webfilez",
+                    type: "navigated",
+                    url: url
+                }, location.origin);
+            }
+
+            function readFolder() {
+                var root = document.querySelector("[data-wf-public-url]");
+                if (!root) {
+                    return;
+                }
+
+                publish(root.getAttribute("data-wf-public-url") || "");
+            }
+
+            document.addEventListener("wf-navigated", function (event) {
+                var detail = event.detail || {};
+                publish(detail.publicUrl || "");
+            });
+
+            document.addEventListener("wf-selected", function (event) {
+                var files = event.detail && event.detail.files;
+                var file = files && files[0];
+                if (!file) {
+                    return;
+                }
+
+                parent.postMessage({
+                    source: "pickstack-webfilez",
+                    type: "selected",
+                    file: {
+                        url: file.publicUrl || file.url || "",
+                        name: file.name || "",
+                        mime: file.mimeType || ""
+                    }
+                }, location.origin);
+            });
+
+            new MutationObserver(readFolder).observe(document.documentElement, {
+                subtree: true,
+                childList: true,
+                attributes: true,
+                attributeFilter: ["data-wf-public-url"]
+            });
+        })();
+    </script>
+</body>
+</html>

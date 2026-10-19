@@ -1,6 +1,7 @@
 using Pickstack;
 using Pickstack.FileManager.elFinder;
 using Pickstack.FileManager.ResponsiveFileManager;
+using Pickstack.FileManager.WebFilez;
 using Pickstack.RichTextEditor.CkEditor;
 using Pickstack.RichTextEditor.Froala;
 using Pickstack.RichTextEditor.Froala5;
@@ -21,10 +22,11 @@ pickstack = stack["FileManager"] switch
     ResponsiveFileManagerAdapter.Key => pickstack.AddResponsiveFileManager(fileManager => fileManager
         .WithLanguage("en_EN")
         .Server(server => server.MaxSizeUpload = 16)),
+    WebFilezFileManager.Key => pickstack.AddWebFilez(fileManager => fileManager.WithTheme("light")), // defaults to "auto" and "en" if not set
     null or "" or ElFinderFileManager.Key => pickstack.AddElFinder(fileManager => fileManager
         .DisableCommands("extract", "archive")),
     var name => throw new InvalidOperationException(
-        $"Unknown Pickstack file manager '{name}'. Use '{ElFinderFileManager.Key}' or '{ResponsiveFileManagerAdapter.Key}'.")
+        $"Unknown Pickstack file manager '{name}'. Use '{ElFinderFileManager.Key}', '{ResponsiveFileManagerAdapter.Key}', or '{WebFilezFileManager.Key}'.")
 };
 
 Action<TinyMceOptions> tinymce = editor => editor
