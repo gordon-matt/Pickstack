@@ -152,7 +152,7 @@ Responsive File Manager's dialog options are fluent too. `Server` configures the
 
 Call `.UseHostSession()` when the host already calls `UseSession()`, as Mantle does. Pickstack then leaves that session in place.
 
-WebFilez uses the same upload folder. `file-root` opens a folder inside it. Image fields ask for `image/*`. Folder fields show directories, and Use this folder writes the open folder. `.Server` configures WebFilez itself, including the upload limit. `.UseHostBlazor()` and `.UseHostApi()` leave an existing Blazor circuit or `MapWebFilezApi()` call in place.
+WebFilez uses the same upload folder. `file-root` is the top of that browser: the user cannot navigate above it. Image fields ask for `image/*`. Folder fields show directories, and Use this folder writes the open folder. `.Server` configures WebFilez itself, including the upload limit. `.UseHostBlazor()` and `.UseHostApi()` leave an existing Blazor circuit or `MapWebFilezApi()` call in place.
 
 ```csharp
 .AddWebFilez(files => files
