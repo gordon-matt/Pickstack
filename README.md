@@ -160,6 +160,57 @@ WebFilez uses the same upload folder. `file-root` is the top of that browser: th
     .Server(server => server.MaxUploadBytes = 32 * 1024 * 1024));
 ```
 
+That root is always the shared Pickstack folder. `AddPickstack` binds `Pickstack:Storage` to `IFileStorage`, and the WebFilez adapter publishes it as the `media` root on the filesystem provider. `file-root` (such as a tenant folder) is created on that disk before the browser opens. Swapping to elFinder or Responsive File Manager still sees those files.
+
+```json
+"Pickstack": {
+  "Storage": {
+    "RequestPath": "/Media/Uploads/",
+    "WebRootFolder": "Media/Uploads",
+    "ThumbnailRequestPath": "/Media/Thumbs/",
+    "ThumbnailWebRootFolder": "Media/Thumbs"
+  }
+}
+```
+
+`WebRootFolder` is a directory under the web root. Keep the thumbnail folder outside it.
+
+WebFilez can also show a root stored somewhere else. Register the provider package, then add the root inside `Server`. `FileRoot` is `WebFilez.Services.FileRoot`. The adapter does not read a `WebFilez` configuration section, so this callback is where the root is declared. Azure Blob:
+
+```csharp
+builder.Services.AddWebFilezAzureBlob();
+
+builder.Services.AddPickstack(builder.Configuration).AddWebFilez(files => files.Server(server =>
+{
+    server.MaxUploadBytes = 32 * 1024 * 1024;
+    server.Roots.Add(new FileRoot
+    {
+        Id = "assets",
+        Name = "Assets",
+        Provider = "azure-blob",
+        Path = "uploads",
+        PublicBaseUrl = "https://cdn.example.com",
+        Settings = new Dictionary<string, string>
+        {
+            ["ConnectionString"] = builder.Configuration["Azure:Storage"]!,
+            ["Container"] = "media"
+        }
+    });
+}));
+```
+
+`assets` appears beside `media`. The same shape works for the other provider packages:
+
+| Package | Registration | `Provider` | `Settings` |
+| --- | --- | --- | --- |
+| `WebFilez.Storage.AzureBlob` | `AddWebFilezAzureBlob()` | `azure-blob` | `ConnectionString`, `Container` |
+| `WebFilez.Storage.AmazonS3` | `AddWebFilezAmazonS3()` | `amazon-s3` | `AccessKey`, `SecretKey`, `Bucket` |
+| `WebFilez.Storage.GoogleCloud` | `AddWebFilezGoogleCloud()` | `google-cloud` | `Bucket` |
+| `WebFilez.Storage.AzureFiles` | `AddWebFilezAzureFiles()` | `azure-file` | `ConnectionString`, `Share` |
+
+`Path` is a prefix inside that store. `PublicBaseUrl` is the address written into content, such as a CDN host.
+
+This does not replace `media`. The picker, `file-root`, and the standalone browser still open the local folder. Registering a different `IFileStorage` before `AddPickstack` only changes which directory that is. The contract is a physical path, so it cannot point the shared root at a blob container or a bucket.
 
 ## Add another implementation
 
