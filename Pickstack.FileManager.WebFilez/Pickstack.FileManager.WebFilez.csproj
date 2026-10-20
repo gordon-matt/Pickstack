@@ -21,6 +21,9 @@
     <!-- Project references until WebFilez is published. Replace these with PackageReference. -->
     <ProjectReference Include="..\..\..\Components\WebFilez\WebFilez.AspNetCore\WebFilez.AspNetCore.csproj" />
     <ProjectReference Include="..\..\..\Components\WebFilez\WebFilez.Components\WebFilez.Components.csproj" />
+    <ProjectReference Include="..\..\..\Components\WebFilez\WebFilez.Plugins.FileRobot\WebFilez.Plugins.FileRobot.csproj" />
+    <ProjectReference Include="..\..\..\Components\WebFilez\WebFilez.Plugins.FortuneSheet\WebFilez.Plugins.FortuneSheet.csproj" />
+    <ProjectReference Include="..\..\..\Components\WebFilez\WebFilez.Plugins.SuperDoc\WebFilez.Plugins.SuperDoc.csproj" />
   </ItemGroup>
 
 </Project>

@@ -57,10 +57,34 @@ public static class ClientAssets
         ArgumentNullException.ThrowIfNull(configuration);
         ArgumentException.ThrowIfNullOrEmpty(scriptUrl);
 
-        builder.Append("<script type=\"application/json\" id=\"").Append(Encode(elementId)).Append("\">");
-        builder.Append(configuration);
-        builder.Append("</script>");
-        AppendScript(builder, scriptUrl);
+        Append(builder, [
+            ClientInclude.Json(elementId, configuration),
+            ClientInclude.Script(scriptUrl)
+        ]);
+    }
+
+    public static void Append(StringBuilder builder, IEnumerable<ClientInclude> includes)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(includes);
+
+        foreach (var include in includes)
+        {
+            switch (include.Kind)
+            {
+                case "style":
+                    builder.Append("<link rel=\"stylesheet\" href=\"").Append(Encode(include.Url ?? "")).Append("\" />");
+                    break;
+                case "script":
+                    AppendScript(builder, include.Url ?? "");
+                    break;
+                case "json":
+                    builder.Append("<script type=\"application/json\" id=\"").Append(Encode(include.Id ?? "")).Append("\">");
+                    builder.Append(include.Content);
+                    builder.Append("</script>");
+                    break;
+            }
+        }
     }
 
     private static void AppendScript(StringBuilder builder, string url) =>

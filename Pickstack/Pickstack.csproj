@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Assets\pickstack.js" LogicalName="pickstack.js" />
+    <EmbeddedResource Include="Assets\load.js" LogicalName="load.js" />
   </ItemGroup>
 
   <ItemGroup>

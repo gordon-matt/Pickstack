@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Pickstack.FileManager;
 
 namespace Pickstack.FileManager.WebFilez;
 
@@ -22,20 +23,30 @@ public sealed class WebFilezBrowserModel
     public required string SelectLabel { get; init; }
 
     public bool ShowTree { get; init; }
+
+    /// <summary>
+    /// Editor map for this instance. Empty leaves the rich text picker without FileRobot, SuperDoc, or Fortune Sheet.
+    /// </summary>
+    public string? Editors { get; init; }
 }
 
 [Route(WebFilezRoutes.Prefix)]
 public sealed class WebFilezBrowserController : Controller
 {
-    private readonly WebFilezFileManagerOptions _options;
+    public const string StandaloneEditors =
+        "filerobot:.jpg,.jpeg,.png,.webp,.gif,.bmp,.avif|superdoc:.docx|fortunesheet:.xlsx,.csv";
 
-    public WebFilezBrowserController(IOptions<WebFilezFileManagerOptions> options)
+    private readonly WebFilezFileManagerOptions _options;
+    private readonly IFileStorage _storage;
+
+    public WebFilezBrowserController(IOptions<WebFilezFileManagerOptions> options, IFileStorage storage)
     {
         _options = options.Value;
+        _storage = storage;
     }
 
     [HttpGet]
-    public IActionResult Index(string? type, bool select, string? root)
+    public IActionResult Index(string? type, bool select, string? root, bool editors)
     {
         string? path = null;
         if (!string.IsNullOrWhiteSpace(root))
@@ -48,6 +59,8 @@ public sealed class WebFilezBrowserController : Controller
             {
                 return BadRequest();
             }
+
+            _storage.EnsureRoot(path);
         }
 
         string normalized = string.IsNullOrWhiteSpace(type) ? "any" : type.ToLowerInvariant();
@@ -63,7 +76,8 @@ public sealed class WebFilezBrowserController : Controller
             Kind = KindFor(normalized),
             Accept = normalized == "image" ? "image/*" : null,
             SelectLabel = _options.SelectLabel,
-            ShowTree = _options.ShowTree
+            ShowTree = _options.ShowTree,
+            Editors = editors ? StandaloneEditors : null
         });
     }
 

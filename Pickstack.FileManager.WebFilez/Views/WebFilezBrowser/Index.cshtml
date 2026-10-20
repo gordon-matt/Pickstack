@@ -29,8 +29,15 @@
                param-Kind="@Model.Kind"
                param-Accept="@Model.Accept"
                param-SelectLabel="@Model.SelectLabel"
-               param-ShowTree="@Model.ShowTree" />
+               param-ShowTree="@Model.ShowTree"
+               param-Editors="@Model.Editors" />
     <script src="~/_framework/blazor.server.js"></script>
+    @if (!string.IsNullOrEmpty(Model.Editors))
+    {
+        <script type="module" src="~/_content/WebFilez.Plugins.FileRobot/filerobot.js"></script>
+        <script type="module" src="~/_content/WebFilez.Plugins.SuperDoc/superdoc.js"></script>
+        <script type="module" src="~/_content/WebFilez.Plugins.FortuneSheet/fortunesheet.js"></script>
+    }
     <script>
         (function () {
             var lastUrl = null;
