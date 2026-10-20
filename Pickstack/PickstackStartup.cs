@@ -9,7 +9,8 @@ public sealed class PickstackRuntimeAssets : IPickstackAssetSource
 {
     public IEnumerable<PickstackAsset> GetAssets() => [
         PickstackAssets.Script(typeof(PickstackRuntimeAssets).Assembly, "pickstack.js", "pickstack.js"),
-        PickstackAssets.Script(typeof(PickstackRuntimeAssets).Assembly, "load.js", "load.js")
+        PickstackAssets.Script(typeof(PickstackRuntimeAssets).Assembly, "load.js", "load.js"),
+        PickstackAssets.Script(typeof(PickstackRuntimeAssets).Assembly, "editor.js", "editor.js")
     ];
 }
 

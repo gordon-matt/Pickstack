@@ -1,23 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>1.0.1</Version>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Assets\pickstack.js" LogicalName="pickstack.js" />
-    <EmbeddedResource Include="Assets\load.js" LogicalName="load.js" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Assets\pickstack.js" LogicalName="pickstack.js" />
+		<EmbeddedResource Include="Assets\load.js" LogicalName="load.js" />
+		<EmbeddedResource Include="Assets\editor.js" LogicalName="editor.js" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />
-    <ProjectReference Include="..\Pickstack.RichTextEditor\Pickstack.RichTextEditor.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />
+		<ProjectReference Include="..\Pickstack.RichTextEditor\Pickstack.RichTextEditor.csproj" />
+	</ItemGroup>
 
 </Project>

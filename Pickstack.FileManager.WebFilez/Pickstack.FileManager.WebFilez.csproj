@@ -1,31 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+		<Version>1.0.1</Version>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Assets\webfilez.js" LogicalName="webfilez.js" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Assets\webfilez.js" LogicalName="webfilez.js" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="WebFilez.AspNetCore" Version="1.0.0" />
-    <PackageReference Include="WebFilez.Components" Version="1.0.0" />
-    <PackageReference Include="WebFilez.Plugins.FileRobot" Version="1.0.0" />
-    <PackageReference Include="WebFilez.Plugins.FortuneSheet" Version="1.0.0" />
-    <PackageReference Include="WebFilez.Plugins.SuperDoc" Version="1.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="WebFilez.AspNetCore" Version="1.0.0" />
+		<PackageReference Include="WebFilez.Components" Version="1.0.0" />
+		<PackageReference Include="WebFilez.Plugins.FileRobot" Version="1.0.0" />
+		<PackageReference Include="WebFilez.Plugins.FortuneSheet" Version="1.0.0" />
+		<PackageReference Include="WebFilez.Plugins.SuperDoc" Version="1.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />
-    <ProjectReference Include="..\Pickstack\Pickstack.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />
+		<ProjectReference Include="..\Pickstack\Pickstack.csproj" />
+	</ItemGroup>
 
 </Project>

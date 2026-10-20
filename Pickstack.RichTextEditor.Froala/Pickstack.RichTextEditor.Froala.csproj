@@ -1,22 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>1.0.1</Version>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Assets\froala.js" LogicalName="froala.js" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Assets\froala.js" LogicalName="froala.js" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Pickstack.RichTextEditor\Pickstack.RichTextEditor.csproj" />
-    <ProjectReference Include="..\Pickstack\Pickstack.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Pickstack.RichTextEditor\Pickstack.RichTextEditor.csproj" />
+		<ProjectReference Include="..\Pickstack\Pickstack.csproj" />
+	</ItemGroup>
 
 </Project>

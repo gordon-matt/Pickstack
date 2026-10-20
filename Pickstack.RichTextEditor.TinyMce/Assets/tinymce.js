@@ -23,15 +23,29 @@
                     return;
                 }
 
+                options = options || {};
                 var init = Object.assign({}, config.init || {});
+                if (options.init) {
+                    Object.keys(options.init).forEach(function (key) {
+                        if (key === "file_picker_callback" || key === "target" || key === "selector" || key === "base_url") {
+                            return;
+                        }
+
+                        init[key] = key === "plugins" ? flattenPlugins(options.init[key]) : options.init[key];
+                    });
+                }
+
+                applyInstance(init, options);
+                if (init.toolbar1 || init.toolbar2 || init.toolbar3) {
+                    delete init.toolbar;
+                }
+
                 init.target = element;
                 init.base_url = baseUrl;
-                applyInstance(init, options);
-
                 init.file_picker_callback = function (callback, value, meta) {
                     window.Pickstack.files.open({
                         type: meta && meta.filetype ? meta.filetype : "file",
-                        root: options && options.fileRoot,
+                        root: options.fileRoot || "",
                         callback: function (file) {
                             callback(file.url, { alt: file.name || "" });
                         }
@@ -82,6 +96,25 @@
         if (options.toolbar) {
             init.toolbar = options.toolbar;
         }
+
+        if (typeof options.setup === "function") {
+            var previous = init.setup;
+            init.setup = function (editor) {
+                if (typeof previous === "function") {
+                    previous(editor);
+                }
+
+                options.setup(editor);
+            };
+        }
+    }
+
+    function flattenPlugins(plugins) {
+        if (Array.isArray(plugins)) {
+            return joinPlugins(plugins.join(" "), "", " ");
+        }
+
+        return plugins;
     }
 
     function joinPlugins(current, extra, separator) {
