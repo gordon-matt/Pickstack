@@ -11,6 +11,10 @@ namespace Pickstack;
 public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
 {
     private string _initialValue = string.Empty;
+    private string? _pendingValue;
+    private int _pendingVersion;
+    private int _sentVersion;
+    private bool _sending;
     private ElementReference _element;
     private bool _hasElement;
     private bool _mounted;
@@ -73,6 +77,7 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
         _module = await Js.InvokeAsync<IJSObjectReference>("import", "/pickstack/assets/editor.js");
         await _module.InvokeVoidAsync("mount", _element, Options(), _reference);
         _mounted = true;
+        await SendPendingAsync();
     }
 
     protected override async Task OnParametersSetAsync()
@@ -83,9 +88,69 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
             return;
         }
 
-        if (_mounted && _module is not null && _hasElement)
+        string value = Value ?? string.Empty;
+
+        // The first render writes the textarea the editor reads as it starts. Until that element
+        // exists, keep the starting value current. Afterwards a change has to be sent explicitly,
+        // and one that arrives while the script is loading is held until mount returns.
+        if (!_hasElement)
         {
-            await _module.InvokeVoidAsync("setContent", _element, Value ?? string.Empty);
+            _initialValue = value;
+            return;
+        }
+
+        if (!_mounted || _module is null)
+        {
+            if (!string.Equals(value, _initialValue, StringComparison.Ordinal))
+            {
+                Hold(value);
+            }
+
+            return;
+        }
+
+        Hold(value);
+        await SendPendingAsync();
+    }
+
+    private void Hold(string value)
+    {
+        if (_pendingVersion > 0 && string.Equals(value, _pendingValue, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _pendingValue = value;
+        _pendingVersion++;
+    }
+
+    /// <summary>
+    /// One send at a time. A value that arrives while a send is in flight waits for it, so an older
+    /// value cannot land after a newer one.
+    /// </summary>
+    private async Task SendPendingAsync()
+    {
+        if (_sending || _module is null)
+        {
+            return;
+        }
+
+        _sending = true;
+        try
+        {
+            while (_module is not null && _sentVersion != _pendingVersion && _pendingValue is string pending)
+            {
+                int version = _pendingVersion;
+                await _module.InvokeVoidAsync("setContent", _element, pending);
+                if (version == _pendingVersion)
+                {
+                    _sentVersion = version;
+                }
+            }
+        }
+        finally
+        {
+            _sending = false;
         }
     }
 

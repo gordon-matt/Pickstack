@@ -9,6 +9,8 @@
     var editorProvider = null;
     var listeners = [];
     var activeSubscription = null;
+    var activeRequest = null;
+    var modalGeneration = 0;
 
     var Pickstack = window.Pickstack = window.Pickstack || {};
 
@@ -18,6 +20,15 @@
         },
         open: function (options) {
             options = options || {};
+
+            // A dialog that is still open was dismissed without a choice. Tell its caller before
+            // this request takes over, and stop if that caller opened another dialog of its own.
+            notifyClosed();
+            if (activeRequest) {
+                return;
+            }
+
+            modalGeneration += 1;
             var modal = ensureModal();
             var body = modal.querySelector("[data-pickstack-modal-body]");
             var title = modal.querySelector("[data-pickstack-modal-title]");
@@ -30,30 +41,40 @@
             body.innerHTML = "";
             modal.hidden = false;
 
-            if (activeSubscription) {
-                activeSubscription();
-                activeSubscription = null;
-            }
+            activeRequest = {
+                chosen: false,
+                onClose: typeof options.onClose === "function" ? options.onClose : null
+            };
 
             activeSubscription = subscribe(function (file) {
-                if (options.fieldId) {
-                    var field = document.getElementById(options.fieldId);
-                    if (field) {
-                        field.value = file.url || "";
-                        field.dispatchEvent(new Event("input", { bubbles: true }));
-                        field.dispatchEvent(new Event("change", { bubbles: true }));
-                        var root = field.closest("[data-pickstack-file-input]");
-                        if (root) {
-                            renderPreview(root, file.url || "");
+                var request = activeRequest;
+                if (request) {
+                    request.chosen = true;
+                }
+
+                try {
+                    if (options.fieldId) {
+                        var field = document.getElementById(options.fieldId);
+                        if (field) {
+                            field.value = file.url || "";
+                            field.dispatchEvent(new Event("input", { bubbles: true }));
+                            field.dispatchEvent(new Event("change", { bubbles: true }));
+                            var root = field.closest("[data-pickstack-file-input]");
+                            if (root) {
+                                renderPreview(root, file.url || "");
+                            }
                         }
                     }
-                }
 
-                if (typeof options.callback === "function") {
-                    options.callback(file);
+                    if (typeof options.callback === "function") {
+                        options.callback(file);
+                    }
+                } finally {
+                    // Leave a dialog the callback opened itself. This request was already released.
+                    if (activeRequest === request) {
+                        closeModal();
+                    }
                 }
-
-                closeModal();
             });
 
             mount(body, {
@@ -201,13 +222,34 @@
         return modal;
     }
 
-    function closeModal() {
+    function releaseRequest() {
+        var request = activeRequest;
+        activeRequest = null;
         if (activeSubscription) {
             activeSubscription();
             activeSubscription = null;
         }
 
+        return request;
+    }
+
+    function notifyClosed() {
+        var request = releaseRequest();
+        if (request && !request.chosen && request.onClose) {
+            request.onClose();
+        }
+    }
+
+    function closeModal() {
+        var generation = modalGeneration += 1;
+        notifyClosed();
+
+        // Hide after the click that closed it. A newer open bumps the generation and is left showing.
         window.setTimeout(function () {
+            if (generation !== modalGeneration) {
+                return;
+            }
+
             var modal = document.getElementById("pickstack-modal");
             if (!modal) {
                 return;

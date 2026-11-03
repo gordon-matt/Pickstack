@@ -24,6 +24,11 @@ export function mount(element, options, dotnet) {
                     editor.on("change keyup", function () {
                         dotnet.invokeMethodAsync("UpdateValue", editor.getContent());
                     });
+
+                    // init returns before the editor can take content. Apply anything set in that gap.
+                    editor.on("init", function () {
+                        applyPending(element, editor);
+                    });
                 }
             });
 
@@ -50,14 +55,35 @@ export function mount(element, options, dotnet) {
 }
 
 export function setContent(element, value) {
-    var editor = element && element._pickstackEditor;
-    if (!editor) {
+    if (!element) {
         return;
     }
 
     var next = value || "";
+    var editor = element._pickstackEditor;
+
+    // TinyMCE reports initialized === false until its init event. setContent before that is lost,
+    // so hold the value and let the init handler apply it.
+    if (!editor || editor.initialized === false) {
+        element._pickstackPending = next;
+        return;
+    }
+
+    element._pickstackPending = null;
     if (editor.getContent() !== next) {
         editor.setContent(next);
+    }
+}
+
+function applyPending(element, editor) {
+    if (element._pickstackPending == null) {
+        return;
+    }
+
+    var pending = element._pickstackPending;
+    element._pickstackPending = null;
+    if (editor.getContent() !== pending) {
+        editor.setContent(pending);
     }
 }
 

@@ -16,8 +16,14 @@ Those tag helpers ask dependency injection for `IFileManager` and `IRichTextEdit
 Every file manager provider implements the same browser function:
 
 ```javascript
-Pickstack.files.open({ type: "image", callback: function (file) { /* file.url */ } });
+Pickstack.files.open({
+    type: "image",
+    callback: function (file) { /* file.url */ },
+    onClose: function () { /* dismissed without a choice */ }
+});
 ```
+
+`callback` runs when a file is chosen. `onClose` runs when the dialog is dismissed without one: the close button, Escape, a click outside it, or another `open` replacing it. A choice does not also call `onClose`.
 
 The cover-image button calls that. TinyMCE's file picker calls that. CKEditor opens a Pickstack browse page that mounts the same manager. Replacing the manager replaces the function, so every picker on the site follows.
 
