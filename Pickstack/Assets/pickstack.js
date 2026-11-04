@@ -273,12 +273,15 @@
         style.textContent =
             ".pickstack-modal{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:1rem;}" +
             ".pickstack-modal[hidden]{display:none !important;}" +
-            ".pickstack-modal-dialog{background:#fff;width:min(1100px,96vw);height:min(760px,92vh);display:flex;flex-direction:column;border-radius:8px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.2);}" +
-            ".pickstack-modal-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 1rem;border-bottom:1px solid #dee2e6;}" +
+            ".pickstack-modal-dialog{background:#fff;color:#1f2328;width:min(1100px,96vw);height:min(760px,92vh);display:flex;flex-direction:column;border-radius:8px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.2);}" +
+            ".pickstack-modal-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 1rem;border-bottom:1px solid #dee2e6;color:#1f2328;}" +
             ".pickstack-modal-actions{display:flex;align-items:center;gap:.75rem;}" +
             ".pickstack-modal-use-folder{border:1px solid #0d6efd;background:#0d6efd;color:#fff;border-radius:4px;padding:.25rem .65rem;font-size:.875rem;cursor:pointer;}" +
             ".pickstack-modal-use-folder[hidden]{display:none;}" +
-            ".pickstack-modal-close{border:0;background:transparent;font-size:1.5rem;line-height:1;padding:0 .25rem;}" +
+            ".pickstack-modal-close{border:0;background:transparent;color:#1f2328;font-size:1.5rem;line-height:1;padding:0 .25rem;cursor:pointer;}" +
+            "[data-theme='dark'] .pickstack-modal-dialog{background:#1c2128;color:#e6edf3;border:1px solid #30363d;}" +
+            "[data-theme='dark'] .pickstack-modal-header{border-bottom-color:#30363d;color:#e6edf3;}" +
+            "[data-theme='dark'] .pickstack-modal-close{color:#e6edf3;}" +
             ".pickstack-modal-body{flex:1;min-height:0;}" +
             ".pickstack-preview img{display:block;max-height:140px;margin-top:.5rem;border:1px solid #dee2e6;border-radius:.25rem;}";
         document.head.appendChild(style);

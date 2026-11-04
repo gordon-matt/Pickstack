@@ -8,9 +8,8 @@ namespace Pickstack;
 /// Loads the shared Pickstack runtime and the scripts for the registered file manager and rich text editor.
 /// Interactive Blazor does not run script tags emitted by a component, so those hosts inject the same list through the browser.
 /// </summary>
-public sealed class PickstackScripts : ComponentBase, IAsyncDisposable
+public sealed class PickstackScripts : ComponentBase
 {
-    private IJSObjectReference? _module;
     private bool _started;
 
     [Inject]
@@ -43,15 +42,9 @@ public sealed class PickstackScripts : ComponentBase, IAsyncDisposable
             return;
         }
 
-        _module = await Js.InvokeAsync<IJSObjectReference>("import", "/pickstack/assets/load.js");
-        await _module.InvokeVoidAsync("load", includes);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_module is not null)
-        {
-            await _module.DisposeAsync();
-        }
+        // The loader is only needed for this one call, so release it straight away. Holding it until the
+        // component is disposed would mean a JS call while the circuit is being torn down, which always fails.
+        await using var module = await Js.InvokeAsync<IJSObjectReference>("import", "/pickstack/assets/load.js");
+        await module.InvokeVoidAsync("load", includes);
     }
 }

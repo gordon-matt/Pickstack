@@ -22,6 +22,7 @@
 		<ProjectReference Include="..\Pickstack.RichTextEditor.TinyMce5\Pickstack.RichTextEditor.TinyMce5.csproj" />
 		<ProjectReference Include="..\Pickstack.RichTextEditor.TinyMce6\Pickstack.RichTextEditor.TinyMce6.csproj" />
 		<ProjectReference Include="..\Pickstack.RichTextEditor.TinyMce7\Pickstack.RichTextEditor.TinyMce7.csproj" />
+		<ProjectReference Include="..\Pickstack.RichTextEditor.TinyMce8\Pickstack.RichTextEditor.TinyMce8.csproj" />
 		<ProjectReference Include="..\Pickstack.RichTextEditor\Pickstack.RichTextEditor.csproj" />
 		<ProjectReference Include="..\Pickstack\Pickstack.csproj" />
 	</ItemGroup>

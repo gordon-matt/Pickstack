@@ -4,19 +4,24 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Folder Name="/FileManager/">
+    <Project Path="Pickstack.FileManager.elFinder/Pickstack.FileManager.elFinder.csproj" />
+    <Project Path="Pickstack.FileManager.ResponsiveFileManager/Pickstack.FileManager.ResponsiveFileManager.csproj" />
+    <Project Path="Pickstack.FileManager.WebFilez/Pickstack.FileManager.WebFilez.csproj" />
+    <Project Path="Pickstack.FileManager/Pickstack.FileManager.csproj" />
+  </Folder>
+  <Folder Name="/RichTextEditor/">
+    <Project Path="Pickstack.RichTextEditor.CkEditor/Pickstack.RichTextEditor.CkEditor.csproj" />
+    <Project Path="Pickstack.RichTextEditor.Froala/Pickstack.RichTextEditor.Froala.csproj" />
+    <Project Path="Pickstack.RichTextEditor.Froala5/Pickstack.RichTextEditor.Froala5.csproj" />
+    <Project Path="Pickstack.RichTextEditor.TinyMce/Pickstack.RichTextEditor.TinyMce.csproj" />
+    <Project Path="Pickstack.RichTextEditor.TinyMce5/Pickstack.RichTextEditor.TinyMce5.csproj" />
+    <Project Path="Pickstack.RichTextEditor.TinyMce6/Pickstack.RichTextEditor.TinyMce6.csproj" />
+    <Project Path="Pickstack.RichTextEditor.TinyMce7/Pickstack.RichTextEditor.TinyMce7.csproj" />
+    <Project Path="Pickstack.RichTextEditor.TinyMce8/Pickstack.RichTextEditor.TinyMce8.csproj" />
+    <Project Path="Pickstack.RichTextEditor/Pickstack.RichTextEditor.csproj" />
+  </Folder>
   <Project Path="Pickstack.Abstractions/Pickstack.Abstractions.csproj" />
   <Project Path="Pickstack.Demo/Pickstack.Demo.csproj" />
-  <Project Path="Pickstack.FileManager.elFinder/Pickstack.FileManager.elFinder.csproj" />
-  <Project Path="Pickstack.FileManager.ResponsiveFileManager/Pickstack.FileManager.ResponsiveFileManager.csproj" />
-  <Project Path="Pickstack.FileManager.WebFilez/Pickstack.FileManager.WebFilez.csproj" />
-  <Project Path="Pickstack.FileManager/Pickstack.FileManager.csproj" />
-  <Project Path="Pickstack.RichTextEditor.CkEditor/Pickstack.RichTextEditor.CkEditor.csproj" />
-  <Project Path="Pickstack.RichTextEditor.Froala/Pickstack.RichTextEditor.Froala.csproj" />
-  <Project Path="Pickstack.RichTextEditor.Froala5/Pickstack.RichTextEditor.Froala5.csproj" />
-  <Project Path="Pickstack.RichTextEditor.TinyMce/Pickstack.RichTextEditor.TinyMce.csproj" />
-  <Project Path="Pickstack.RichTextEditor.TinyMce5/Pickstack.RichTextEditor.TinyMce5.csproj" />
-  <Project Path="Pickstack.RichTextEditor.TinyMce6/Pickstack.RichTextEditor.TinyMce6.csproj" />
-  <Project Path="Pickstack.RichTextEditor.TinyMce7/Pickstack.RichTextEditor.TinyMce7.csproj" />
-  <Project Path="Pickstack.RichTextEditor/Pickstack.RichTextEditor.csproj" />
   <Project Path="Pickstack/Pickstack.csproj" />
 </Solution>

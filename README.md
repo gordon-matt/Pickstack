@@ -40,6 +40,7 @@ Pickstack.RichTextEditor                      contract and tag helper
     Pickstack.RichTextEditor.TinyMce5         TinyMCE 5.10.9 and a local copy
     Pickstack.RichTextEditor.TinyMce6         TinyMCE 6.8.5 and a local copy
     Pickstack.RichTextEditor.TinyMce7         TinyMCE 7.9.0 and a local copy
+    Pickstack.RichTextEditor.TinyMce8         TinyMCE 8.10.1 and a local copy
   Pickstack.RichTextEditor.Froala             shared Froala adapter
     Pickstack.RichTextEditor.Froala5          Froala 5.5.0 and a local copy
   Pickstack.RichTextEditor.CkEditor           browse page that hosts IFileManager
@@ -55,13 +56,13 @@ The demo references every adapter so you can switch without changing project ref
 ```json
 "Pickstack": {
   "FileManager": "elFinder",
-  "RichTextEditor": "TinyMCE7"
+  "RichTextEditor": "TinyMCE8"
 }
 ```
 
-`FileManager` is `elFinder`, `ResponsiveFileManager`, or `WebFilez`. `RichTextEditor` is `TinyMCE5`, `TinyMCE6`, `TinyMCE7`, `Froala5`, or `CKEditor`. `TinyMCE` still selects TinyMCE 7, and `Froala` selects Froala 5. Restart the app after changing them.
+`FileManager` is `elFinder`, `ResponsiveFileManager`, or `WebFilez`. `RichTextEditor` is `TinyMCE5`, `TinyMCE6`, `TinyMCE7`, `TinyMCE8`, `Froala5`, or `CKEditor`. `TinyMCE` selects TinyMCE 8, and `Froala` selects Froala 5. Restart the app after changing them.
 
-Each version package loads that editor from the CDN, then falls back to the copy shipped in the package. TinyMCE serves `/_content/Pickstack.RichTextEditor.TinyMce7/tinymce.min.js` (and the same path for versions 5 and 6), including skins and plugins. Froala 5 serves `/_content/Pickstack.RichTextEditor.Froala5/froala_editor.pkgd.min.js` and its stylesheet. The editor still starts when the CDN is unreachable.
+Each version package loads that editor from the CDN, then falls back to the copy shipped in the package. TinyMCE serves `/_content/Pickstack.RichTextEditor.TinyMce8/tinymce.min.js` (and the same path for versions 5, 6, and 7), including skins and plugins. Froala 5 serves `/_content/Pickstack.RichTextEditor.Froala5/froala_editor.pkgd.min.js` and its stylesheet. The editor still starts when the CDN is unreachable.
 
 `Pickstack:Storage` is the shared upload folder. `WebRootFolder` can be nested, such as `Media/Uploads`. Keep the thumbnail folder outside the upload folder; Responsive File Manager requires that.
 
@@ -76,7 +77,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddPickstack(builder.Configuration)
     .AddElFinder()
-    .AddTinyMce7();
+    .AddTinyMce8();
 
 var app = builder.Build();
 
@@ -122,7 +123,7 @@ builder.Services.AddPickstack(builder.Configuration)
     .AddElFinder(files => files
         .DisableCommands("extract", "archive")
         .AddToolbarGroup("fullscreen"))
-    .AddTinyMce7(editor => editor
+    .AddTinyMce8(editor => editor
         .AddPlugins("codesample", "charmap")
         .WithToolbar("undo redo | bold italic | codesample charmap | link image")
         .Set("branding", false));

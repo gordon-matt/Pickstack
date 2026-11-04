@@ -46,7 +46,7 @@ public sealed class WebFilezBrowserController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index(string? type, bool select, string? root, bool editors)
+    public IActionResult Index(string? type, bool select, string? root, bool editors, string? theme)
     {
         string? path = null;
         if (!string.IsNullOrWhiteSpace(root))
@@ -68,7 +68,7 @@ public sealed class WebFilezBrowserController : Controller
         {
             RootId = _options.RootId,
             Path = path,
-            Theme = _options.Theme,
+            Theme = ThemeOrDefault(theme),
             Language = _options.Language,
             SelectionMode = select && normalized != "folder"
                 ? global::WebFilez.Constants.SelectionModes.Single
@@ -80,6 +80,9 @@ public sealed class WebFilezBrowserController : Controller
             Editors = editors ? StandaloneEditors : null
         });
     }
+
+    private string ThemeOrDefault(string? theme) =>
+        theme is "light" or "dark" or "auto" or "bootstrap" ? theme : _options.Theme;
 
     private static string? KindFor(string type) => type switch
     {

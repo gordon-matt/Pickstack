@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -17,11 +17,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="WebFilez.AspNetCore" Version="1.0.0" />
-		<PackageReference Include="WebFilez.Components" Version="1.0.0" />
-		<PackageReference Include="WebFilez.Plugins.FileRobot" Version="1.0.0" />
-		<PackageReference Include="WebFilez.Plugins.FortuneSheet" Version="1.0.0" />
-		<PackageReference Include="WebFilez.Plugins.SuperDoc" Version="1.0.0" />
+		<PackageReference Include="WebFilez.AspNetCore" Version="1.0.1" />
+		<PackageReference Include="WebFilez.Components" Version="1.0.1" />
+		<PackageReference Include="WebFilez.Plugins.FileRobot" Version="1.0.1" />
+		<PackageReference Include="WebFilez.Plugins.FortuneSheet" Version="1.0.1" />
+		<PackageReference Include="WebFilez.Plugins.SuperDoc" Version="1.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

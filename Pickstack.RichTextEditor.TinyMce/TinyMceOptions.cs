@@ -2,16 +2,16 @@ namespace Pickstack.RichTextEditor.TinyMce;
 
 /// <summary>
 /// Site-wide TinyMCE settings. Fluent methods return the same instance so they can be chained
-/// from <c>AddTinyMce5</c>, <c>AddTinyMce6</c>, or <c>AddTinyMce7</c>.
+/// from <c>AddTinyMce5</c>, <c>AddTinyMce6</c>, <c>AddTinyMce7</c>, or <c>AddTinyMce8</c>.
 /// A field's <c>height</c> attribute overrides <see cref="Height"/> for that editor.
 /// </summary>
 public sealed class TinyMceOptions
 {
-    /// <summary>Name shown for the registered editor, such as TinyMCE 7.</summary>
+    /// <summary>Name shown for the registered editor, such as TinyMCE 8.</summary>
     public string Name { get; set; } = "TinyMCE";
 
     /// <summary>CDN (or other) URL loaded first.</summary>
-    public string ScriptUrl { get; set; } = "https://cdn.jsdelivr.net/npm/tinymce@7.9.0/tinymce.min.js";
+    public string ScriptUrl { get; set; } = "https://cdn.jsdelivr.net/npm/tinymce@8.10.1/tinymce.min.js";
 
     /// <summary>URL of the copy shipped in the version package. Used when <see cref="ScriptUrl"/> fails to load.</summary>
     public string? FallbackUrl { get; set; }
@@ -22,7 +22,7 @@ public sealed class TinyMceOptions
 
     /// <summary>
     /// When set, <see cref="LicenseKey"/> and <see cref="Promotion"/> are sent to TinyMCE.
-    /// TinyMCE 7 needs this. TinyMCE 5 and 6 do not.
+    /// TinyMCE 7 and 8 need this. TinyMCE 5 and 6 do not.
     /// </summary>
     public bool IncludeLicense { get; set; } = true;
 

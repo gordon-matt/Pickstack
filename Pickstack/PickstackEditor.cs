@@ -173,12 +173,12 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
             try
             {
                 await _module.InvokeVoidAsync("destroy", _element);
+                await _module.DisposeAsync();
             }
             catch (JSDisconnectedException)
             {
+                // The circuit is already gone, so there is nothing left to release.
             }
-
-            await _module.DisposeAsync();
         }
 
         _reference?.Dispose();

@@ -46,6 +46,12 @@
                 params.set("root", options.root);
             }
 
+            // The file manager runs in its own document, so it cannot see the host's theme on its own.
+            var theme = document.documentElement.getAttribute("data-theme");
+            if (theme === "dark" || theme === "light") {
+                params.set("theme", theme);
+            }
+
             frame = document.createElement("iframe");
             frame.title = "File manager";
             frame.src = (config.browserUrl || "/pickstack/webfilez") + "?" + params.toString();
