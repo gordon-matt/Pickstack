@@ -4,7 +4,9 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
+		<Description>Rich text editor contract and tag helper (pickstack-editor) for Pickstack. Reference an adapter such as TinyMCE, Froala or CKEditor to provide the editor.</Description>
+		<PackageTags>pickstack;aspnetcore;rich-text-editor;wysiwyg;html-editor;tag-helpers</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>

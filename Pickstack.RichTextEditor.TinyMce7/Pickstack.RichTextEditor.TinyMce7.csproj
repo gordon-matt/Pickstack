@@ -5,7 +5,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
+		<Description>TinyMCE 7.9.0 rich text editor for Pickstack, loaded from the CDN with a fallback copy shipped in the package.</Description>
+		<PackageTags>pickstack;aspnetcore;rich-text-editor;wysiwyg;html-editor;tinymce;tinymce7</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>

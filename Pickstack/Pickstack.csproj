@@ -4,7 +4,9 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
+		<Description>Composition and shared browser runtime for Pickstack: pick a file manager and a rich text editor for ASP.NET Core and swap either one without changing your pages.</Description>
+		<PackageTags>pickstack;aspnetcore;mvc;razor-pages;tag-helpers;file-manager;rich-text-editor;wysiwyg</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>

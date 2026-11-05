@@ -4,6 +4,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
 		<!-- Responsive File Manager's package targets net9.0. -->
 		<AssetTargetFallback>$(AssetTargetFallback);net9.0</AssetTargetFallback>
 		<!-- Serves _framework/blazor.server.js, which WebFilez needs. .NET 10 omits it unless the app asks. -->

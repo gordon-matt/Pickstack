@@ -6,7 +6,9 @@
 		<Nullable>enable</Nullable>
 		<!-- The Responsive File Manager packages currently target net9.0. -->
 		<AssetTargetFallback>$(AssetTargetFallback);net9.0</AssetTargetFallback>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
+		<Description>Responsive File Manager adapter for Pickstack. Provides the Pickstack file manager using ResponsiveFileManager.AspNetCore.</Description>
+		<PackageTags>pickstack;aspnetcore;file-manager;responsive-file-manager;file-browser;file-picker</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>

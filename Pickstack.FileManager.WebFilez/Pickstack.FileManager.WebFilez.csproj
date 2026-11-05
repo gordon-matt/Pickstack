@@ -5,7 +5,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
+		<Description>WebFilez adapter for Pickstack. Provides the Pickstack file manager using WebFilez and its Blazor components.</Description>
+		<PackageTags>pickstack;aspnetcore;blazor;file-manager;webfilez;file-browser;file-picker</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>

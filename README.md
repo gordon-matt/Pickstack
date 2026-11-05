@@ -1,4 +1,4 @@
-<img src="https://github.com/gordon-matt/Pickstack/blob/master/_Misc/Logo.png" alt="Logo" width="300" />
+<img src="https://github.com/gordon-matt/Pickstack/raw/master/_Misc/Logo.png" alt="Logo" width="300" />
 
 Pickstack is a set of replaceable ASP.NET Core components. An app picks a file manager and a rich text editor, and can later swap either one by changing a package reference and a registration. File fields and editors keep working because they talk to Pickstack, not to elFinder, Responsive File Manager, WebFilez, TinyMCE, or CKEditor.
 
@@ -233,3 +233,34 @@ A file manager implements `IFileManager`:
 - Register the class as `IFileManager` and as `IPickstackAssetSource` if the script is embedded. `AddFileManager<T>()` only registers the interface; an adapter with endpoints or middleware should add its own extension, as `AddElFinder` does.
 
 An editor implements `IRichTextEditor` and registers with `Pickstack.editors.use({ init: function (element, options) { ... } })`. When it needs a file, it calls `Pickstack.files.open` instead of embedding a file-manager URL.
+
+## Support
+
+If you find this project useful, consider supporting its development.
+
+<p align="center">
+  <a href="https://buymeacoffee.com/vnmatt">
+    <img src="https://github.com/gordon-matt/MyResume/raw/gh-pages/assets/images/BuyMeACoffee_Logo.png"
+         alt="Buy Me a Coffee"
+         height="40">
+  </a>&nbsp;&nbsp;&nbsp;
+  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=gordon_matt%40live%2ecom&lc=AU&currency_code=AUD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">
+    <img src="https://github.com/gordon-matt/MyResume/raw/gh-pages/assets/images/PayPal_Logo.png"
+         alt="Donate with PayPal"
+         height="40">
+  </a>
+</p>
+
+<p align="center">
+  Prefer using your phone? Scan the QR code:
+</p>
+
+<p align="center">
+  <a href="https://buymeacoffee.com/vnmatt">
+    <img src="https://github.com/gordon-matt/MyResume/raw/gh-pages/assets/images/BuyMeACoffee_QR.png"
+         alt="Buy Me a Coffee QR Code"
+         width="180">
+  </a>
+</p>
+
+<img src="https://komarev.com/ghpvc/?username=gordon-matt&label=GitHub%20Hits%20Since%202025-06-01%3A%20&color=ff0000&style=flat" alt="gordon-matt" />

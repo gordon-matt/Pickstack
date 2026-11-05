@@ -4,7 +4,9 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
+		<Description>File manager contract, shared storage and tag helpers (pickstack-file) for Pickstack. Reference an adapter such as elFinder, Responsive File Manager or WebFilez to provide the UI.</Description>
+		<PackageTags>pickstack;aspnetcore;file-manager;file-browser;file-picker;tag-helpers;upload</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>

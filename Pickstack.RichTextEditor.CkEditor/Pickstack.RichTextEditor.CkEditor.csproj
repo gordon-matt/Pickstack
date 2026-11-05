@@ -4,7 +4,9 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
+		<Description>CKEditor adapter for Pickstack. Opens a Pickstack browse page that hosts the registered file manager.</Description>
+		<PackageTags>pickstack;aspnetcore;rich-text-editor;wysiwyg;html-editor;ckeditor</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
