@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<Description>WebFilez adapter for Pickstack. Provides the Pickstack file manager using WebFilez and its Blazor components.</Description>
 		<PackageTags>pickstack;aspnetcore;blazor;file-manager;webfilez;file-browser;file-picker</PackageTags>
 	</PropertyGroup>
@@ -19,11 +19,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="WebFilez.AspNetCore" Version="1.0.1" />
-		<PackageReference Include="WebFilez.Components" Version="1.0.1" />
-		<PackageReference Include="WebFilez.Plugins.FileRobot" Version="1.0.1" />
-		<PackageReference Include="WebFilez.Plugins.FortuneSheet" Version="1.0.1" />
-		<PackageReference Include="WebFilez.Plugins.SuperDoc" Version="1.0.1" />
+		<PackageReference Include="WebFilez.AspNetCore" Version="1.0.2" />
+		<PackageReference Include="WebFilez.Components" Version="1.0.2" />
+		<PackageReference Include="WebFilez.Plugins.FileRobot" Version="1.0.2" />
+		<PackageReference Include="WebFilez.Plugins.FortuneSheet" Version="1.0.2" />
+		<PackageReference Include="WebFilez.Plugins.SuperDoc" Version="1.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
