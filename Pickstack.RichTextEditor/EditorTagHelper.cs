@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Pickstack.RichTextEditor;
 
+/// <summary>
+/// Represents the editor tag helper.
+/// </summary>
 [HtmlTargetElement("pickstack-editor", Attributes = ForAttribute, TagStructure = TagStructure.WithoutEndTag)]
 public sealed class EditorTagHelper : TagHelper
 {
@@ -14,14 +17,24 @@ public sealed class EditorTagHelper : TagHelper
 
     private readonly IRichTextEditor _editor;
 
+    /// <summary>
+    /// Initializes a new instance of the EditorTagHelper class.
+    /// </summary>
+    /// <param name="editor">The editor.</param>
     public EditorTagHelper(IRichTextEditor editor)
     {
         _editor = editor;
     }
 
+    /// <summary>
+    /// Gets or sets the for.
+    /// </summary>
     [HtmlAttributeName(ForAttribute)]
     public ModelExpression For { get; set; } = default!;
 
+    /// <summary>
+    /// Gets or sets the height.
+    /// </summary>
     public int? Height { get; set; }
 
     /// <summary>Replaces the registered plugin list for this field.</summary>
@@ -40,10 +53,14 @@ public sealed class EditorTagHelper : TagHelper
     [HtmlAttributeName("file-root")]
     public string? FileRoot { get; set; }
 
+    /// <summary>
+    /// Gets or sets the view context.
+    /// </summary>
     [ViewContext]
     [HtmlAttributeNotBound]
     public ViewContext ViewContext { get; set; } = default!;
 
+    /// <inheritdoc/>
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
         ArgumentNullException.ThrowIfNull(output);

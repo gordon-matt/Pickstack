@@ -8,5 +8,9 @@ namespace Pickstack;
 /// </summary>
 public interface IPickstackStartup
 {
+    /// <summary>
+    /// Uses the value.
+    /// </summary>
+    /// <param name="app">The app.</param>
     void Use(WebApplication app);
 }

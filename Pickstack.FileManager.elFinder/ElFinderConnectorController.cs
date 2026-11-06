@@ -5,18 +5,30 @@ using Microsoft.Extensions.Logging;
 
 namespace Pickstack.FileManager.elFinder;
 
+/// <summary>
+/// Represents the el finder connector controller.
+/// </summary>
 [Route(ElFinderRoutes.Prefix)]
 public sealed class ElFinderConnectorController : Controller
 {
     private readonly IFileStorage _storage;
     private readonly ILogger<ElFinderConnectorController> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the ElFinderConnectorController class.
+    /// </summary>
+    /// <param name="storage">The storage.</param>
+    /// <param name="logger">The logger.</param>
     public ElFinderConnectorController(IFileStorage storage, ILogger<ElFinderConnectorController> logger)
     {
         _storage = storage;
         _logger = logger;
     }
 
+    /// <summary>
+    /// Gets the connector.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the i action result.</returns>
     [Route("connector")]
     public async Task<IActionResult> Connector()
     {
@@ -31,6 +43,11 @@ public sealed class ElFinderConnectorController : Controller
         }
     }
 
+    /// <summary>
+    /// Gets the thumbnail.
+    /// </summary>
+    /// <param name="hash">The hash.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the i action result.</returns>
     [Route("thumb/{*hash}")]
     public async Task<IActionResult> Thumbnail(string hash)
     {

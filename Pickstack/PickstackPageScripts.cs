@@ -11,6 +11,11 @@ namespace Pickstack;
 /// </summary>
 public static class PickstackPageScripts
 {
+    /// <summary>
+    /// Resolves the value.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <returns>The client includes.</returns>
     public static IReadOnlyList<ClientInclude> Resolve(IServiceProvider services)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -37,6 +42,11 @@ public static class PickstackPageScripts
         return includes;
     }
 
+    /// <summary>
+    /// Gets the HTML.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <returns>The HTML.</returns>
     public static string Html(IServiceProvider services)
     {
         var builder = new StringBuilder();

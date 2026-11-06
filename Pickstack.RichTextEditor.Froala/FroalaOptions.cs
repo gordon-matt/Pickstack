@@ -22,11 +22,17 @@ public sealed class FroalaOptions
     /// <summary>URL of the stylesheet shipped in the version package. Used when <see cref="StyleUrl"/> fails to load.</summary>
     public string? FallbackStyleUrl { get; set; }
 
+    /// <summary>
+    /// Gets or sets the height.
+    /// </summary>
     public int Height { get; set; } = 420;
 
     /// <summary>Froala license key. Leave empty for an unlicensed editor.</summary>
     public string? LicenseKey { get; set; }
 
+    /// <summary>
+    /// Gets or sets the plugins.
+    /// </summary>
     public List<string> Plugins { get; set; } =
     [
         "align",
@@ -59,6 +65,9 @@ public sealed class FroalaOptions
         "wordPaste"
     ];
 
+    /// <summary>
+    /// Gets or sets the toolbar.
+    /// </summary>
     public List<string> Toolbar { get; set; } =
     [
         "bold",
@@ -86,36 +95,66 @@ public sealed class FroalaOptions
     /// <summary>Extra Froala init values. Structured settings are applied after these, and file picking stays wired to Pickstack.</summary>
     public Dictionary<string, object?> CustomOptions { get; } = [];
 
+    /// <summary>
+    /// Returns a copy with the script.
+    /// </summary>
+    /// <param name="url">The URL.</param>
+    /// <returns>The script.</returns>
     public FroalaOptions WithScript(string url)
     {
         ScriptUrl = url;
         return this;
     }
 
+    /// <summary>
+    /// Returns a copy with the fallback.
+    /// </summary>
+    /// <param name="url">The URL.</param>
+    /// <returns>The fallback.</returns>
     public FroalaOptions WithFallback(string? url)
     {
         FallbackUrl = url;
         return this;
     }
 
+    /// <summary>
+    /// Returns a copy with the style.
+    /// </summary>
+    /// <param name="url">The URL.</param>
+    /// <returns>The style.</returns>
     public FroalaOptions WithStyle(string url)
     {
         StyleUrl = url;
         return this;
     }
 
+    /// <summary>
+    /// Returns a copy with the style fallback.
+    /// </summary>
+    /// <param name="url">The URL.</param>
+    /// <returns>The style fallback.</returns>
     public FroalaOptions WithStyleFallback(string? url)
     {
         FallbackStyleUrl = url;
         return this;
     }
 
+    /// <summary>
+    /// Returns a copy with the height.
+    /// </summary>
+    /// <param name="pixels">The pixels.</param>
+    /// <returns>The height.</returns>
     public FroalaOptions WithHeight(int pixels)
     {
         Height = pixels;
         return this;
     }
 
+    /// <summary>
+    /// Returns a copy with the license key.
+    /// </summary>
+    /// <param name="licenseKey">The license key.</param>
+    /// <returns>The license key.</returns>
     public FroalaOptions WithLicenseKey(string licenseKey)
     {
         LicenseKey = licenseKey;
@@ -164,6 +203,12 @@ public sealed class FroalaOptions
         return this;
     }
 
+    /// <summary>
+    /// Sets the value.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="value">The value.</param>
+    /// <returns>The froala options.</returns>
     public FroalaOptions Set(string name, object? value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);

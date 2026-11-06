@@ -3,8 +3,17 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Pickstack.RichTextEditor.CkEditor;
 
+/// <summary>
+/// Provides extension methods for ck editor service collections.
+/// </summary>
 public static class CkEditorServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds the ck editor.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="configure">The configure.</param>
+    /// <returns>The ck editor.</returns>
     public static PickstackBuilder AddCkEditor(this PickstackBuilder builder, Action<CkEditorOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(builder);

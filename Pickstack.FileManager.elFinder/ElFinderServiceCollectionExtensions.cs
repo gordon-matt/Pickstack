@@ -3,8 +3,17 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Pickstack.FileManager.elFinder;
 
+/// <summary>
+/// Provides extension methods for el finder service collections.
+/// </summary>
 public static class ElFinderServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds the el finder.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="configure">The configure.</param>
+    /// <returns>The el finder.</returns>
     public static PickstackBuilder AddElFinder(this PickstackBuilder builder, Action<ElFinderOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(builder);

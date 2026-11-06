@@ -7,6 +7,9 @@ using Pickstack.RichTextEditor;
 
 namespace Pickstack;
 
+/// <summary>
+/// Provides extension methods for pickstack HTMLs.
+/// </summary>
 public static class PickstackHtmlExtensions
 {
     /// <summary>

@@ -3,8 +3,17 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Pickstack.RichTextEditor.Froala;
 
+/// <summary>
+/// Provides extension methods for froala service collections.
+/// </summary>
 public static class FroalaServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds the froala.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="configure">The configure.</param>
+    /// <returns>The froala.</returns>
     public static PickstackBuilder AddFroala(this PickstackBuilder builder, Action<FroalaOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(builder);

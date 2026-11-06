@@ -3,23 +3,45 @@ using Pickstack.FileManager;
 
 namespace Pickstack.RichTextEditor.CkEditor;
 
+/// <summary>
+/// Provides ck editor routes.
+/// </summary>
 public static class CkEditorRoutes
 {
+    /// <summary>
+    /// The prefix constant.
+    /// </summary>
     public const string Prefix = "pickstack/ckeditor";
 
+    /// <summary>
+    /// The browse path constant.
+    /// </summary>
     public const string BrowsePath = "/pickstack/ckeditor/browse";
 }
 
+/// <summary>
+/// Represents the ck editor browser controller.
+/// </summary>
 [Route(CkEditorRoutes.Prefix)]
 public sealed class CkEditorBrowserController : Controller
 {
     private readonly IFileManager _fileManager;
 
+    /// <summary>
+    /// Initializes a new instance of the CkEditorBrowserController class.
+    /// </summary>
+    /// <param name="fileManager">The file manager.</param>
     public CkEditorBrowserController(IFileManager fileManager)
     {
         _fileManager = fileManager;
     }
 
+    /// <summary>
+    /// Gets the browse.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <param name="root">The root.</param>
+    /// <returns>The browse.</returns>
     [HttpGet("browse")]
     public ContentResult Browse(string? type, string? root)
     {

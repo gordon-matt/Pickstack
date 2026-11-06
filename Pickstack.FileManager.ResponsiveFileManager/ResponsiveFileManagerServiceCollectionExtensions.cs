@@ -5,8 +5,15 @@ using Microsoft.Extensions.Options;
 
 namespace Pickstack.FileManager.ResponsiveFileManager;
 
+/// <summary>
+/// Represents the responsive file manager startup.
+/// </summary>
 public sealed class ResponsiveFileManagerStartup : IPickstackStartup
 {
+    /// <summary>
+    /// Uses the value.
+    /// </summary>
+    /// <param name="app">The app.</param>
     public void Use(WebApplication app)
     {
         if (!app.Services.GetRequiredService<IOptions<ResponsiveFileManagerOptions>>().Value.HostOwnsSession)
@@ -18,8 +25,17 @@ public sealed class ResponsiveFileManagerStartup : IPickstackStartup
     }
 }
 
+/// <summary>
+/// Provides extension methods for responsive file manager service collections.
+/// </summary>
 public static class ResponsiveFileManagerServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds the responsive file manager.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="configure">The configure.</param>
+    /// <returns>The responsive file manager.</returns>
     public static PickstackBuilder AddResponsiveFileManager(
         this PickstackBuilder builder,
         Action<ResponsiveFileManagerOptions>? configure = null)

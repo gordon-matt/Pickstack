@@ -6,8 +6,18 @@ using Pickstack.RichTextEditor;
 
 namespace Pickstack;
 
+/// <summary>
+/// Provides extension methods for pickstack service collections.
+/// </summary>
 public static class PickstackServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds the pickstack.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="configure">The configure.</param>
+    /// <returns>The pickstack.</returns>
     public static PickstackBuilder AddPickstack(this IServiceCollection services, IConfiguration? configuration = null, Action<FileStorageOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -29,15 +39,30 @@ public static class PickstackServiceCollectionExtensions
     }
 }
 
+/// <summary>
+/// Represents the pickstack builder.
+/// </summary>
 public sealed class PickstackBuilder
 {
+    /// <summary>
+    /// Initializes a new instance of the PickstackBuilder class.
+    /// </summary>
+    /// <param name="services">The services.</param>
     public PickstackBuilder(IServiceCollection services)
     {
         Services = services;
     }
 
+    /// <summary>
+    /// Gets the services.
+    /// </summary>
     public IServiceCollection Services { get; }
 
+    /// <summary>
+    /// Adds the file manager.
+    /// </summary>
+    /// <typeparam name="TFileManager">The type of the file manager.</typeparam>
+    /// <returns>The file manager.</returns>
     public PickstackBuilder AddFileManager<TFileManager>()
         where TFileManager : class, IFileManager
     {
@@ -46,6 +71,11 @@ public sealed class PickstackBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds the rich text editor.
+    /// </summary>
+    /// <typeparam name="TEditor">The type of the editor.</typeparam>
+    /// <returns>The rich text editor.</returns>
     public PickstackBuilder AddRichTextEditor<TEditor>()
         where TEditor : class, IRichTextEditor
     {

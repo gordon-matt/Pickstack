@@ -4,14 +4,32 @@ using Pickstack.Abstractions;
 
 namespace Pickstack.RichTextEditor;
 
+/// <summary>
+/// Provides editor assets.
+/// </summary>
 public static class EditorAssets
 {
+    /// <summary>
+    /// The runtime script URL constant.
+    /// </summary>
     public const string RuntimeScriptUrl = ClientAssets.RuntimeScriptUrl;
+    /// <summary>
+    /// The runtime item key constant.
+    /// </summary>
     public const string RuntimeItemKey = ClientAssets.RuntimeItemKey;
+    /// <summary>
+    /// The provider element identifier constant.
+    /// </summary>
     public const string ProviderElementId = "pickstack-editor-provider";
 
     private const string StartupItemKey = "Pickstack.Editor.Startup";
 
+    /// <summary>
+    /// Appends the startup.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="httpContext">The HTTP context.</param>
+    /// <param name="editor">The editor.</param>
     public static void AppendStartup(StringBuilder builder, HttpContext httpContext, IRichTextEditor editor)
     {
         ArgumentNullException.ThrowIfNull(builder);

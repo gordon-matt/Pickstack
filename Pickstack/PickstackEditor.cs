@@ -22,21 +22,39 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
     private IJSObjectReference? _module;
     private DotNetObjectReference<PickstackEditor>? _reference;
 
+    /// <summary>
+    /// Gets or sets the value.
+    /// </summary>
     [Parameter]
     public string? Value { get; set; }
 
+    /// <summary>
+    /// Gets or sets the value changed.
+    /// </summary>
     [Parameter]
     public EventCallback<string?> ValueChanged { get; set; }
 
+    /// <summary>
+    /// Gets or sets the height.
+    /// </summary>
     [Parameter]
     public int? Height { get; set; }
 
+    /// <summary>
+    /// Gets or sets the plugins.
+    /// </summary>
     [Parameter]
     public string? Plugins { get; set; }
 
+    /// <summary>
+    /// Gets or sets the add plugins.
+    /// </summary>
     [Parameter]
     public string? AddPlugins { get; set; }
 
+    /// <summary>
+    /// Gets or sets the toolbar.
+    /// </summary>
     [Parameter]
     public string? Toolbar { get; set; }
 
@@ -44,14 +62,19 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
     [Parameter]
     public string? FileRoot { get; set; }
 
+    /// <summary>
+    /// Gets or sets the js.
+    /// </summary>
     [Inject]
     public IJSRuntime Js { get; set; } = default!;
 
+    /// <inheritdoc/>
     protected override void OnInitialized()
     {
         _initialValue = Value ?? string.Empty;
     }
 
+    /// <inheritdoc/>
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, "textarea");
@@ -66,6 +89,7 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
         builder.CloseElement();
     }
 
+    /// <inheritdoc/>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender || !_hasElement)
@@ -80,6 +104,7 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
         await SendPendingAsync();
     }
 
+    /// <inheritdoc/>
     protected override async Task OnParametersSetAsync()
     {
         if (_fromEditor)
@@ -154,6 +179,11 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Updates the value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [JSInvokable]
     public async Task UpdateValue(string? value)
     {
@@ -166,6 +196,10 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
         await ValueChanged.InvokeAsync(value);
     }
 
+    /// <summary>
+    /// Releases the resources used by this instance.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask DisposeAsync()
     {
         if (_module is not null && _hasElement)

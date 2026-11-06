@@ -4,14 +4,32 @@ using Pickstack.Abstractions;
 
 namespace Pickstack.FileManager;
 
+/// <summary>
+/// Provides file manager assets.
+/// </summary>
 public static class FileManagerAssets
 {
+    /// <summary>
+    /// The runtime script URL constant.
+    /// </summary>
     public const string RuntimeScriptUrl = ClientAssets.RuntimeScriptUrl;
+    /// <summary>
+    /// The provider element identifier constant.
+    /// </summary>
     public const string ProviderElementId = "pickstack-file-provider";
+    /// <summary>
+    /// The runtime item key constant.
+    /// </summary>
     public const string RuntimeItemKey = ClientAssets.RuntimeItemKey;
 
     private const string StartupItemKey = "Pickstack.FileManager.Startup";
 
+    /// <summary>
+    /// Appends the startup.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="httpContext">The HTTP context.</param>
+    /// <param name="fileManager">The file manager.</param>
     public static void AppendStartup(StringBuilder builder, HttpContext httpContext, IFileManager fileManager)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -27,6 +45,11 @@ public static class FileManagerAssets
         Append(builder, httpContext, fileManager);
     }
 
+    /// <summary>
+    /// Renders the standalone startup.
+    /// </summary>
+    /// <param name="fileManager">The file manager.</param>
+    /// <returns>The standalone startup.</returns>
     public static string RenderStandaloneStartup(IFileManager fileManager)
     {
         ArgumentNullException.ThrowIfNull(fileManager);

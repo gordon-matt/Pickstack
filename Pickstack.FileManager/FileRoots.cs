@@ -8,6 +8,11 @@ namespace Pickstack.FileManager;
 /// </summary>
 public static class FileRoots
 {
+    /// <summary>
+    /// Normalizes the value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The string.</returns>
     public static string? Normalize(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -24,6 +29,11 @@ public static class FileRoots
         return string.Join('/', segments);
     }
 
+    /// <summary>
+    /// Converts the value to the token.
+    /// </summary>
+    /// <param name="root">The root.</param>
+    /// <returns>The token.</returns>
     public static string ToToken(string root)
     {
         string normalized = Normalize(root)
@@ -35,6 +45,11 @@ public static class FileRoots
             .Replace('/', '_');
     }
 
+    /// <summary>
+    /// Creates a value from the token.
+    /// </summary>
+    /// <param name="token">The token.</param>
+    /// <returns>The token.</returns>
     public static string FromToken(string token)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(token);
@@ -45,6 +60,11 @@ public static class FileRoots
             ?? throw new InvalidOperationException("The file root token is empty.");
     }
 
+    /// <summary>
+    /// Determines whether this instance is unsafe.
+    /// </summary>
+    /// <param name="segment">The segment.</param>
+    /// <returns>true when the condition is met; otherwise, false.</returns>
     public static bool IsUnsafe(string segment) =>
         segment is "." or ".."
         || segment.Contains(':', StringComparison.Ordinal)

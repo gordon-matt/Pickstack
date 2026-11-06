@@ -5,8 +5,15 @@ using Pickstack.FileManager;
 
 namespace Pickstack;
 
+/// <summary>
+/// Represents the pickstack runtime assets.
+/// </summary>
 public sealed class PickstackRuntimeAssets : IPickstackAssetSource
 {
+    /// <summary>
+    /// Gets the assets.
+    /// </summary>
+    /// <returns>The assets.</returns>
     public IEnumerable<PickstackAsset> GetAssets() => [
         PickstackAssets.Script(typeof(PickstackRuntimeAssets).Assembly, "pickstack.js", "pickstack.js"),
         PickstackAssets.Script(typeof(PickstackRuntimeAssets).Assembly, "load.js", "load.js"),
@@ -14,8 +21,15 @@ public sealed class PickstackRuntimeAssets : IPickstackAssetSource
     ];
 }
 
+/// <summary>
+/// Represents the pickstack startup.
+/// </summary>
 public sealed class PickstackStartup : IPickstackStartup
 {
+    /// <summary>
+    /// Uses the value.
+    /// </summary>
+    /// <param name="app">The app.</param>
     public void Use(WebApplication app)
     {
         app.Services.GetRequiredService<IFileStorage>().EnsureCreated();
@@ -53,8 +67,16 @@ public sealed class PickstackStartup : IPickstackStartup
     }
 }
 
+/// <summary>
+/// Provides extension methods for web applications.
+/// </summary>
 public static class WebApplicationExtensions
 {
+    /// <summary>
+    /// Uses the pickstack.
+    /// </summary>
+    /// <param name="app">The app.</param>
+    /// <returns>The pickstack.</returns>
     public static WebApplication UsePickstack(this WebApplication app)
     {
         ArgumentNullException.ThrowIfNull(app);

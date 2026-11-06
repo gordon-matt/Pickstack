@@ -12,12 +12,19 @@ public sealed class PickstackScripts : ComponentBase
 {
     private bool _started;
 
+    /// <summary>
+    /// Gets or sets the services.
+    /// </summary>
     [Inject]
     public IServiceProvider Services { get; set; } = default!;
 
+    /// <summary>
+    /// Gets or sets the js.
+    /// </summary>
     [Inject]
     public IJSRuntime Js { get; set; } = default!;
 
+    /// <inheritdoc/>
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         if (RendererInfo.IsInteractive)
@@ -28,6 +35,7 @@ public sealed class PickstackScripts : ComponentBase
         builder.AddMarkupContent(0, PickstackPageScripts.Html(Services));
     }
 
+    /// <inheritdoc/>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender || !RendererInfo.IsInteractive || _started)

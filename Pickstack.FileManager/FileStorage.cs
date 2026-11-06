@@ -3,11 +3,19 @@ using Microsoft.Extensions.Options;
 
 namespace Pickstack.FileManager;
 
+/// <summary>
+/// Represents the file storage.
+/// </summary>
 public sealed class FileStorage : IFileStorage
 {
     private readonly string _webRoot;
     private readonly FileStorageOptions _options;
 
+    /// <summary>
+    /// Initializes a new instance of the FileStorage class.
+    /// </summary>
+    /// <param name="environment">The environment.</param>
+    /// <param name="options">The options.</param>
     public FileStorage(IWebHostEnvironment environment, IOptions<FileStorageOptions> options)
     {
         if (string.IsNullOrEmpty(environment.WebRootPath))
@@ -26,22 +34,46 @@ public sealed class FileStorage : IFileStorage
         }
     }
 
+    /// <summary>
+    /// Gets the physical path.
+    /// </summary>
     public string PhysicalPath => Path.Combine(_webRoot, NormalizeFolder(_options.WebRootFolder, "media"));
 
+    /// <summary>
+    /// Gets the request path.
+    /// </summary>
     public string RequestPath => NormalizeRequestPath(_options.RequestPath, "/media/");
 
+    /// <summary>
+    /// Gets the thumbnail physical path.
+    /// </summary>
     public string ThumbnailPhysicalPath => Path.Combine(_webRoot, NormalizeFolder(_options.ThumbnailWebRootFolder, "media-thumbs"));
 
+    /// <summary>
+    /// Gets the thumbnail request path.
+    /// </summary>
     public string ThumbnailRequestPath => NormalizeRequestPath(_options.ThumbnailRequestPath, "/media-thumbs/");
 
+    /// <summary>
+    /// Ensures the created.
+    /// </summary>
     public void EnsureCreated()
     {
         Directory.CreateDirectory(PhysicalPath);
         Directory.CreateDirectory(ThumbnailPhysicalPath);
     }
 
+    /// <summary>
+    /// Ensures the root.
+    /// </summary>
+    /// <param name="root">The root.</param>
     public void EnsureRoot(string? root) => Directory.CreateDirectory(ResolvePhysicalPath(root));
 
+    /// <summary>
+    /// Resolves the physical path.
+    /// </summary>
+    /// <param name="root">The root.</param>
+    /// <returns>The physical path.</returns>
     public string ResolvePhysicalPath(string? root)
     {
         string? relative = FileRoots.Normalize(root);
@@ -61,6 +93,11 @@ public sealed class FileStorage : IFileStorage
         return full;
     }
 
+    /// <summary>
+    /// Resolves the request path.
+    /// </summary>
+    /// <param name="root">The root.</param>
+    /// <returns>The request path.</returns>
     public string ResolveRequestPath(string? root)
     {
         string? relative = FileRoots.Normalize(root);

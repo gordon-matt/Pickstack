@@ -8,16 +8,31 @@ namespace Pickstack.Abstractions;
 /// </summary>
 public static class ClientAssets
 {
+    /// <summary>
+    /// The runtime script URL constant.
+    /// </summary>
     public const string RuntimeScriptUrl = "/pickstack/assets/pickstack.js";
 
+    /// <summary>
+    /// The runtime item key constant.
+    /// </summary>
     public const string RuntimeItemKey = "Pickstack.RuntimeIncluded";
 
+    /// <summary>
+    /// Appends the runtime.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
     public static void AppendRuntime(StringBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
         AppendScript(builder, RuntimeScriptUrl);
     }
 
+    /// <summary>
+    /// Appends the runtime once.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="items">The items.</param>
     public static void AppendRuntimeOnce(StringBuilder builder, IDictionary<object, object?> items)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -32,6 +47,11 @@ public static class ClientAssets
         AppendRuntime(builder);
     }
 
+    /// <summary>
+    /// Appends the value.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assets">The assets.</param>
     public static void Append(StringBuilder builder, IEnumerable<ClientAsset> assets)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -50,6 +70,13 @@ public static class ClientAssets
         }
     }
 
+    /// <summary>
+    /// Appends the provider.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="elementId">The element identifier.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="scriptUrl">The script URL.</param>
     public static void AppendProvider(StringBuilder builder, string elementId, string configuration, string scriptUrl)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -63,6 +90,11 @@ public static class ClientAssets
         ]);
     }
 
+    /// <summary>
+    /// Appends the value.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="includes">The includes.</param>
     public static void Append(StringBuilder builder, IEnumerable<ClientInclude> includes)
     {
         ArgumentNullException.ThrowIfNull(builder);

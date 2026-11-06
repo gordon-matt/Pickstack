@@ -5,16 +5,26 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Pickstack.FileManager;
 
+/// <summary>
+/// Represents the file browser tag helper.
+/// </summary>
 [HtmlTargetElement("pickstack-files", TagStructure = TagStructure.WithoutEndTag)]
 public sealed class FileBrowserTagHelper : TagHelper
 {
     private readonly IFileManager _fileManager;
 
+    /// <summary>
+    /// Initializes a new instance of the FileBrowserTagHelper class.
+    /// </summary>
+    /// <param name="fileManager">The file manager.</param>
     public FileBrowserTagHelper(IFileManager fileManager)
     {
         _fileManager = fileManager;
     }
 
+    /// <summary>
+    /// Gets or sets the file type.
+    /// </summary>
     [HtmlAttributeName("file-type")]
     public FilePickerType FileType { get; set; } = FilePickerType.Any;
 
@@ -22,10 +32,14 @@ public sealed class FileBrowserTagHelper : TagHelper
     [HtmlAttributeName("file-root")]
     public string? FileRoot { get; set; }
 
+    /// <summary>
+    /// Gets or sets the view context.
+    /// </summary>
     [ViewContext]
     [HtmlAttributeNotBound]
     public ViewContext ViewContext { get; set; } = default!;
 
+    /// <inheritdoc/>
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
         ArgumentNullException.ThrowIfNull(output);
