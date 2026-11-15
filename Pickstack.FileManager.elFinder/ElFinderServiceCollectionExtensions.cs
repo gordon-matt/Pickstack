@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 
 namespace Pickstack.FileManager.elFinder;
 
@@ -23,6 +24,7 @@ public static class ElFinderServiceCollectionExtensions
             builder.Services.Configure(configure);
         }
 
+        builder.Services.AddHostedService<ElFinderVideoStartup>();
         builder.Services.RemoveAll<IFileManager>();
         builder.Services.AddSingleton<ElFinderFileManager>();
         builder.Services.AddSingleton<IFileManager>(services => services.GetRequiredService<ElFinderFileManager>());

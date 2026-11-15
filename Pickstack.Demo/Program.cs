@@ -1,4 +1,5 @@
 using Pickstack;
+using WebFilez.Plugins.Video;
 using Pickstack.FileManager.elFinder;
 using Pickstack.FileManager.ResponsiveFileManager;
 using Pickstack.FileManager.WebFilez;
@@ -20,31 +21,44 @@ var pickstack = builder.Services.AddPickstack(builder.Configuration);
 
 pickstack = stack["FileManager"] switch
 {
-    ResponsiveFileManagerAdapter.Key => pickstack.AddResponsiveFileManager(fileManager => fileManager
-        .WithLanguage("en_EN")
-        .Server(server => server.MaxSizeUpload = 16)),
-    WebFilezFileManager.Key => pickstack.AddWebFilez(fileManager => fileManager.WithTheme("light")), // defaults to "auto" and "en" if not set
+    ResponsiveFileManagerAdapter.Key => pickstack
+        .AddResponsiveFileManager(fileManager => fileManager
+            .WithLanguage("en_EN")
+            .Server(server => server.MaxSizeUpload = 16)),
+
+    WebFilezFileManager.Key => pickstack
+        .AddWebFilez(fileManager => fileManager.WithTheme("light"))
+        .AddVideo(video => video.DownloadIfMissing = true)
+        .Pickstack,
+
     null or "" or ElFinderFileManager.Key => pickstack.AddElFinder(fileManager => fileManager
-        .DisableCommands("extract", "archive")),
+        .DisableCommands("extract", "archive")
+        .WithVideoThumbnails()),
+
     var name => throw new InvalidOperationException(
         $"Unknown Pickstack file manager '{name}'. Use '{ElFinderFileManager.Key}', '{ResponsiveFileManagerAdapter.Key}', or '{WebFilezFileManager.Key}'.")
 };
 
-Action<TinyMceOptions> tinymce = editor => editor
+static void tinymce(TinyMceOptions editor) => editor
     .AddPlugins("codesample", "charmap")
     .WithToolbar("undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media charmap codesample | code");
 
 pickstack = stack["RichTextEditor"] switch
 {
-    CkEditorEditor.Key => pickstack.AddCkEditor(editor => editor
+    CkEditorEditor.Key => pickstack
+        .AddCkEditor(editor => editor
         .WithoutPlugins("elementspath")),
-    FroalaEditor.Key or Froala5ServiceCollectionExtensions.Key => pickstack.AddFroala5(editor => editor
-        .AddPlugins("codeSnippet")
-        .AddToolbarButtons("codeSnippet")),
+
+    FroalaEditor.Key or Froala5ServiceCollectionExtensions.Key => pickstack
+        .AddFroala5(editor => editor
+            .AddPlugins("codeSnippet")
+            .AddToolbarButtons("codeSnippet")),
+
     TinyMce5ServiceCollectionExtensions.Key => pickstack.AddTinyMce5(tinymce),
     TinyMce6ServiceCollectionExtensions.Key => pickstack.AddTinyMce6(tinymce),
     TinyMce7ServiceCollectionExtensions.Key => pickstack.AddTinyMce7(tinymce),
     null or "" or TinyMceEditor.Key or TinyMce8ServiceCollectionExtensions.Key => pickstack.AddTinyMce8(tinymce),
+
     var name => throw new InvalidOperationException(
         $"Unknown Pickstack rich text editor '{name}'. Use '{TinyMce5ServiceCollectionExtensions.Key}', '{TinyMce6ServiceCollectionExtensions.Key}', '{TinyMce7ServiceCollectionExtensions.Key}', '{TinyMce8ServiceCollectionExtensions.Key}', '{Froala5ServiceCollectionExtensions.Key}', or '{CkEditorEditor.Key}'.")
 };

@@ -1,3 +1,5 @@
+using elFinder.NetCore.Ffmpeg;
+
 namespace Pickstack.FileManager.elFinder;
 
 /// <summary>
@@ -76,6 +78,12 @@ public sealed class ElFinderOptions
     /// Gets or sets the disabled commands.
     /// </summary>
     public List<string> DisabledCommands { get; set; } = ["callback", "chmod", "editor", "netmount", "ping", "help"];
+
+    /// <summary>When set, startup looks for ffmpeg so video files can have thumbnails.</summary>
+    public bool VideoThumbnails { get; private set; }
+
+    /// <summary>Adjusts the ffmpeg search. Download stays on unless this turns it off.</summary>
+    internal Action<FfmpegBootstrapOptions>? ConfigureVideo { get; private set; }
 
     /// <summary>
     /// Returns a copy with the style.
@@ -209,6 +217,18 @@ public sealed class ElFinderOptions
     public ElFinderOptions WithCommandsEnabled(params string[] commands)
     {
         DisabledCommands.RemoveAll(command => commands.Contains(command, StringComparer.OrdinalIgnoreCase));
+        return this;
+    }
+
+    /// <summary>
+    /// Enables video thumbnails. ffmpeg is downloaded into an <c>ffmpeg</c> folder under the
+    /// content root when it is not already installed. That build is GPL-licensed.
+    /// A missing ffmpeg does not stop the app; video files keep the generic icon.
+    /// </summary>
+    public ElFinderOptions WithVideoThumbnails(Action<FfmpegBootstrapOptions>? configure = null)
+    {
+        VideoThumbnails = true;
+        ConfigureVideo = configure;
         return this;
     }
 }

@@ -6,6 +6,7 @@
 		<Product>Pickstack</Product>
 		<Copyright>Copyright © Matt Gordon</Copyright>
 		<NeutralLanguage>en-US</NeutralLanguage>
+		<Version>1.0.5</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/gordon-matt/Pickstack</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/gordon-matt/Pickstack</RepositoryUrl>

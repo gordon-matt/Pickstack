@@ -122,7 +122,8 @@ Same-origin file URLs are stored as root-relative paths, such as `/media/42/7/ph
 builder.Services.AddPickstack(builder.Configuration)
     .AddElFinder(files => files
         .DisableCommands("extract", "archive")
-        .AddToolbarGroup("fullscreen"))
+        .AddToolbarGroup("fullscreen")
+        .WithVideoThumbnails())
     .AddTinyMce8(editor => editor
         .AddPlugins("codesample", "charmap")
         .WithToolbar("undo redo | bold italic | codesample charmap | link image")
@@ -162,10 +163,17 @@ Call `.UseHostSession()` when the host already calls `UseSession()`, as Mantle d
 WebFilez uses the same upload folder. `file-root` is the top of that browser: the user cannot navigate above it. Image fields ask for `image/*`. Folder fields show directories, and Use this folder writes the open folder. `.Server` configures WebFilez itself, including the upload limit. `.UseHostBlazor()` and `.UseHostApi()` leave an existing Blazor circuit or `MapWebFilezApi()` call in place.
 
 ```csharp
-.AddWebFilez(files => files
-    .WithTheme("auto")
-    .Server(server => server.MaxUploadBytes = 32 * 1024 * 1024));
+builder.Services.AddPickstack(builder.Configuration)
+    .AddWebFilez(files => files
+        .WithTheme("auto")
+        .Server(server => server.MaxUploadBytes = 32 * 1024 * 1024))
+    .AddVideo(video => video.DownloadIfMissing = true)
+    .AddAzureBlob()
+    .AddAmazonS3()
+    .Pickstack;
 ```
+
+`AddWebFilez` switches to a WebFilez builder, so `AddAzureBlob` and the other WebFilez packages appear only after that call. `.Pickstack` returns to the product-agnostic builder for an editor. Reference only the packages you call. Leave `AddVideo` out and videos keep their icon. `DownloadIfMissing` fetches the GPL ffmpeg build.
 
 That root is always the shared Pickstack folder. `AddPickstack` binds `Pickstack:Storage` to `IFileStorage`, and the WebFilez adapter publishes it as the `media` root on the filesystem provider. `file-root` (such as a tenant folder) is created on that disk before the browser opens. Swapping to elFinder or Responsive File Manager still sees those files.
 
@@ -185,9 +193,8 @@ That root is always the shared Pickstack folder. `AddPickstack` binds `Pickstack
 WebFilez can also show a root stored somewhere else. Register the provider package, then add the root inside `Server`. `FileRoot` is `WebFilez.Services.FileRoot`. The adapter does not read a `WebFilez` configuration section, so this callback is where the root is declared. Azure Blob:
 
 ```csharp
-builder.Services.AddWebFilezAzureBlob();
-
-builder.Services.AddPickstack(builder.Configuration).AddWebFilez(files => files.Server(server =>
+builder.Services.AddPickstack(builder.Configuration)
+    .AddWebFilez(files => files.Server(server =>
 {
     server.MaxUploadBytes = 32 * 1024 * 1024;
     server.Roots.Add(new FileRoot
@@ -203,17 +210,18 @@ builder.Services.AddPickstack(builder.Configuration).AddWebFilez(files => files.
             ["Container"] = "media"
         }
     });
-}));
+}))
+.AddAzureBlob();
 ```
 
 `assets` appears beside `media`. The same shape works for the other provider packages:
 
 | Package | Registration | `Provider` | `Settings` |
 | --- | --- | --- | --- |
-| `WebFilez.Storage.AzureBlob` | `AddWebFilezAzureBlob()` | `azure-blob` | `ConnectionString`, `Container` |
-| `WebFilez.Storage.AmazonS3` | `AddWebFilezAmazonS3()` | `amazon-s3` | `AccessKey`, `SecretKey`, `Bucket` |
-| `WebFilez.Storage.GoogleCloud` | `AddWebFilezGoogleCloud()` | `google-cloud` | `Bucket` |
-| `WebFilez.Storage.AzureFiles` | `AddWebFilezAzureFiles()` | `azure-file` | `ConnectionString`, `Share` |
+| `WebFilez.Storage.AzureBlob` | `AddAzureBlob()` | `azure-blob` | `ConnectionString`, `Container` |
+| `WebFilez.Storage.AmazonS3` | `AddAmazonS3()` | `amazon-s3` | `AccessKey`, `SecretKey`, `Bucket` |
+| `WebFilez.Storage.GoogleCloud` | `AddGoogleCloud()` | `google-cloud` | `Bucket` |
+| `WebFilez.Storage.AzureFiles` | `AddAzureFiles()` | `azure-file` | `ConnectionString`, `Share` |
 
 `Path` is a prefix inside that store. `PublicBaseUrl` is the address written into content, such as a CDN host.
 

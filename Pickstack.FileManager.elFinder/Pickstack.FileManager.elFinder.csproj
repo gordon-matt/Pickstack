@@ -4,7 +4,6 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>1.0.4</Version>
 		<Description>elFinder adapter for Pickstack. Provides the Pickstack file manager using elFinder.NetCore.</Description>
 		<PackageTags>pickstack;aspnetcore;file-manager;elfinder;file-browser;file-picker</PackageTags>
 	</PropertyGroup>
@@ -12,18 +11,17 @@
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
-
 	<ItemGroup>
-		<EmbeddedResource Include="Assets\elfinder.js" LogicalName="elfinder.js" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="elFinder.NetCore" Version="1.7.1" />
+		<PackageReference Include="elFinder.NetCore" Version="1.8.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Pickstack.FileManager\Pickstack.FileManager.csproj" />
 		<ProjectReference Include="..\Pickstack\Pickstack.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Assets\elfinder.js" LogicalName="elfinder.js" />
 	</ItemGroup>
 
 </Project>

@@ -11,9 +11,10 @@ Shared coding conventions live in Blueprint/.cursor/rules/conventions.mdc (absol
 
 | Name | How it's consumed | Package ID and version | Source location |
 | --- | --- | --- | --- |
-| elFinder.NetCore | NuGet PackageReference | elFinder.NetCore 1.6.0 | `D:\Source\GitHub\Components\elFinder.NetCore` (`..\..\Components\elFinder.NetCore`) |
-| WebFilez.AspNetCore | NuGet PackageReference | WebFilez.AspNetCore 1.0.0 | `D:\Source\GitHub\Components\WebFilez` (`..\..\Components\WebFilez`) |
-| WebFilez.Components | NuGet PackageReference | WebFilez.Components 1.0.0 | `D:\Source\GitHub\Components\WebFilez` (`..\..\Components\WebFilez`) |
+| elFinder.NetCore | ProjectReference from `Pickstack.FileManager.elFinder` | elFinder.NetCore (local) | `D:\Source\GitHub\Components\elFinder.NetCore` (`..\..\Components\elFinder.NetCore`) |
+| WebFilez.AspNetCore | ProjectReference from `Pickstack.FileManager.WebFilez` | WebFilez.AspNetCore (local) | `D:\Source\GitHub\Components\WebFilez` (`..\..\Components\WebFilez`) |
+| WebFilez.Components | ProjectReference from `Pickstack.FileManager.WebFilez` | WebFilez.Components (local) | `D:\Source\GitHub\Components\WebFilez` (`..\..\Components\WebFilez`) |
+| WebFilez.Plugins.Video | ProjectReference from `Pickstack.Demo` only | WebFilez.Plugins.Video (local) | `D:\Source\GitHub\Components\WebFilez` (`..\..\Components\WebFilez`) |
 | WebFilez.Plugins.FileRobot | NuGet PackageReference | WebFilez.Plugins.FileRobot 1.0.0 | `D:\Source\GitHub\Components\WebFilez` (`..\..\Components\WebFilez`) |
 | WebFilez.Plugins.FortuneSheet | NuGet PackageReference | WebFilez.Plugins.FortuneSheet 1.0.0 | `D:\Source\GitHub\Components\WebFilez` (`..\..\Components\WebFilez`) |
 | WebFilez.Plugins.SuperDoc | NuGet PackageReference | WebFilez.Plugins.SuperDoc 1.0.0 | `D:\Source\GitHub\Components\WebFilez` (`..\..\Components\WebFilez`) |

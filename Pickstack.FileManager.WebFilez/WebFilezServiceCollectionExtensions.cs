@@ -41,8 +41,8 @@ public static class WebFilezServiceCollectionExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="configure">The configure.</param>
-    /// <returns>The web filez.</returns>
-    public static PickstackBuilder AddWebFilez(this PickstackBuilder builder, Action<WebFilezFileManagerOptions>? configure = null)
+    /// <returns>A builder that accepts WebFilez package methods. Use <see cref="WebFilezPickstackBuilder.Pickstack"/> to continue with Pickstack.</returns>
+    public static WebFilezPickstackBuilder AddWebFilez(this PickstackBuilder builder, Action<WebFilezFileManagerOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -55,8 +55,7 @@ public static class WebFilezServiceCollectionExtensions
 
         // Registered first so AddWebFilez's TryAdd leaves this provider in place.
         builder.Services.AddScoped<IFileRootProvider, PickstackFileRootProvider>();
-        builder.Services.AddWebFilez(configure: probe.ConfigureServer);
-        builder.Services.AddWebFilezComponents();
+        builder.Services.AddWebFilez(configure: probe.ConfigureServer).AddComponents();
         builder.Services.AddServerSideBlazor();
 
         builder.Services.RemoveAll<IFileManager>();
@@ -64,6 +63,6 @@ public static class WebFilezServiceCollectionExtensions
         builder.Services.AddSingleton<IFileManager>(services => services.GetRequiredService<WebFilezFileManager>());
         builder.Services.AddSingleton<IPickstackAssetSource>(services => services.GetRequiredService<WebFilezFileManager>());
         builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IPickstackStartup, WebFilezFileManagerStartup>());
-        return builder;
+        return new WebFilezPickstackBuilder(builder);
     }
 }

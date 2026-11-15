@@ -12,6 +12,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="WebFilez.Plugins.Video" Version="1.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\Pickstack.FileManager.elFinder\Pickstack.FileManager.elFinder.csproj" />
 		<ProjectReference Include="..\Pickstack.FileManager.ResponsiveFileManager\Pickstack.FileManager.ResponsiveFileManager.csproj" />
 		<ProjectReference Include="..\Pickstack.FileManager.WebFilez\Pickstack.FileManager.WebFilez.csproj" />
