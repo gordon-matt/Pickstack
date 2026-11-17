@@ -17,6 +17,14 @@
                 settings.height = options.height;
             }
 
+            if (typeof options.minHeight === "number") {
+                settings.resize_minHeight = options.minHeight;
+            }
+
+            if (typeof options.maxHeight === "number") {
+                settings.resize_maxHeight = options.maxHeight;
+            }
+
             if (options.addPlugins) {
                 settings.extraPlugins = joinPlugins(settings.extraPlugins, options.addPlugins);
             }

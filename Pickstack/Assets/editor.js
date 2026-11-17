@@ -13,7 +13,7 @@ export function mount(element, options, dotnet) {
                 return;
             }
 
-            var started = window.Pickstack.editors.init(element, {
+            var instance = {
                 height: options && options.height,
                 plugins: options && options.plugins,
                 addPlugins: options && options.addPlugins,
@@ -30,7 +30,17 @@ export function mount(element, options, dotnet) {
                         applyPending(element, editor);
                     });
                 }
-            });
+            };
+
+            if (options && typeof options.minHeight === "number") {
+                instance.minHeight = options.minHeight;
+            }
+
+            if (options && typeof options.maxHeight === "number") {
+                instance.maxHeight = options.maxHeight;
+            }
+
+            var started = window.Pickstack.editors.init(element, instance);
 
             if (started === false) {
                 retry();

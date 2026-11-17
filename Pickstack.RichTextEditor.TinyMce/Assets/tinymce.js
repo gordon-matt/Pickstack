@@ -152,6 +152,14 @@
             init.height = options.height;
         }
 
+        if (typeof options.minHeight === "number") {
+            init.min_height = options.minHeight;
+        }
+
+        if (typeof options.maxHeight === "number") {
+            init.max_height = options.maxHeight;
+        }
+
         if (options.plugins) {
             init.plugins = options.plugins;
         } else if (options.addPlugins) {

@@ -3,7 +3,7 @@ namespace Pickstack.RichTextEditor.TinyMce;
 /// <summary>
 /// Site-wide TinyMCE settings. Fluent methods return the same instance so they can be chained
 /// from <c>AddTinyMce5</c>, <c>AddTinyMce6</c>, <c>AddTinyMce7</c>, or <c>AddTinyMce8</c>.
-/// A field's <c>height</c> attribute overrides <see cref="Height"/> for that editor.
+/// A field's <c>height</c>, <c>min-height</c>, or <c>max-height</c> attribute overrides the matching setting for that editor.
 /// </summary>
 public sealed class TinyMceOptions
 {
@@ -20,6 +20,19 @@ public sealed class TinyMceOptions
     /// Gets or sets the height.
     /// </summary>
     public int Height { get; set; } = 420;
+
+    /// <summary>
+    /// Minimum editor height in pixels. The <c>autoresize</c> plugin sizes the editor to its content
+    /// and uses this value as the floor, so <see cref="Height"/> no longer holds it at a fixed size.
+    /// Leave unset to keep TinyMCE's own default.
+    /// </summary>
+    public int? MinHeight { get; set; }
+
+    /// <summary>
+    /// Maximum editor height in pixels. With <c>autoresize</c>, the editor scrolls once the content
+    /// is taller than this. Leave unset for no maximum.
+    /// </summary>
+    public int? MaxHeight { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is menubar.
@@ -82,6 +95,11 @@ public sealed class TinyMceOptions
     /// </summary>
     public string Toolbar { get; set; } = "undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media | code";
 
+    /// <summary>
+    /// Toolbar rows. When this has any entries, TinyMCE receives a <c>toolbar</c> array and <see cref="Toolbar"/> is not sent.
+    /// </summary>
+    public IReadOnlyList<string>? Toolbars { get; set; }
+
     /// <summary>Extra TinyMCE init values. Structured settings are applied after these, and the file picker stays wired to Pickstack.</summary>
     public Dictionary<string, object?> CustomOptions { get; } = [];
 
@@ -115,6 +133,24 @@ public sealed class TinyMceOptions
     public TinyMceOptions WithHeight(int pixels)
     {
         Height = pixels;
+        return this;
+    }
+
+    /// <summary>Sets the minimum editor height, in pixels.</summary>
+    /// <param name="pixels">The pixels.</param>
+    /// <returns>The same options instance.</returns>
+    public TinyMceOptions WithMinHeight(int pixels)
+    {
+        MinHeight = pixels;
+        return this;
+    }
+
+    /// <summary>Sets the maximum editor height, in pixels.</summary>
+    /// <param name="pixels">The pixels.</param>
+    /// <returns>The same options instance.</returns>
+    public TinyMceOptions WithMaxHeight(int pixels)
+    {
+        MaxHeight = pixels;
         return this;
     }
 
@@ -196,13 +232,24 @@ public sealed class TinyMceOptions
     }
 
     /// <summary>
-    /// Returns a copy with the toolbar.
+    /// Returns a copy with the toolbar. Replaces any rows set with <see cref="WithToolbars"/>.
     /// </summary>
     /// <param name="toolbar">The toolbar.</param>
-    /// <returns>The toolbar.</returns>
+    /// <returns>The same options instance.</returns>
     public TinyMceOptions WithToolbar(string toolbar)
     {
         Toolbar = toolbar;
+        Toolbars = null;
+        return this;
+    }
+
+    /// <summary>Shows one toolbar row for each string. Replaces <see cref="WithToolbar"/>.</summary>
+    /// <param name="toolbars">The toolbar rows, from top to bottom.</param>
+    /// <returns>The same options instance.</returns>
+    public TinyMceOptions WithToolbars(params string[] toolbars)
+    {
+        ArgumentNullException.ThrowIfNull(toolbars);
+        Toolbars = [.. toolbars];
         return this;
     }
 
@@ -229,9 +276,26 @@ public sealed class TinyMceOptions
         }
 
         init["height"] = Height;
+        if (MinHeight is int minHeight)
+        {
+            init["min_height"] = minHeight;
+        }
+
+        if (MaxHeight is int maxHeight)
+        {
+            init["max_height"] = maxHeight;
+        }
+
         init["menubar"] = Menubar;
         init["plugins"] = string.Join(' ', Plugins);
-        init["toolbar"] = Toolbar;
+        if (Toolbars is { Count: > 0 } toolbars)
+        {
+            init["toolbar"] = toolbars;
+        }
+        else
+        {
+            init["toolbar"] = Toolbar;
+        }
         init["relative_urls"] = RelativeUrls;
         init["remove_script_host"] = RemoveScriptHost;
         init["convert_urls"] = ConvertUrls;

@@ -37,6 +37,14 @@ public sealed class EditorTagHelper : TagHelper
     /// </summary>
     public int? Height { get; set; }
 
+    /// <summary>Minimum height for this field, in pixels. Overrides the registered editor's minimum.</summary>
+    [HtmlAttributeName("min-height")]
+    public int? MinHeight { get; set; }
+
+    /// <summary>Maximum height for this field, in pixels. Overrides the registered editor's maximum.</summary>
+    [HtmlAttributeName("max-height")]
+    public int? MaxHeight { get; set; }
+
     /// <summary>Replaces the registered plugin list for this field.</summary>
     [HtmlAttributeName("plugins")]
     public string? Plugins { get; set; }
@@ -92,6 +100,16 @@ public sealed class EditorTagHelper : TagHelper
         if (Height is int height)
         {
             options["height"] = height;
+        }
+
+        if (MinHeight is int minHeight)
+        {
+            options["minHeight"] = minHeight;
+        }
+
+        if (MaxHeight is int maxHeight)
+        {
+            options["maxHeight"] = maxHeight;
         }
 
         if (!string.IsNullOrWhiteSpace(Plugins))

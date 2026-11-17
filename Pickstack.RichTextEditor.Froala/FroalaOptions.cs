@@ -2,7 +2,7 @@ namespace Pickstack.RichTextEditor.Froala;
 
 /// <summary>
 /// Site-wide Froala settings. Fluent methods return the same instance so they can be chained
-/// from <c>AddFroala5</c>. A field's <c>height</c> attribute overrides <see cref="Height"/> for that editor.
+/// from <c>AddFroala5</c>. A field's <c>height</c>, <c>min-height</c>, or <c>max-height</c> attribute overrides the matching setting for that editor.
 /// Image, video, and file buttons stay wired to Pickstack.
 /// </summary>
 public sealed class FroalaOptions
@@ -26,6 +26,18 @@ public sealed class FroalaOptions
     /// Gets or sets the height.
     /// </summary>
     public int Height { get; set; } = 420;
+
+    /// <summary>
+    /// Minimum editor height in pixels. When set, Froala grows with the content and will not shrink below this.
+    /// Leave unset to keep Froala's own default.
+    /// </summary>
+    public int? MinHeight { get; set; }
+
+    /// <summary>
+    /// Maximum editor height in pixels. Content scrolls once it is taller than this.
+    /// Leave unset for no maximum.
+    /// </summary>
+    public int? MaxHeight { get; set; }
 
     /// <summary>Froala license key. Leave empty for an unlicensed editor.</summary>
     public string? LicenseKey { get; set; }
@@ -150,6 +162,24 @@ public sealed class FroalaOptions
         return this;
     }
 
+    /// <summary>Sets the minimum editor height, in pixels.</summary>
+    /// <param name="pixels">The pixels.</param>
+    /// <returns>The same options instance.</returns>
+    public FroalaOptions WithMinHeight(int pixels)
+    {
+        MinHeight = pixels;
+        return this;
+    }
+
+    /// <summary>Sets the maximum editor height, in pixels.</summary>
+    /// <param name="pixels">The pixels.</param>
+    /// <returns>The same options instance.</returns>
+    public FroalaOptions WithMaxHeight(int pixels)
+    {
+        MaxHeight = pixels;
+        return this;
+    }
+
     /// <summary>
     /// Returns a copy with the license key.
     /// </summary>
@@ -227,6 +257,16 @@ public sealed class FroalaOptions
             ["videoUpload"] = false,
             ["fileUpload"] = false
         };
+
+        if (MinHeight is int minHeight)
+        {
+            init["heightMin"] = minHeight;
+        }
+
+        if (MaxHeight is int maxHeight)
+        {
+            init["heightMax"] = maxHeight;
+        }
 
         if (!string.IsNullOrWhiteSpace(LicenseKey))
         {

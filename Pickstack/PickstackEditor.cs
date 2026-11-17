@@ -40,6 +40,14 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
     [Parameter]
     public int? Height { get; set; }
 
+    /// <summary>Minimum height for this editor, in pixels. Overrides the registered editor's minimum.</summary>
+    [Parameter]
+    public int? MinHeight { get; set; }
+
+    /// <summary>Maximum height for this editor, in pixels. Overrides the registered editor's maximum.</summary>
+    [Parameter]
+    public int? MaxHeight { get; set; }
+
     /// <summary>
     /// Gets or sets the plugins.
     /// </summary>
@@ -224,6 +232,16 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
         if (Height is int height)
         {
             options["height"] = height;
+        }
+
+        if (MinHeight is int minHeight)
+        {
+            options["minHeight"] = minHeight;
+        }
+
+        if (MaxHeight is int maxHeight)
+        {
+            options["maxHeight"] = maxHeight;
         }
 
         if (!string.IsNullOrWhiteSpace(Plugins))

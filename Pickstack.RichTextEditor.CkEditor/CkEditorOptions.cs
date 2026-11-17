@@ -17,6 +17,16 @@ public sealed class CkEditorOptions
     public int Height { get; set; } = 420;
 
     /// <summary>
+    /// Minimum height of the resize handle, in pixels. Leave unset to keep CKEditor's own default.
+    /// </summary>
+    public int? MinHeight { get; set; }
+
+    /// <summary>
+    /// Maximum height of the resize handle, in pixels. Leave unset for no maximum.
+    /// </summary>
+    public int? MaxHeight { get; set; }
+
+    /// <summary>
     /// Gets or sets the browse window width.
     /// </summary>
     public int BrowseWindowWidth { get; set; } = 980;
@@ -63,6 +73,24 @@ public sealed class CkEditorOptions
     public CkEditorOptions WithHeight(int pixels)
     {
         Height = pixels;
+        return this;
+    }
+
+    /// <summary>Sets the minimum editor height, in pixels.</summary>
+    /// <param name="pixels">The pixels.</param>
+    /// <returns>The same options instance.</returns>
+    public CkEditorOptions WithMinHeight(int pixels)
+    {
+        MinHeight = pixels;
+        return this;
+    }
+
+    /// <summary>Sets the maximum editor height, in pixels.</summary>
+    /// <param name="pixels">The pixels.</param>
+    /// <returns>The same options instance.</returns>
+    public CkEditorOptions WithMaxHeight(int pixels)
+    {
+        MaxHeight = pixels;
         return this;
     }
 
@@ -165,6 +193,16 @@ public sealed class CkEditorOptions
             ["filebrowserWindowWidth"] = BrowseWindowWidth,
             ["filebrowserWindowHeight"] = BrowseWindowHeight
         };
+
+        if (MinHeight is int minHeight)
+        {
+            config["resize_minHeight"] = minHeight;
+        }
+
+        if (MaxHeight is int maxHeight)
+        {
+            config["resize_maxHeight"] = maxHeight;
+        }
 
         if (Toolbar.Count > 0)
         {
