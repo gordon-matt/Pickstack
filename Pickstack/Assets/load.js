@@ -1,4 +1,17 @@
-export async function load(items) {
+// One load at a time. Two PickstackScripts on the same page otherwise both see a script tag that
+// has not finished running, and the file manager script gives up because Pickstack is not there yet.
+var chain = Promise.resolve();
+var loadedScripts = Object.create(null);
+
+export function load(items) {
+    var run = chain.then(function () {
+        return loadItems(items);
+    });
+    chain = run.catch(function () { });
+    return run;
+}
+
+async function loadItems(items) {
     if (!items || !items.length) {
         return;
     }
@@ -43,14 +56,22 @@ function ensureJson(id, content) {
 }
 
 function ensureScript(url) {
-    if (!url || hasUrl("script", "src", url)) {
+    if (!url) {
+        return Promise.resolve();
+    }
+
+    var absolute = new URL(url, document.baseURI).href;
+    if (loadedScripts[absolute]) {
         return Promise.resolve();
     }
 
     return new Promise(function (resolve, reject) {
         var script = document.createElement("script");
         script.src = url;
-        script.onload = function () { resolve(); };
+        script.onload = function () {
+            loadedScripts[absolute] = true;
+            resolve();
+        };
         script.onerror = function () { reject(new Error("Failed to load " + url)); };
         document.head.appendChild(script);
     });

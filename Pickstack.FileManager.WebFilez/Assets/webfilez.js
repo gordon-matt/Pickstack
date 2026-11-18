@@ -6,10 +6,25 @@
     var frame = null;
     var folderUrl = "";
 
+    // A second script loader can run this before pickstack.js has finished. Wait instead of
+    // leaving the file manager unregistered for the rest of the page.
     if (!window.Pickstack) {
+        var attempts = 0;
+        var timer = window.setInterval(function () {
+            attempts += 1;
+            if (window.Pickstack) {
+                window.clearInterval(timer);
+                start();
+            } else if (attempts > 200) {
+                window.clearInterval(timer);
+            }
+        }, 30);
         return;
     }
 
+    start();
+
+    function start() {
     window.addEventListener("message", function (event) {
         if (event.origin !== window.location.origin || !frame || event.source !== frame.contentWindow) {
             return;
@@ -66,4 +81,5 @@
             return folderUrl;
         }
     });
+    }
 })(window, document);
