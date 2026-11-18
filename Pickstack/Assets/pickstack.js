@@ -18,6 +18,10 @@
         use: function (provider) {
             fileProvider = provider;
         },
+        // Editors leave their own dialogs in place until a file manager calls use().
+        isRegistered: function () {
+            return fileProvider !== null;
+        },
         open: function (options) {
             options = options || {};
 

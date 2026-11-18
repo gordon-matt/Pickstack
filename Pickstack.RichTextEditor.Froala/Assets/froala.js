@@ -26,6 +26,11 @@
                 applyInstance(init, options);
                 init.events = Object.assign({}, init.events, {
                     "commands.before": function (cmd) {
+                        // Let Froala open its own insert popup when no file manager is registered.
+                        if (!window.Pickstack.files.isRegistered()) {
+                            return;
+                        }
+
                         return openPicker(this, cmd, options);
                     }
                 });

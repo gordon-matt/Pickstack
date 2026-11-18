@@ -33,9 +33,13 @@
                 settings.toolbar = options.toolbar;
             }
 
-            var root = options.fileRoot ? "&root=" + encodeURIComponent(options.fileRoot) : "";
-            settings.filebrowserBrowseUrl = "/pickstack/ckeditor/browse?type=file" + root;
-            settings.filebrowserImageBrowseUrl = "/pickstack/ckeditor/browse?type=image" + root;
+            // Browse Server only appears when these URLs are set. Without a file manager, CKEditor keeps its own dialogs.
+            if (window.Pickstack.files.isRegistered()) {
+                var root = options.fileRoot ? "&root=" + encodeURIComponent(options.fileRoot) : "";
+                settings.filebrowserBrowseUrl = "/pickstack/ckeditor/browse?type=file" + root;
+                settings.filebrowserImageBrowseUrl = "/pickstack/ckeditor/browse?type=image" + root;
+            }
+
             window.CKEDITOR.replace(element, settings);
         }
     });

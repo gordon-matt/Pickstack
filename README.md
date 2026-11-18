@@ -25,7 +25,7 @@ Pickstack.files.open({
 
 `callback` runs when a file is chosen. `onClose` runs when the dialog is dismissed without one: the close button, Escape, a click outside it, or another `open` replacing it. A choice does not also call `onClose`.
 
-The cover-image button calls that. TinyMCE's file picker calls that. CKEditor opens a Pickstack browse page that mounts the same manager. Replacing the manager replaces the function, so every picker on the site follows.
+The cover-image button calls that. TinyMCE's file picker, Froala's insert commands, and CKEditor's browse window call it when a file manager is registered. With no file manager, those editors keep their own insert dialogs. Replacing the manager replaces the function, so every picker on the site follows.
 
 Both adapters read and write `wwwroot/media` (URL `/media/`). Files uploaded with one manager are still there after the swap.
 
@@ -142,7 +142,7 @@ CKEditor groups buttons the same way. An empty toolbar leaves CKEditor's default
         ["Link", "Image"]));
 ```
 
-Froala uses the same field attributes. Image, video, and file buttons open the file manager. `WithLicenseKey` supplies a Froala license key.
+Froala uses the same field attributes. Image, video, and file buttons open the file manager when one is registered, and Froala's own insert popup otherwise. `WithLicenseKey` supplies a Froala license key.
 
 ```csharp
 .AddFroala5(editor => editor
@@ -240,7 +240,7 @@ A file manager implements `IFileManager`:
 - `options.root` is the relative folder to open, such as `42/7`. Pickstack creates it before calling `mount`.
 - Register the class as `IFileManager` and as `IPickstackAssetSource` if the script is embedded. `AddFileManager<T>()` only registers the interface; an adapter with endpoints or middleware should add its own extension, as `AddElFinder` does.
 
-An editor implements `IRichTextEditor` and registers with `Pickstack.editors.use({ init: function (element, options) { ... } })`. When it needs a file, it calls `Pickstack.files.open` instead of embedding a file-manager URL.
+An editor implements `IRichTextEditor` and registers with `Pickstack.editors.use({ init: function (element, options) { ... } })`. When it needs a file and `Pickstack.files.isRegistered()` is true, it calls `Pickstack.files.open`. Otherwise it leaves the editor's own dialog in place.
 
 ## Support
 
