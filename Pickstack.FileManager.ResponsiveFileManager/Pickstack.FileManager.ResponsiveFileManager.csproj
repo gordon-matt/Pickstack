@@ -19,7 +19,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ResponsiveFileManager.AspNetCore" Version="2.0.1" />
+		<PackageReference Include="ResponsiveFileManager.AspNetCore" />
 	</ItemGroup>
 
 	<ItemGroup>

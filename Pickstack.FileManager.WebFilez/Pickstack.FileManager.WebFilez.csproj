@@ -18,11 +18,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="WebFilez.AspNetCore" Version="1.1.1" />
-		<PackageReference Include="WebFilez.Components" Version="1.1.1" />
-		<PackageReference Include="WebFilez.Plugins.FileRobot" Version="1.1.1" />
-		<PackageReference Include="WebFilez.Plugins.FortuneSheet" Version="1.1.1" />
-		<PackageReference Include="WebFilez.Plugins.SuperDoc" Version="1.1.1" />
+		<PackageReference Include="WebFilez.AspNetCore" />
+		<PackageReference Include="WebFilez.Components" />
+		<PackageReference Include="WebFilez.Plugins.FileRobot" />
+		<PackageReference Include="WebFilez.Plugins.FortuneSheet" />
+		<PackageReference Include="WebFilez.Plugins.SuperDoc" />
 	</ItemGroup>
 
 	<ItemGroup>
