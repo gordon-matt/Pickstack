@@ -71,6 +71,13 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
     public string? FileRoot { get; set; }
 
     /// <summary>
+    /// When false, this editor keeps its own file dialog even if a file manager is registered.
+    /// Other editors on the same page are unchanged.
+    /// </summary>
+    [Parameter]
+    public bool FileManager { get; set; } = true;
+
+    /// <summary>
     /// Gets or sets the js.
     /// </summary>
     [Inject]
@@ -262,6 +269,11 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
         if (!string.IsNullOrWhiteSpace(FileRoot))
         {
             options["fileRoot"] = FileRoot;
+        }
+
+        if (!FileManager)
+        {
+            options["fileManager"] = false;
         }
 
         return options;

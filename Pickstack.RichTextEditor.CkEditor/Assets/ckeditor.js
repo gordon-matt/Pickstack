@@ -33,8 +33,8 @@
                 settings.toolbar = options.toolbar;
             }
 
-            // Browse Server only appears when these URLs are set. Without a file manager, CKEditor keeps its own dialogs.
-            if (window.Pickstack.files.isRegistered()) {
+            // Browse Server only appears when these URLs are set. This instance can opt out and keep CKEditor's own dialogs.
+            if (window.Pickstack.files.enabledFor(options)) {
                 var root = options.fileRoot ? "&root=" + encodeURIComponent(options.fileRoot) : "";
                 settings.filebrowserBrowseUrl = "/pickstack/ckeditor/browse?type=file" + root;
                 settings.filebrowserImageBrowseUrl = "/pickstack/ckeditor/browse?type=image" + root;

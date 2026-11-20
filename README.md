@@ -25,7 +25,7 @@ Pickstack.files.open({
 
 `callback` runs when a file is chosen. `onClose` runs when the dialog is dismissed without one: the close button, Escape, a click outside it, or another `open` replacing it. A choice does not also call `onClose`.
 
-The cover-image button calls that. TinyMCE's file picker, Froala's insert commands, and CKEditor's browse window call it when a file manager is registered. With no file manager, those editors keep their own insert dialogs. Replacing the manager replaces the function, so every picker on the site follows.
+The cover-image button calls that. TinyMCE's file picker, Froala's insert commands, and CKEditor's browse window call it when a file manager is registered. With no file manager, those editors keep their own insert dialogs. One editor can opt out with `file-manager="false"` (or `FileManager="false"` in Blazor) while the others on the page still use the file manager. Replacing the manager replaces the function, so every picker that has not opted out follows.
 
 Both adapters read and write `wwwroot/media` (URL `/media/`). Files uploaded with one manager are still there after the swap.
 
@@ -111,10 +111,10 @@ Each `Add` method accepts a fluent options object for that product. These settin
 ```html
 <pickstack-file asp-for="CoverImage" file-type="Image" file-root="42/7" />
 <pickstack-files file-type="Folder" file-root="42/7" />
-<pickstack-editor asp-for="Body" file-root="42/7" add-plugins="contentzone" toolbar="undo redo | contentzone" />
+<pickstack-editor asp-for="Body" file-root="42/7" file-manager="false" add-plugins="contentzone" toolbar="undo redo | contentzone" />
 ```
 
-`file-root` is a relative folder under the upload directory. `42/7` is a tenant and user; a single segment works the same way. `file-type="Folder"` shows directories. Clicking a folder opens it, and Use this folder writes the open folder's path into the field. A `<pickstack-editor>` `height`, `min-height`, `max-height`, `plugins`, `add-plugins`, or `toolbar` attribute applies to that field only. The file picker stays connected to Pickstack.
+`file-root` is a relative folder under the upload directory. `42/7` is a tenant and user; a single segment works the same way. `file-type="Folder"` shows directories. Clicking a folder opens it, and Use this folder writes the open folder's path into the field. A `<pickstack-editor>` `height`, `min-height`, `max-height`, `plugins`, `add-plugins`, `toolbar`, or `file-manager` attribute applies to that field only. `file-manager="false"` leaves that editor's own insert dialog in place. The other editors still open the registered file manager.
 
 Same-origin file URLs are stored as root-relative paths, such as `/media/42/7/photo.png`. TinyMCE keeps that form by removing the script host.
 
@@ -240,7 +240,7 @@ A file manager implements `IFileManager`:
 - `options.root` is the relative folder to open, such as `42/7`. Pickstack creates it before calling `mount`.
 - Register the class as `IFileManager` and as `IPickstackAssetSource` if the script is embedded. `AddFileManager<T>()` only registers the interface; an adapter with endpoints or middleware should add its own extension, as `AddElFinder` does.
 
-An editor implements `IRichTextEditor` and registers with `Pickstack.editors.use({ init: function (element, options) { ... } })`. When it needs a file and `Pickstack.files.isRegistered()` is true, it calls `Pickstack.files.open`. Otherwise it leaves the editor's own dialog in place.
+An editor implements `IRichTextEditor` and registers with `Pickstack.editors.use({ init: function (element, options) { ... } })`. When it needs a file and `Pickstack.files.enabledFor(options)` is true, it calls `Pickstack.files.open`. That is false when no file manager is registered, and when this instance set `fileManager: false`. Otherwise it leaves the editor's own dialog in place.
 
 ## Support
 

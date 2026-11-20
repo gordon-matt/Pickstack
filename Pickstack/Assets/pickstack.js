@@ -22,6 +22,10 @@
         isRegistered: function () {
             return fileProvider !== null;
         },
+        // An editor instance can pass fileManager: false and keep its own dialog.
+        enabledFor: function (options) {
+            return fileProvider !== null && (!options || options.fileManager !== false);
+        },
         open: function (options) {
             options = options || {};
 

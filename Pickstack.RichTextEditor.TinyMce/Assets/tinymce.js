@@ -55,8 +55,9 @@
                     themedEditors.push(editor);
                     watchHostTheme();
                 };
-                // No browse button without a file manager, so TinyMCE keeps its own image, link, and media dialogs.
-                if (window.Pickstack.files.isRegistered()) {
+                // No browse button unless this instance uses the registered file manager.
+                // TinyMCE then keeps its own image, link, and media dialogs.
+                if (window.Pickstack.files.enabledFor(options)) {
                     init.file_picker_callback = function (callback, value, meta) {
                         window.Pickstack.files.open({
                             type: meta && meta.filetype ? meta.filetype : "file",

@@ -2,7 +2,8 @@ namespace Pickstack.RichTextEditor.CkEditor;
 
 /// <summary>
 /// Site-wide CKEditor 4 settings. An empty toolbar leaves CKEditor's own toolbar in place.
-/// When a file manager is registered, the provider script points Browse Server at it. Otherwise CKEditor keeps its own dialogs.
+/// When a file manager is registered, the provider script points Browse Server at it.
+/// An editor instance can set <c>file-manager="false"</c> and keep CKEditor's own dialogs.
 /// </summary>
 public sealed class CkEditorOptions
 {

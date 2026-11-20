@@ -62,6 +62,13 @@ public sealed class EditorTagHelper : TagHelper
     public string? FileRoot { get; set; }
 
     /// <summary>
+    /// When false, this field keeps the editor's own file dialog even if a file manager is registered.
+    /// Other editors on the same page are unchanged.
+    /// </summary>
+    [HtmlAttributeName("file-manager")]
+    public bool FileManager { get; set; } = true;
+
+    /// <summary>
     /// Gets or sets the view context.
     /// </summary>
     [ViewContext]
@@ -130,6 +137,11 @@ public sealed class EditorTagHelper : TagHelper
         if (!string.IsNullOrWhiteSpace(FileRoot))
         {
             options["fileRoot"] = FileRoot;
+        }
+
+        if (!FileManager)
+        {
+            options["fileManager"] = false;
         }
 
         return options;

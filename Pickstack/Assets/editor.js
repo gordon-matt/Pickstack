@@ -19,6 +19,7 @@ export function mount(element, options, dotnet) {
                 addPlugins: options && options.addPlugins,
                 toolbar: options && options.toolbar,
                 fileRoot: options && options.fileRoot,
+                fileManager: options && options.fileManager,
                 setup: function (editor) {
                     element._pickstackEditor = editor;
                     editor.on("change keyup", function () {

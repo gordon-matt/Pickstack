@@ -26,8 +26,8 @@
                 applyInstance(init, options);
                 init.events = Object.assign({}, init.events, {
                     "commands.before": function (cmd) {
-                        // Let Froala open its own insert popup when no file manager is registered.
-                        if (!window.Pickstack.files.isRegistered()) {
+                        // Let Froala open its own insert popup when this instance is not using the file manager.
+                        if (!window.Pickstack.files.enabledFor(options)) {
                             return;
                         }
 
