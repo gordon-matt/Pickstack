@@ -2,32 +2,25 @@ using Pickstack.RichTextEditor.Froala;
 
 namespace Pickstack.RichTextEditor.Froala5;
 
-/// <summary>
-/// Provides extension methods for froala5service collections.
-/// </summary>
+/// <summary>Registers Froala 5.5.0.</summary>
 public static class Froala5ServiceCollectionExtensions
 {
-    /// <summary>
-    /// The key constant.
-    /// </summary>
+    /// <summary>The configuration name. The value is <c>Froala5</c>.</summary>
     public const string Key = "Froala5";
 
-    /// <summary>
-    /// The local script URL constant.
-    /// </summary>
+    /// <summary>The script shipped in this package. The value is <c>/_content/Pickstack.RichTextEditor.Froala5/froala_editor.pkgd.min.js</c>.</summary>
     public const string LocalScriptUrl = "/_content/Pickstack.RichTextEditor.Froala5/froala_editor.pkgd.min.js";
 
-    /// <summary>
-    /// The local style URL constant.
-    /// </summary>
+    /// <summary>The stylesheet shipped in this package. The value is <c>/_content/Pickstack.RichTextEditor.Froala5/froala_editor.pkgd.min.css</c>.</summary>
     public const string LocalStyleUrl = "/_content/Pickstack.RichTextEditor.Froala5/froala_editor.pkgd.min.css";
 
     /// <summary>
-    /// Adds the froala5.
+    /// Registers Froala 5 as the only editor. The CDN script and stylesheet are loaded first, and the copies in this package are the fallbacks.
+    /// <paramref name="configure"/> runs after those defaults and can replace them.
     /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="configure">The configure.</param>
-    /// <returns>The froala5.</returns>
+    /// <param name="builder">The Pickstack builder.</param>
+    /// <param name="configure">Adjusts the options. <see langword="null"/> keeps the Froala 5 defaults.</param>
+    /// <returns>The same builder.</returns>
     public static PickstackBuilder AddFroala5(this PickstackBuilder builder, Action<FroalaOptions>? configure = null)
     {
         return builder.AddFroala(options =>

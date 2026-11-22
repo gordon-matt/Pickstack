@@ -10,6 +10,8 @@ namespace Pickstack.FileManager.WebFilez;
 public sealed class WebFilezPickstackBuilder : IWebFilezBuilder
 {
     /// <summary>Wraps the Pickstack builder that selected WebFilez.</summary>
+    /// <param name="pickstack">The builder returned by <c>AddPickstack</c>.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="pickstack"/> is <see langword="null"/>.</exception>
     public WebFilezPickstackBuilder(PickstackBuilder pickstack)
     {
         ArgumentNullException.ThrowIfNull(pickstack);

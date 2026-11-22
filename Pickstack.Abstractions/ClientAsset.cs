@@ -5,13 +5,10 @@ namespace Pickstack.Abstractions;
 /// </summary>
 public enum ClientAssetKind
 {
-    /// <summary>
-    /// The style value.
-    /// </summary>
+    /// <summary>A stylesheet. It is emitted as a <c>link</c> element.</summary>
     Style,
-    /// <summary>
-    /// The script value.
-    /// </summary>
+
+    /// <summary>A script. It is emitted as a <c>script</c> element with a <c>src</c>.</summary>
     Script
 }
 
@@ -20,13 +17,9 @@ public enum ClientAssetKind
 /// </summary>
 public sealed class ClientAsset
 {
-    /// <summary>
-    /// Gets or sets the URL.
-    /// </summary>
+    /// <summary>Address of the stylesheet or script.</summary>
     public required string Url { get; init; }
 
-    /// <summary>
-    /// Gets or sets the kind.
-    /// </summary>
+    /// <summary>Whether <see cref="Url"/> is a stylesheet or a script.</summary>
     public required ClientAssetKind Kind { get; init; }
 }

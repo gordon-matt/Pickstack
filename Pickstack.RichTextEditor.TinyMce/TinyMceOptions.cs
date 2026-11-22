@@ -16,9 +16,7 @@ public sealed class TinyMceOptions
     /// <summary>URL of the copy shipped in the version package. Used when <see cref="ScriptUrl"/> fails to load.</summary>
     public string? FallbackUrl { get; set; }
 
-    /// <summary>
-    /// Gets or sets the height.
-    /// </summary>
+    /// <summary>Editor height in pixels. The default is 420. A field can override it.</summary>
     public int Height { get; set; } = 420;
 
     /// <summary>
@@ -34,9 +32,7 @@ public sealed class TinyMceOptions
     /// </summary>
     public int? MaxHeight { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is menubar.
-    /// </summary>
+    /// <summary><see langword="true"/> shows the menu bar. The default is <see langword="false"/>.</summary>
     public bool Menubar { get; set; }
 
     /// <summary>
@@ -45,39 +41,25 @@ public sealed class TinyMceOptions
     /// </summary>
     public bool IncludeLicense { get; set; } = true;
 
-    /// <summary>
-    /// Gets or sets the license key.
-    /// </summary>
+    /// <summary>Value sent as <c>license_key</c> when <see cref="IncludeLicense"/> is set. The default is <c>gpl</c>.</summary>
     public string LicenseKey { get; set; } = "gpl";
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is promotion.
-    /// </summary>
+    /// <summary><see langword="true"/> shows the TinyMCE promotion. Sent only when <see cref="IncludeLicense"/> is set. The default is <see langword="false"/>.</summary>
     public bool Promotion { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is relative urls.
-    /// </summary>
+    /// <summary><see langword="true"/> stores URLs relative to the document. The default is <see langword="false"/>, so a same-origin file stays root-relative.</summary>
     public bool RelativeUrls { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is remove script host.
-    /// </summary>
+    /// <summary><see langword="true"/> removes the host from same-origin URLs. The default is <see langword="true"/>.</summary>
     public bool RemoveScriptHost { get; set; } = true;
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is convert urls.
-    /// </summary>
+    /// <summary><see langword="true"/> lets TinyMCE rewrite URLs. The default is <see langword="true"/>.</summary>
     public bool ConvertUrls { get; set; } = true;
 
-    /// <summary>
-    /// Gets or sets the file picker types.
-    /// </summary>
+    /// <summary>TinyMCE file picker types, separated by spaces. The default is <c>file image media</c>.</summary>
     public string FilePickerTypes { get; set; } = "file image media";
 
-    /// <summary>
-    /// Gets or sets the plugins.
-    /// </summary>
+    /// <summary>Plugin names. The default is autolink, lists, link, image, media, table, code, and fullscreen.</summary>
     public List<string> Plugins { get; set; } =
     [
         "autolink",
@@ -90,9 +72,7 @@ public sealed class TinyMceOptions
         "fullscreen"
     ];
 
-    /// <summary>
-    /// Gets or sets the toolbar.
-    /// </summary>
+    /// <summary>One toolbar row. Ignored when <see cref="Toolbars"/> has any entries.</summary>
     public string Toolbar { get; set; } = "undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media | code";
 
     /// <summary>
@@ -103,33 +83,27 @@ public sealed class TinyMceOptions
     /// <summary>Extra TinyMCE init values. Structured settings are applied after these, and the file picker stays wired to Pickstack.</summary>
     public Dictionary<string, object?> CustomOptions { get; } = [];
 
-    /// <summary>
-    /// Returns a copy with the script.
-    /// </summary>
-    /// <param name="url">The URL.</param>
-    /// <returns>The script.</returns>
+    /// <summary>Sets <see cref="ScriptUrl"/> and returns this instance.</summary>
+    /// <param name="url">The address loaded first.</param>
+    /// <returns>This instance.</returns>
     public TinyMceOptions WithScript(string url)
     {
         ScriptUrl = url;
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the fallback.
-    /// </summary>
-    /// <param name="url">The URL.</param>
-    /// <returns>The fallback.</returns>
+    /// <summary>Sets <see cref="FallbackUrl"/> and returns this instance.</summary>
+    /// <param name="url">The local copy. <see langword="null"/> leaves no fallback.</param>
+    /// <returns>This instance.</returns>
     public TinyMceOptions WithFallback(string? url)
     {
         FallbackUrl = url;
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the height.
-    /// </summary>
-    /// <param name="pixels">The pixels.</param>
-    /// <returns>The height.</returns>
+    /// <summary>Sets <see cref="Height"/> and returns this instance.</summary>
+    /// <param name="pixels">The height, in pixels.</param>
+    /// <returns>This instance.</returns>
     public TinyMceOptions WithHeight(int pixels)
     {
         Height = pixels;
@@ -154,22 +128,18 @@ public sealed class TinyMceOptions
         return this;
     }
 
-    /// <summary>
-    /// Gets the show menubar.
-    /// </summary>
-    /// <param name="show">The show.</param>
-    /// <returns>The show menubar.</returns>
+    /// <summary>Sets <see cref="Menubar"/> and returns this instance.</summary>
+    /// <param name="show"><see langword="false"/> hides the menu bar. The default argument is <see langword="true"/>.</param>
+    /// <returns>This instance.</returns>
     public TinyMceOptions ShowMenubar(bool show = true)
     {
         Menubar = show;
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the license key.
-    /// </summary>
-    /// <param name="licenseKey">The license key.</param>
-    /// <returns>The license key.</returns>
+    /// <summary>Sets <see cref="LicenseKey"/>, turns <see cref="IncludeLicense"/> on, and returns this instance.</summary>
+    /// <param name="licenseKey">The key sent as <c>license_key</c>.</param>
+    /// <returns>This instance.</returns>
     public TinyMceOptions WithLicenseKey(string licenseKey)
     {
         LicenseKey = licenseKey;
@@ -177,47 +147,45 @@ public sealed class TinyMceOptions
         return this;
     }
 
-    /// <summary>
-    /// Gets the show promotion.
-    /// </summary>
-    /// <param name="show">The show.</param>
-    /// <returns>The show promotion.</returns>
+    /// <summary>Sets <see cref="Promotion"/> and returns this instance. The value is sent only when <see cref="IncludeLicense"/> is set.</summary>
+    /// <param name="show"><see langword="false"/> hides the promotion. The default argument is <see langword="true"/>.</param>
+    /// <returns>This instance.</returns>
     public TinyMceOptions ShowPromotion(bool show = true)
     {
         Promotion = show;
         return this;
     }
 
-    /// <summary>
-    /// Uses the relative urls.
-    /// </summary>
-    /// <param name="relative">The relative.</param>
-    /// <returns>The relative urls.</returns>
+    /// <summary>Sets <see cref="RelativeUrls"/> and returns this instance.</summary>
+    /// <param name="relative"><see langword="false"/> keeps root-relative URLs. The default argument is <see langword="true"/>.</param>
+    /// <returns>This instance.</returns>
     public TinyMceOptions UseRelativeUrls(bool relative = true)
     {
         RelativeUrls = relative;
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the file picker types.
-    /// </summary>
-    /// <param name="types">The types.</param>
-    /// <returns>The file picker types.</returns>
+    /// <summary>Sets <see cref="FilePickerTypes"/> and returns this instance.</summary>
+    /// <param name="types">Picker types separated by spaces, such as <c>image</c>.</param>
+    /// <returns>This instance.</returns>
     public TinyMceOptions WithFilePickerTypes(string types)
     {
         FilePickerTypes = types;
         return this;
     }
 
-    /// <summary>Replaces the plugin list.</summary>
+    /// <summary>Replaces the plugin list and returns this instance.</summary>
+    /// <param name="plugins">The plugin names.</param>
+    /// <returns>This instance.</returns>
     public TinyMceOptions WithPlugins(params string[] plugins)
     {
         Plugins = [.. plugins];
         return this;
     }
 
-    /// <summary>Adds plugins that are not already listed.</summary>
+    /// <summary>Adds plugins that are not already listed and returns this instance. The comparison ignores case.</summary>
+    /// <param name="plugins">The plugin names to add.</param>
+    /// <returns>This instance.</returns>
     public TinyMceOptions AddPlugins(params string[] plugins)
     {
         foreach (string plugin in plugins)
@@ -232,7 +200,7 @@ public sealed class TinyMceOptions
     }
 
     /// <summary>
-    /// Returns a copy with the toolbar. Replaces any rows set with <see cref="WithToolbars"/>.
+    /// Sets <see cref="Toolbar"/>, clears any rows set with <see cref="WithToolbars"/>, and returns this instance.
     /// </summary>
     /// <param name="toolbar">The toolbar.</param>
     /// <returns>The same options instance.</returns>
@@ -254,11 +222,13 @@ public sealed class TinyMceOptions
     }
 
     /// <summary>
-    /// Sets the value.
+    /// Stores one TinyMCE init value and returns this instance.
+    /// A structured setting written later, such as the toolbar or the file picker, replaces the same name.
     /// </summary>
-    /// <param name="name">The name.</param>
-    /// <param name="value">The value.</param>
-    /// <returns>The tiny mce options.</returns>
+    /// <param name="name">The init property name.</param>
+    /// <param name="value">The value passed through to TinyMCE.</param>
+    /// <returns>This instance.</returns>
+    /// <exception cref="ArgumentException"><paramref name="name"/> is <see langword="null"/> or white space.</exception>
     public TinyMceOptions Set(string name, object? value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);

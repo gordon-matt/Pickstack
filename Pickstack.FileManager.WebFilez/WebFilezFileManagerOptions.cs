@@ -8,9 +8,7 @@ public sealed class WebFilezFileManagerOptions
     /// <summary>WebFilez root id for the shared upload folder.</summary>
     public string RootId { get; set; } = "media";
 
-    /// <summary>
-    /// Gets or sets the root name.
-    /// </summary>
+    /// <summary>Name shown for the shared upload folder. The default is Media.</summary>
     public string RootName { get; set; } = "Media";
 
     /// <summary><c>light</c>, <c>dark</c>, <c>auto</c>, or <c>bootstrap</c>.</summary>
@@ -19,14 +17,10 @@ public sealed class WebFilezFileManagerOptions
     /// <summary>IETF language tag, such as <c>fr-CA</c>. Empty follows the UI culture.</summary>
     public string? Language { get; set; }
 
-    /// <summary>
-    /// Gets or sets the select label.
-    /// </summary>
+    /// <summary>Text of the button that chooses the open file. The default is Select.</summary>
     public string SelectLabel { get; set; } = "Select";
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is show tree.
-    /// </summary>
+    /// <summary><see langword="true"/> shows the folder tree. The default is <see langword="true"/>.</summary>
     public bool ShowTree { get; set; } = true;
 
     /// <summary>The host already calls <c>MapBlazorHub</c>. Pickstack then leaves that circuit in place.</summary>
@@ -37,12 +31,11 @@ public sealed class WebFilezFileManagerOptions
 
     internal Action<global::WebFilez.Services.WebFilezOptions>? ConfigureServer { get; private set; }
 
-    /// <summary>
-    /// Returns a copy with the root.
-    /// </summary>
-    /// <param name="id">The identifier.</param>
-    /// <param name="name">The name.</param>
-    /// <returns>The root.</returns>
+    /// <summary>Sets the shared root id and, when <paramref name="name"/> is not blank, its display name. Returns this instance.</summary>
+    /// <param name="id">The WebFilez root id.</param>
+    /// <param name="name">The display name. <see langword="null"/> or white space leaves <see cref="RootName"/> unchanged.</param>
+    /// <returns>This instance.</returns>
+    /// <exception cref="ArgumentException"><paramref name="id"/> is <see langword="null"/> or white space.</exception>
     public WebFilezFileManagerOptions WithRoot(string id, string? name = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
@@ -55,11 +48,10 @@ public sealed class WebFilezFileManagerOptions
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the theme.
-    /// </summary>
-    /// <param name="theme">The theme.</param>
-    /// <returns>The theme.</returns>
+    /// <summary>Sets <see cref="Theme"/> and returns this instance.</summary>
+    /// <param name="theme"><c>light</c>, <c>dark</c>, <c>auto</c>, or <c>bootstrap</c>.</param>
+    /// <returns>This instance.</returns>
+    /// <exception cref="ArgumentException"><paramref name="theme"/> is <see langword="null"/> or white space.</exception>
     public WebFilezFileManagerOptions WithTheme(string theme)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(theme);
@@ -67,11 +59,10 @@ public sealed class WebFilezFileManagerOptions
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the language.
-    /// </summary>
-    /// <param name="language">The language.</param>
-    /// <returns>The language.</returns>
+    /// <summary>Sets <see cref="Language"/> and returns this instance.</summary>
+    /// <param name="language">An IETF language tag, such as <c>fr-CA</c>.</param>
+    /// <returns>This instance.</returns>
+    /// <exception cref="ArgumentException"><paramref name="language"/> is <see langword="null"/> or white space.</exception>
     public WebFilezFileManagerOptions WithLanguage(string language)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(language);
@@ -79,11 +70,10 @@ public sealed class WebFilezFileManagerOptions
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the select label.
-    /// </summary>
-    /// <param name="label">The label.</param>
-    /// <returns>The select label.</returns>
+    /// <summary>Sets <see cref="SelectLabel"/> and returns this instance.</summary>
+    /// <param name="label">The button text.</param>
+    /// <returns>This instance.</returns>
+    /// <exception cref="ArgumentException"><paramref name="label"/> is <see langword="null"/> or white space.</exception>
     public WebFilezFileManagerOptions WithSelectLabel(string label)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(label);
@@ -91,37 +81,38 @@ public sealed class WebFilezFileManagerOptions
         return this;
     }
 
-    /// <summary>
-    /// Gets the hide tree.
-    /// </summary>
-    /// <returns>The hide tree.</returns>
+    /// <summary>Hides the folder tree and returns this instance.</summary>
+    /// <returns>This instance.</returns>
     public WebFilezFileManagerOptions HideTree()
     {
         ShowTree = false;
         return this;
     }
 
-    /// <summary>
-    /// Uses the host blazor.
-    /// </summary>
-    /// <returns>The host blazor.</returns>
+    /// <summary>Leaves <c>MapBlazorHub</c> to the host and returns this instance. Blazor services are still registered.</summary>
+    /// <returns>This instance.</returns>
     public WebFilezFileManagerOptions UseHostBlazor()
     {
         HostOwnsBlazor = true;
         return this;
     }
 
-    /// <summary>
-    /// Uses the host API.
-    /// </summary>
-    /// <returns>The host API.</returns>
+    /// <summary>Leaves <c>MapWebFilezApi</c> to the host and returns this instance.</summary>
+    /// <returns>This instance.</returns>
     public WebFilezFileManagerOptions UseHostApi()
     {
         HostOwnsApi = true;
         return this;
     }
 
-    /// <summary>Configures WebFilez itself: upload limits, blocked extensions, and extra roots.</summary>
+    /// <summary>
+    /// Configures WebFilez itself: upload limits, blocked extensions, and extra roots. Returns this instance.
+    /// The adapter does not read a WebFilez configuration section, so extra roots are declared here.
+    /// The shared <c>media</c> root is still added, and an extra root with the same id is skipped.
+    /// </summary>
+    /// <param name="configure">The WebFilez options callback.</param>
+    /// <returns>This instance.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="configure"/> is <see langword="null"/>.</exception>
     public WebFilezFileManagerOptions Server(Action<global::WebFilez.Services.WebFilezOptions> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);

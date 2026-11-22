@@ -4,47 +4,36 @@ using Pickstack.Abstractions;
 
 namespace Pickstack.RichTextEditor.TinyMce;
 
-/// <summary>
-/// Represents the tiny mce editor.
-/// </summary>
+/// <summary>TinyMCE as <see cref="IRichTextEditor"/>. The provider script loads TinyMCE so a CDN failure can use the local copy.</summary>
 public sealed class TinyMceEditor : IRichTextEditor, IPickstackAssetSource
 {
-    /// <summary>
-    /// The key constant.
-    /// </summary>
+    /// <summary>The name used when <see cref="TinyMceOptions.Name"/> is blank. The value is <c>TinyMCE</c>.</summary>
     public const string Key = "TinyMCE";
 
     private readonly TinyMceOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the TinyMceEditor class.
-    /// </summary>
-    /// <param name="options">The options.</param>
+    /// <summary>Reads the TinyMCE options.</summary>
+    /// <param name="options">The TinyMCE options.</param>
     public TinyMceEditor(IOptions<TinyMceOptions> options)
     {
         _options = options.Value;
     }
 
-    /// <summary>
-    /// Gets the name.
-    /// </summary>
+    /// <summary><see cref="TinyMceOptions.Name"/>, or <see cref="Key"/> when that name is blank.</summary>
     public string Name => string.IsNullOrWhiteSpace(_options.Name) ? Key : _options.Name;
 
-    /// <summary>
-    /// Gets the provider script URL.
-    /// </summary>
+    /// <summary>The embedded provider script. The value is <c>/pickstack/assets/tinymce.js</c>.</summary>
     public string ProviderScriptUrl => "/pickstack/assets/tinymce.js";
 
     /// <summary>
-    /// The provider script loads TinyMCE itself so a CDN failure can fall back to the local copy
+    /// No styles or scripts. The provider script loads TinyMCE itself so a CDN failure can fall back to the local copy
     /// before any editor is initialized.
     /// </summary>
+    /// <returns>An empty list.</returns>
     public IReadOnlyList<ClientAsset> GetClientAssets() => [];
 
-    /// <summary>
-    /// Gets the provider configuration.
-    /// </summary>
-    /// <returns>The provider configuration.</returns>
+    /// <summary>JSON for the provider script: the script address, the fallback address, and the init object.</summary>
+    /// <returns>The JSON.</returns>
     public string GetProviderConfiguration() => JsonSerializer.Serialize(new
     {
         scriptUrl = _options.ScriptUrl,
@@ -52,10 +41,8 @@ public sealed class TinyMceEditor : IRichTextEditor, IPickstackAssetSource
         init = _options.CreateInit()
     });
 
-    /// <summary>
-    /// Gets the assets.
-    /// </summary>
-    /// <returns>The assets.</returns>
+    /// <summary>The embedded <c>tinymce.js</c> provider script.</summary>
+    /// <returns>The asset.</returns>
     public IEnumerable<PickstackAsset> GetAssets() =>
     [
         PickstackAssets.Script(typeof(TinyMceEditor).Assembly, "tinymce.js", "tinymce.js")

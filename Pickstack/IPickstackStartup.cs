@@ -8,9 +8,7 @@ namespace Pickstack;
 /// </summary>
 public interface IPickstackStartup
 {
-    /// <summary>
-    /// Uses the value.
-    /// </summary>
-    /// <param name="app">The app.</param>
+    /// <summary>Adds this adapter's middleware and endpoints. Called by <see cref="WebApplicationExtensions.UsePickstack"/> in registration order.</summary>
+    /// <param name="app">The application being started.</param>
     void Use(WebApplication app);
 }

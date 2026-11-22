@@ -22,21 +22,15 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
     private IJSObjectReference? _module;
     private DotNetObjectReference<PickstackEditor>? _reference;
 
-    /// <summary>
-    /// Gets or sets the value.
-    /// </summary>
+    /// <summary>The HTML in the editor. A change that comes from this parameter is pushed into the editor. A change the editor reports is not pushed back.</summary>
     [Parameter]
     public string? Value { get; set; }
 
-    /// <summary>
-    /// Gets or sets the value changed.
-    /// </summary>
+    /// <summary>Raised when the editor content changes and differs from <see cref="Value"/>.</summary>
     [Parameter]
     public EventCallback<string?> ValueChanged { get; set; }
 
-    /// <summary>
-    /// Gets or sets the height.
-    /// </summary>
+    /// <summary>Editor height in pixels. Overrides the registered editor's height. Leave unset to keep that height.</summary>
     [Parameter]
     public int? Height { get; set; }
 
@@ -48,21 +42,15 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
     [Parameter]
     public int? MaxHeight { get; set; }
 
-    /// <summary>
-    /// Gets or sets the plugins.
-    /// </summary>
+    /// <summary>Replaces the registered plugin list for this editor.</summary>
     [Parameter]
     public string? Plugins { get; set; }
 
-    /// <summary>
-    /// Gets or sets the add plugins.
-    /// </summary>
+    /// <summary>Plugins added to the registered list for this editor.</summary>
     [Parameter]
     public string? AddPlugins { get; set; }
 
-    /// <summary>
-    /// Gets or sets the toolbar.
-    /// </summary>
+    /// <summary>Replaces the registered toolbar for this editor.</summary>
     [Parameter]
     public string? Toolbar { get; set; }
 
@@ -77,9 +65,7 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
     [Parameter]
     public bool FileManager { get; set; } = true;
 
-    /// <summary>
-    /// Gets or sets the js.
-    /// </summary>
+    /// <summary>Loads <c>/pickstack/assets/editor.js</c>, which mounts the registered editor on the textarea.</summary>
     [Inject]
     public IJSRuntime Js { get; set; } = default!;
 
@@ -194,11 +180,9 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
         }
     }
 
-    /// <summary>
-    /// Updates the value.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Stores content reported by the editor and raises <see cref="ValueChanged"/> when it differs from <see cref="Value"/>.</summary>
+    /// <param name="value">The HTML the editor reported.</param>
+    /// <returns>A task that completes when <see cref="ValueChanged"/> has been invoked, or immediately when the value is unchanged.</returns>
     [JSInvokable]
     public async Task UpdateValue(string? value)
     {
@@ -211,10 +195,8 @@ public sealed class PickstackEditor : ComponentBase, IAsyncDisposable
         await ValueChanged.InvokeAsync(value);
     }
 
-    /// <summary>
-    /// Releases the resources used by this instance.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Destroys the editor and releases the script module. A disconnected circuit is ignored.</summary>
+    /// <returns>A task that completes when the editor has been destroyed.</returns>
     public async ValueTask DisposeAsync()
     {
         if (_module is not null && _hasElement)

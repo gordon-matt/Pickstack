@@ -15,10 +15,11 @@ internal sealed class ElFinderVideoStartup(
     ILogger<ElFinderVideoStartup> logger) : IHostedService
 {
     /// <summary>
-    /// Starts the value.
+    /// Searches for ffmpeg when video thumbnails were requested, and downloads the GPL build when it is missing.
+    /// Does nothing when video thumbnails are off.
     /// </summary>
-    /// <param name="cancellationToken">A token that can be used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="cancellationToken">A token that can cancel the download.</param>
+    /// <returns>The search, or a completed task when video thumbnails are off.</returns>
     public Task StartAsync(CancellationToken cancellationToken)
     {
         ElFinderOptions settings = options.Value;
@@ -40,10 +41,8 @@ internal sealed class ElFinderVideoStartup(
         return FfmpegBootstrap.EnsureAsync(ffmpeg, logger, cancellationToken);
     }
 
-    /// <summary>
-    /// Stops the value.
-    /// </summary>
-    /// <param name="cancellationToken">A token that can be used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <summary>Does nothing. The ffmpeg search is not cancelled from here.</summary>
+    /// <param name="cancellationToken">Ignored.</param>
+    /// <returns>A completed task.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

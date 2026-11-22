@@ -4,47 +4,36 @@ using Pickstack.Abstractions;
 
 namespace Pickstack.RichTextEditor.Froala;
 
-/// <summary>
-/// Represents the froala editor.
-/// </summary>
+/// <summary>Froala as <see cref="IRichTextEditor"/>. The provider script loads Froala so a CDN failure can use the local copy.</summary>
 public sealed class FroalaEditor : IRichTextEditor, IPickstackAssetSource
 {
-    /// <summary>
-    /// The key constant.
-    /// </summary>
+    /// <summary>The name used when <see cref="FroalaOptions.Name"/> is blank. The value is <c>Froala</c>.</summary>
     public const string Key = "Froala";
 
     private readonly FroalaOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the FroalaEditor class.
-    /// </summary>
-    /// <param name="options">The options.</param>
+    /// <summary>Reads the Froala options.</summary>
+    /// <param name="options">The Froala options.</param>
     public FroalaEditor(IOptions<FroalaOptions> options)
     {
         _options = options.Value;
     }
 
-    /// <summary>
-    /// Gets the name.
-    /// </summary>
+    /// <summary><see cref="FroalaOptions.Name"/>, or <see cref="Key"/> when that name is blank.</summary>
     public string Name => string.IsNullOrWhiteSpace(_options.Name) ? Key : _options.Name;
 
-    /// <summary>
-    /// Gets the provider script URL.
-    /// </summary>
+    /// <summary>The embedded provider script. The value is <c>/pickstack/assets/froala.js</c>.</summary>
     public string ProviderScriptUrl => "/pickstack/assets/froala.js";
 
     /// <summary>
-    /// The provider script loads Froala itself so a CDN failure can fall back to the local copy
+    /// No styles or scripts. The provider script loads Froala itself so a CDN failure can fall back to the local copy
     /// before any editor is initialized.
     /// </summary>
+    /// <returns>An empty list.</returns>
     public IReadOnlyList<ClientAsset> GetClientAssets() => [];
 
-    /// <summary>
-    /// Gets the provider configuration.
-    /// </summary>
-    /// <returns>The provider configuration.</returns>
+    /// <summary>JSON for the provider script: the script and stylesheet addresses, their fallbacks, and the init object.</summary>
+    /// <returns>The JSON.</returns>
     public string GetProviderConfiguration() => JsonSerializer.Serialize(new
     {
         scriptUrl = _options.ScriptUrl,
@@ -54,10 +43,8 @@ public sealed class FroalaEditor : IRichTextEditor, IPickstackAssetSource
         init = _options.CreateInit()
     });
 
-    /// <summary>
-    /// Gets the assets.
-    /// </summary>
-    /// <returns>The assets.</returns>
+    /// <summary>The embedded <c>froala.js</c> provider script.</summary>
+    /// <returns>The asset.</returns>
     public IEnumerable<PickstackAsset> GetAssets() =>
     [
         PickstackAssets.Script(typeof(FroalaEditor).Assembly, "froala.js", "froala.js")

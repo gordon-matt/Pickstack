@@ -9,10 +9,12 @@ namespace Pickstack.FileManager;
 public static class FileRoots
 {
     /// <summary>
-    /// Normalizes the value.
+    /// Trims the folder, accepts <c>/</c> or <c>\</c>, and joins the segments with <c>/</c>.
+    /// A blank value is the upload folder itself and returns <see langword="null"/>.
     /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The string.</returns>
+    /// <param name="value">The relative folder.</param>
+    /// <returns>The normalized folder, or <see langword="null"/> when <paramref name="value"/> is blank.</returns>
+    /// <exception cref="InvalidOperationException">A segment is <c>.</c>, <c>..</c>, or contains <c>.</c> or <c>:</c>. The message is "'{value}' is not a valid file root."</exception>
     public static string? Normalize(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -29,11 +31,10 @@ public static class FileRoots
         return string.Join('/', segments);
     }
 
-    /// <summary>
-    /// Converts the value to the token.
-    /// </summary>
-    /// <param name="root">The root.</param>
+    /// <summary>Encodes a normalized root as unpadded base64, with <c>+</c> and <c>/</c> replaced so the token can sit in a URL path.</summary>
+    /// <param name="root">The relative folder.</param>
     /// <returns>The token.</returns>
+    /// <exception cref="InvalidOperationException"><paramref name="root"/> is blank or not a valid file root. A blank root says "A file root is required."</exception>
     public static string ToToken(string root)
     {
         string normalized = Normalize(root)
@@ -45,11 +46,12 @@ public static class FileRoots
             .Replace('/', '_');
     }
 
-    /// <summary>
-    /// Creates a value from the token.
-    /// </summary>
+    /// <summary>Decodes a token from <see cref="ToToken"/> and normalizes the folder it contains.</summary>
     /// <param name="token">The token.</param>
-    /// <returns>The token.</returns>
+    /// <returns>The relative folder.</returns>
+    /// <exception cref="ArgumentException"><paramref name="token"/> is <see langword="null"/> or white space.</exception>
+    /// <exception cref="FormatException"><paramref name="token"/> is not base64.</exception>
+    /// <exception cref="InvalidOperationException">The decoded folder is empty or not a valid file root.</exception>
     public static string FromToken(string token)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(token);
@@ -60,11 +62,9 @@ public static class FileRoots
             ?? throw new InvalidOperationException("The file root token is empty.");
     }
 
-    /// <summary>
-    /// Determines whether this instance is unsafe.
-    /// </summary>
-    /// <param name="segment">The segment.</param>
-    /// <returns>true when the condition is met; otherwise, false.</returns>
+    /// <summary>Whether one path segment would leave the upload folder or contains a dot. Responsive File Manager ignores a root that contains a dot.</summary>
+    /// <param name="segment">One folder name, without separators.</param>
+    /// <returns><see langword="true"/> for <c>.</c>, <c>..</c>, or a segment that contains <c>.</c> or <c>:</c>.</returns>
     public static bool IsUnsafe(string segment) =>
         segment is "." or ".."
         || segment.Contains(':', StringComparison.Ordinal)

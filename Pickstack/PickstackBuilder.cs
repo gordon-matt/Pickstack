@@ -6,18 +6,21 @@ using Pickstack.RichTextEditor;
 
 namespace Pickstack;
 
-/// <summary>
-/// Provides extension methods for pickstack service collections.
-/// </summary>
+/// <summary>Registers the shared upload folder and the browser runtime.</summary>
 public static class PickstackServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds the pickstack.
+    /// Registers storage, the embedded browser scripts, and the startup that creates the upload folders.
+    /// A storage service, asset source, or startup the host already registered is left in place.
     /// </summary>
-    /// <param name="services">The services.</param>
-    /// <param name="configuration">The configuration.</param>
-    /// <param name="configure">The configure.</param>
-    /// <returns>The pickstack.</returns>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">
+    /// Binds the <c>Pickstack:Storage</c> section when it is not <see langword="null"/>.
+    /// The section is skipped when this is <see langword="null"/>.
+    /// </param>
+    /// <param name="configure">Adjusts the storage options after configuration is bound. <see langword="null"/> leaves them as bound.</param>
+    /// <returns>A builder for a file manager and an editor.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="services"/> is <see langword="null"/>.</exception>
     public static PickstackBuilder AddPickstack(this IServiceCollection services, IConfiguration? configuration = null, Action<FileStorageOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -39,30 +42,25 @@ public static class PickstackServiceCollectionExtensions
     }
 }
 
-/// <summary>
-/// Represents the pickstack builder.
-/// </summary>
+/// <summary>Chooses the file manager and the rich text editor. Each <c>Add</c> method replaces the previous choice.</summary>
 public sealed class PickstackBuilder
 {
-    /// <summary>
-    /// Initializes a new instance of the PickstackBuilder class.
-    /// </summary>
-    /// <param name="services">The services.</param>
+    /// <summary>Keeps the collection the host passed to <c>AddPickstack</c>.</summary>
+    /// <param name="services">The service collection.</param>
     public PickstackBuilder(IServiceCollection services)
     {
         Services = services;
     }
 
-    /// <summary>
-    /// Gets the services.
-    /// </summary>
+    /// <summary>The collection adapter methods register against.</summary>
     public IServiceCollection Services { get; }
 
     /// <summary>
-    /// Adds the file manager.
+    /// Registers <typeparamref name="TFileManager"/> as the only <see cref="IFileManager"/>.
+    /// An adapter that also serves an embedded script or maps endpoints needs its own registration method.
     /// </summary>
-    /// <typeparam name="TFileManager">The type of the file manager.</typeparam>
-    /// <returns>The file manager.</returns>
+    /// <typeparam name="TFileManager">The file manager type.</typeparam>
+    /// <returns>The same builder.</returns>
     public PickstackBuilder AddFileManager<TFileManager>()
         where TFileManager : class, IFileManager
     {
@@ -71,11 +69,9 @@ public sealed class PickstackBuilder
         return this;
     }
 
-    /// <summary>
-    /// Adds the rich text editor.
-    /// </summary>
-    /// <typeparam name="TEditor">The type of the editor.</typeparam>
-    /// <returns>The rich text editor.</returns>
+    /// <summary>Registers <typeparamref name="TEditor"/> as the only <see cref="IRichTextEditor"/>.</summary>
+    /// <typeparam name="TEditor">The editor type.</typeparam>
+    /// <returns>The same builder.</returns>
     public PickstackBuilder AddRichTextEditor<TEditor>()
         where TEditor : class, IRichTextEditor
     {

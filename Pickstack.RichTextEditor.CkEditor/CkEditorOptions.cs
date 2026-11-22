@@ -7,14 +7,10 @@ namespace Pickstack.RichTextEditor.CkEditor;
 /// </summary>
 public sealed class CkEditorOptions
 {
-    /// <summary>
-    /// Gets or sets the script URL.
-    /// </summary>
+    /// <summary>Address of <c>ckeditor.js</c>. The default is CKEditor 4.17.1 on cdnjs.</summary>
     public string ScriptUrl { get; set; } = "https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.17.1/ckeditor.js";
 
-    /// <summary>
-    /// Gets or sets the height.
-    /// </summary>
+    /// <summary>Editor height in pixels. The default is 420. A field can override it.</summary>
     public int Height { get; set; } = 420;
 
     /// <summary>
@@ -27,50 +23,36 @@ public sealed class CkEditorOptions
     /// </summary>
     public int? MaxHeight { get; set; }
 
-    /// <summary>
-    /// Gets or sets the browse window width.
-    /// </summary>
+    /// <summary>Width of the Browse Server window, in pixels. The default is 980.</summary>
     public int BrowseWindowWidth { get; set; } = 980;
 
-    /// <summary>
-    /// Gets or sets the browse window height.
-    /// </summary>
+    /// <summary>Height of the Browse Server window, in pixels. The default is 680.</summary>
     public int BrowseWindowHeight { get; set; } = 680;
 
-    /// <summary>
-    /// Gets or sets the toolbar.
-    /// </summary>
+    /// <summary>Toolbar groups. Each array is one cluster of buttons. Empty leaves CKEditor's own toolbar.</summary>
     public List<string[]> Toolbar { get; set; } = [];
 
-    /// <summary>
-    /// Gets or sets the remove plugins.
-    /// </summary>
+    /// <summary>Plugins removed from CKEditor. Empty removes none.</summary>
     public List<string> RemovePlugins { get; set; } = [];
 
-    /// <summary>
-    /// Gets or sets the extra plugins.
-    /// </summary>
+    /// <summary>Plugins added to CKEditor. Empty adds none.</summary>
     public List<string> ExtraPlugins { get; set; } = [];
 
     /// <summary>Extra CKEditor config values. Structured settings and the file browser URLs are applied after these.</summary>
     public Dictionary<string, object?> CustomOptions { get; } = [];
 
-    /// <summary>
-    /// Returns a copy with the script.
-    /// </summary>
-    /// <param name="url">The URL.</param>
-    /// <returns>The script.</returns>
+    /// <summary>Sets <see cref="ScriptUrl"/> and returns this instance.</summary>
+    /// <param name="url">Address of <c>ckeditor.js</c>.</param>
+    /// <returns>This instance.</returns>
     public CkEditorOptions WithScript(string url)
     {
         ScriptUrl = url;
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the height.
-    /// </summary>
-    /// <param name="pixels">The pixels.</param>
-    /// <returns>The height.</returns>
+    /// <summary>Sets <see cref="Height"/> and returns this instance.</summary>
+    /// <param name="pixels">The height, in pixels.</param>
+    /// <returns>This instance.</returns>
     public CkEditorOptions WithHeight(int pixels)
     {
         Height = pixels;
@@ -95,12 +77,10 @@ public sealed class CkEditorOptions
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the browse window.
-    /// </summary>
-    /// <param name="width">The width.</param>
-    /// <param name="height">The height.</param>
-    /// <returns>The browse window.</returns>
+    /// <summary>Sets the Browse Server window size and returns this instance.</summary>
+    /// <param name="width">The width, in pixels.</param>
+    /// <param name="height">The height, in pixels.</param>
+    /// <returns>This instance.</returns>
     public CkEditorOptions WithBrowseWindow(int width, int height)
     {
         BrowseWindowWidth = width;
@@ -108,29 +88,27 @@ public sealed class CkEditorOptions
         return this;
     }
 
-    /// <summary>Replaces the toolbar with these groups. Each group is one cluster of buttons.</summary>
+    /// <summary>Replaces the toolbar with these groups and returns this instance. Each group is one cluster of buttons. An empty list leaves CKEditor's own toolbar.</summary>
+    /// <param name="groups">The button groups, in order.</param>
+    /// <returns>This instance.</returns>
     public CkEditorOptions WithToolbar(params string[][] groups)
     {
         Toolbar = [.. groups];
         return this;
     }
 
-    /// <summary>
-    /// Adds the toolbar group.
-    /// </summary>
-    /// <param name="items">The items.</param>
-    /// <returns>The toolbar group.</returns>
+    /// <summary>Appends one toolbar group and returns this instance. Once any group is set, CKEditor's own toolbar is no longer used.</summary>
+    /// <param name="items">The button names in the new group.</param>
+    /// <returns>This instance.</returns>
     public CkEditorOptions AddToolbarGroup(params string[] items)
     {
         Toolbar.Add(items);
         return this;
     }
 
-    /// <summary>
-    /// Gets the without plugins.
-    /// </summary>
-    /// <param name="plugins">The plugins.</param>
-    /// <returns>The without plugins.</returns>
+    /// <summary>Adds plugins to <see cref="RemovePlugins"/> and returns this instance. A plugin already listed is left once. The comparison ignores case.</summary>
+    /// <param name="plugins">The plugin names to remove.</param>
+    /// <returns>This instance.</returns>
     public CkEditorOptions WithoutPlugins(params string[] plugins)
     {
         foreach (string plugin in plugins)
@@ -144,22 +122,18 @@ public sealed class CkEditorOptions
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the extra plugins.
-    /// </summary>
-    /// <param name="plugins">The plugins.</param>
-    /// <returns>The extra plugins.</returns>
+    /// <summary>Replaces <see cref="ExtraPlugins"/> and returns this instance.</summary>
+    /// <param name="plugins">The plugin names.</param>
+    /// <returns>This instance.</returns>
     public CkEditorOptions WithExtraPlugins(params string[] plugins)
     {
         ExtraPlugins = [.. plugins];
         return this;
     }
 
-    /// <summary>
-    /// Adds the extra plugins.
-    /// </summary>
-    /// <param name="plugins">The plugins.</param>
-    /// <returns>The extra plugins.</returns>
+    /// <summary>Adds plugins that are not already in <see cref="ExtraPlugins"/> and returns this instance. The comparison ignores case.</summary>
+    /// <param name="plugins">The plugin names to add.</param>
+    /// <returns>This instance.</returns>
     public CkEditorOptions AddExtraPlugins(params string[] plugins)
     {
         foreach (string plugin in plugins)
@@ -174,11 +148,13 @@ public sealed class CkEditorOptions
     }
 
     /// <summary>
-    /// Sets the value.
+    /// Stores one CKEditor config value and returns this instance.
+    /// A structured setting written later, and the file browser URLs, replace the same name.
     /// </summary>
-    /// <param name="name">The name.</param>
-    /// <param name="value">The value.</param>
-    /// <returns>The ck editor options.</returns>
+    /// <param name="name">The config property name.</param>
+    /// <param name="value">The value passed through to CKEditor.</param>
+    /// <returns>This instance.</returns>
+    /// <exception cref="ArgumentException"><paramref name="name"/> is <see langword="null"/> or white space.</exception>
     public CkEditorOptions Set(string name, object? value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);

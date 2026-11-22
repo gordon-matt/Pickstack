@@ -4,54 +4,34 @@ using Pickstack.FileManager;
 
 namespace Pickstack.FileManager.WebFilez;
 
-/// <summary>
-/// Represents the web filez browser model.
-/// </summary>
+/// <summary>Values the WebFilez browser view reads for one request.</summary>
 public sealed class WebFilezBrowserModel
 {
-    /// <summary>
-    /// Gets or sets the root identifier.
-    /// </summary>
+    /// <summary>The WebFilez root id of the shared upload folder.</summary>
     public required string RootId { get; init; }
 
-    /// <summary>
-    /// Gets or sets the path.
-    /// </summary>
+    /// <summary>The relative folder to open, or <see langword="null"/> for the root itself. The user cannot navigate above it.</summary>
     public string? Path { get; init; }
 
-    /// <summary>
-    /// Gets or sets the theme.
-    /// </summary>
+    /// <summary><c>light</c>, <c>dark</c>, <c>auto</c>, or <c>bootstrap</c>.</summary>
     public required string Theme { get; init; }
 
-    /// <summary>
-    /// Gets or sets the language.
-    /// </summary>
+    /// <summary>The IETF language tag, or <see langword="null"/> to follow the UI culture.</summary>
     public string? Language { get; init; }
 
-    /// <summary>
-    /// Gets or sets the selection mode.
-    /// </summary>
+    /// <summary>Single selection when a file is being chosen. None for a folder or a browser that is not choosing.</summary>
     public required string SelectionMode { get; init; }
 
-    /// <summary>
-    /// Gets or sets the kind.
-    /// </summary>
+    /// <summary><c>images</c>, <c>media</c>, or <c>folders</c>. <see langword="null"/> leaves every kind visible.</summary>
     public string? Kind { get; init; }
 
-    /// <summary>
-    /// Gets or sets the accept.
-    /// </summary>
+    /// <summary><c>image/*</c> for an image field. <see langword="null"/> for every other type.</summary>
     public string? Accept { get; init; }
 
-    /// <summary>
-    /// Gets or sets the select label.
-    /// </summary>
+    /// <summary>Text of the button that chooses the open file.</summary>
     public required string SelectLabel { get; init; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is show tree.
-    /// </summary>
+    /// <summary><see langword="true"/> shows the folder tree.</summary>
     public bool ShowTree { get; init; }
 
     /// <summary>
@@ -60,14 +40,12 @@ public sealed class WebFilezBrowserModel
     public string? Editors { get; init; }
 }
 
-/// <summary>
-/// Represents the web filez browser controller.
-/// </summary>
+/// <summary>The frame page that hosts the WebFilez browser.</summary>
 [Route(WebFilezRoutes.Prefix)]
 public sealed class WebFilezBrowserController : Controller
 {
     /// <summary>
-    /// The standalone editors constant.
+    /// Editor map for a standalone browser: FileRobot for images, SuperDoc for <c>.docx</c>, and Fortune Sheet for <c>.xlsx</c> and <c>.csv</c>.
     /// </summary>
     public const string StandaloneEditors =
         "filerobot:.jpg,.jpeg,.png,.webp,.gif,.bmp,.avif|superdoc:.docx|fortunesheet:.xlsx,.csv";
@@ -75,11 +53,9 @@ public sealed class WebFilezBrowserController : Controller
     private readonly WebFilezFileManagerOptions _options;
     private readonly IFileStorage _storage;
 
-    /// <summary>
-    /// Initializes a new instance of the WebFilezBrowserController class.
-    /// </summary>
-    /// <param name="options">The options.</param>
-    /// <param name="storage">The storage.</param>
+    /// <summary>Reads the browser options and the shared upload folder.</summary>
+    /// <param name="options">The WebFilez options.</param>
+    /// <param name="storage">The shared upload folder. A requested root is created here.</param>
     public WebFilezBrowserController(IOptions<WebFilezFileManagerOptions> options, IFileStorage storage)
     {
         _options = options.Value;
@@ -87,14 +63,16 @@ public sealed class WebFilezBrowserController : Controller
     }
 
     /// <summary>
-    /// Gets the index.
+    /// Renders the browser. A blank <paramref name="type"/> is <c>any</c>.
+    /// <paramref name="select"/> chooses a single file, except for a folder, which writes the open folder instead.
+    /// An unknown <paramref name="theme"/> keeps the configured theme. <c>light</c>, <c>dark</c>, <c>auto</c>, and <c>bootstrap</c> are accepted.
     /// </summary>
-    /// <param name="type">The type.</param>
-    /// <param name="select">The select.</param>
-    /// <param name="root">The root.</param>
-    /// <param name="editors">The editors.</param>
-    /// <param name="theme">The theme.</param>
-    /// <returns>The index.</returns>
+    /// <param name="type"><c>any</c>, <c>file</c>, <c>image</c>, <c>media</c>, or <c>folder</c>.</param>
+    /// <param name="select"><see langword="true"/> when a file is being chosen.</param>
+    /// <param name="root">The relative folder to open. It is created when it is valid.</param>
+    /// <param name="editors"><see langword="true"/> enables the standalone image, document, and spreadsheet editors.</param>
+    /// <param name="theme">A theme for this request, or <see langword="null"/> for the configured theme.</param>
+    /// <returns>The browser view, or 400 when <paramref name="root"/> is not a valid file root.</returns>
     [HttpGet]
     public IActionResult Index(string? type, bool select, string? root, bool editors, string? theme)
     {

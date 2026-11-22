@@ -5,45 +5,31 @@ namespace Pickstack.Abstractions;
 /// </summary>
 public sealed class ClientInclude
 {
-    /// <summary>
-    /// Gets or sets the kind.
-    /// </summary>
+    /// <summary><c>style</c>, <c>script</c>, or <c>json</c>. Any other value is ignored when the include is rendered.</summary>
     public string Kind { get; init; } = "";
 
-    /// <summary>
-    /// Gets or sets the URL.
-    /// </summary>
+    /// <summary>Address of a stylesheet or script. Unused for JSON.</summary>
     public string? Url { get; init; }
 
-    /// <summary>
-    /// Gets or sets the identifier.
-    /// </summary>
+    /// <summary>The <c>id</c> of a JSON script element. Unused for a stylesheet or script.</summary>
     public string? Id { get; init; }
 
-    /// <summary>
-    /// Gets or sets the content.
-    /// </summary>
+    /// <summary>JSON written inside the script element. It is not HTML-encoded, so it must already be HTML-safe.</summary>
     public string? Content { get; init; }
 
-    /// <summary>
-    /// Gets the style.
-    /// </summary>
-    /// <param name="url">The URL.</param>
-    /// <returns>The style.</returns>
+    /// <summary>A stylesheet include.</summary>
+    /// <param name="url">Address of the stylesheet.</param>
+    /// <returns>An include whose kind is <c>style</c>.</returns>
     public static ClientInclude Style(string url) => new() { Kind = "style", Url = url };
 
-    /// <summary>
-    /// Gets the script.
-    /// </summary>
-    /// <param name="url">The URL.</param>
-    /// <returns>The script.</returns>
+    /// <summary>A script include.</summary>
+    /// <param name="url">Address of the script.</param>
+    /// <returns>An include whose kind is <c>script</c>.</returns>
     public static ClientInclude Script(string url) => new() { Kind = "script", Url = url };
 
-    /// <summary>
-    /// Gets the JSON.
-    /// </summary>
-    /// <param name="id">The identifier.</param>
-    /// <param name="content">The content.</param>
-    /// <returns>The JSON.</returns>
+    /// <summary>A JSON configuration block.</summary>
+    /// <param name="id">The <c>id</c> the provider script looks up.</param>
+    /// <param name="content">The JSON. It is written as supplied.</param>
+    /// <returns>An include whose kind is <c>json</c>.</returns>
     public static ClientInclude Json(string id, string content) => new() { Kind = "json", Id = id, Content = content };
 }

@@ -12,15 +12,11 @@ public sealed class PickstackScripts : ComponentBase
 {
     private bool _started;
 
-    /// <summary>
-    /// Gets or sets the services.
-    /// </summary>
+    /// <summary>The application services. The registered file manager and editor are resolved from here.</summary>
     [Inject]
     public IServiceProvider Services { get; set; } = default!;
 
-    /// <summary>
-    /// Gets or sets the js.
-    /// </summary>
+    /// <summary>The browser runtime. An interactive render loads <c>/pickstack/assets/load.js</c> through it and then releases the module.</summary>
     [Inject]
     public IJSRuntime Js { get; set; } = default!;
 

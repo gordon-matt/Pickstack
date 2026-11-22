@@ -6,7 +6,8 @@ using Microsoft.Extensions.Logging;
 namespace Pickstack.FileManager.elFinder;
 
 /// <summary>
-/// Represents the el finder connector controller.
+/// The elFinder connector. A request can name a <c>root</c> folder in the form or the query.
+/// A failure is logged and returned as JSON with the message "Unable to process the file manager request."
 /// </summary>
 [Route(ElFinderRoutes.Prefix)]
 public sealed class ElFinderConnectorController : Controller
@@ -14,11 +15,9 @@ public sealed class ElFinderConnectorController : Controller
     private readonly IFileStorage _storage;
     private readonly ILogger<ElFinderConnectorController> _logger;
 
-    /// <summary>
-    /// Initializes a new instance of the ElFinderConnectorController class.
-    /// </summary>
-    /// <param name="storage">The storage.</param>
-    /// <param name="logger">The logger.</param>
+    /// <summary>Uses the shared upload folder as the elFinder volume named Media.</summary>
+    /// <param name="storage">The shared upload folder.</param>
+    /// <param name="logger">Receives connector and thumbnail failures.</param>
     public ElFinderConnectorController(IFileStorage storage, ILogger<ElFinderConnectorController> logger)
     {
         _storage = storage;
@@ -26,9 +25,10 @@ public sealed class ElFinderConnectorController : Controller
     }
 
     /// <summary>
-    /// Gets the connector.
+    /// Handles one elFinder command against the requested root. The root is created when it is missing.
+    /// The volume is writable, its alias is Media, and its URL is the shared request path.
     /// </summary>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the i action result.</returns>
+    /// <returns>The connector response, or the error JSON when the command fails.</returns>
     [Route("connector")]
     public async Task<IActionResult> Connector()
     {
@@ -44,10 +44,10 @@ public sealed class ElFinderConnectorController : Controller
     }
 
     /// <summary>
-    /// Gets the thumbnail.
+    /// Returns one thumbnail. A hash that starts with <c>r/{token}/</c> is read from that file root. Any other hash uses the upload folder.
     /// </summary>
-    /// <param name="hash">The hash.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the i action result.</returns>
+    /// <param name="hash">The elFinder file hash, optionally prefixed with a file-root token.</param>
+    /// <returns>The thumbnail, or the error JSON when it cannot be created.</returns>
     [Route("thumb/{*hash}")]
     public async Task<IActionResult> Thumbnail(string hash)
     {

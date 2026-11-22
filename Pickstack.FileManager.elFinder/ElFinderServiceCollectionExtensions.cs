@@ -4,17 +4,17 @@ using Microsoft.Extensions.Hosting;
 
 namespace Pickstack.FileManager.elFinder;
 
-/// <summary>
-/// Provides extension methods for el finder service collections.
-/// </summary>
+/// <summary>Registers elFinder as the file manager.</summary>
 public static class ElFinderServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds the el finder.
+    /// Registers elFinder as the only <see cref="IFileManager"/>, serves <c>elfinder.js</c>, and starts the video-thumbnail search.
+    /// A file manager already registered is replaced.
     /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="configure">The configure.</param>
-    /// <returns>The el finder.</returns>
+    /// <param name="builder">The Pickstack builder.</param>
+    /// <param name="configure">Adjusts the client options. <see langword="null"/> keeps the defaults.</param>
+    /// <returns>The same builder.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <see langword="null"/>.</exception>
     public static PickstackBuilder AddElFinder(this PickstackBuilder builder, Action<ElFinderOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(builder);

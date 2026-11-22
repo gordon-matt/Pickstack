@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Pickstack.RichTextEditor;
 
 /// <summary>
-/// Represents the editor tag helper.
+/// A <c>pickstack-editor</c> field. It renders a textarea the registered editor replaces.
+/// Field attributes override the registered height, plugins, and toolbar for this field only.
 /// </summary>
 [HtmlTargetElement("pickstack-editor", Attributes = ForAttribute, TagStructure = TagStructure.WithoutEndTag)]
 public sealed class EditorTagHelper : TagHelper
@@ -17,24 +18,18 @@ public sealed class EditorTagHelper : TagHelper
 
     private readonly IRichTextEditor _editor;
 
-    /// <summary>
-    /// Initializes a new instance of the EditorTagHelper class.
-    /// </summary>
-    /// <param name="editor">The editor.</param>
+    /// <summary>Uses the registered editor for the startup scripts written into the field.</summary>
+    /// <param name="editor">The registered editor.</param>
     public EditorTagHelper(IRichTextEditor editor)
     {
         _editor = editor;
     }
 
-    /// <summary>
-    /// Gets or sets the for.
-    /// </summary>
+    /// <summary>The model property bound to the textarea. The attribute is <c>asp-for</c>.</summary>
     [HtmlAttributeName(ForAttribute)]
     public ModelExpression For { get; set; } = default!;
 
-    /// <summary>
-    /// Gets or sets the height.
-    /// </summary>
+    /// <summary>Editor height in pixels. The attribute is <c>height</c>. Overrides the registered editor's height.</summary>
     public int? Height { get; set; }
 
     /// <summary>Minimum height for this field, in pixels. Overrides the registered editor's minimum.</summary>
@@ -68,9 +63,7 @@ public sealed class EditorTagHelper : TagHelper
     [HtmlAttributeName("file-manager")]
     public bool FileManager { get; set; } = true;
 
-    /// <summary>
-    /// Gets or sets the view context.
-    /// </summary>
+    /// <summary>The current view. The startup scripts are written once for this request.</summary>
     [ViewContext]
     [HtmlAttributeNotBound]
     public ViewContext ViewContext { get; set; } = default!;

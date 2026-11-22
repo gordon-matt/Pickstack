@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Pickstack.FileManager;
 
 /// <summary>
-/// Represents the file picker tag helper.
+/// A <c>pickstack-file</c> field. It renders a text input, a Browse button, and, for an image, a preview.
+/// The button calls <c>Pickstack.files.open</c>.
 /// </summary>
 [HtmlTargetElement("pickstack-file", Attributes = ForAttribute, TagStructure = TagStructure.WithoutEndTag)]
 public sealed class FilePickerTagHelper : TagHelper
@@ -15,24 +16,18 @@ public sealed class FilePickerTagHelper : TagHelper
 
     private readonly IFileManager _fileManager;
 
-    /// <summary>
-    /// Initializes a new instance of the FilePickerTagHelper class.
-    /// </summary>
-    /// <param name="fileManager">The file manager.</param>
+    /// <summary>Uses the registered file manager for the startup scripts written into the field.</summary>
+    /// <param name="fileManager">The registered file manager.</param>
     public FilePickerTagHelper(IFileManager fileManager)
     {
         _fileManager = fileManager;
     }
 
-    /// <summary>
-    /// Gets or sets the for.
-    /// </summary>
+    /// <summary>The model property bound to the text input. The attribute is <c>asp-for</c>.</summary>
     [HtmlAttributeName(ForAttribute)]
     public ModelExpression For { get; set; } = default!;
 
-    /// <summary>
-    /// Gets or sets the file type.
-    /// </summary>
+    /// <summary>What the browser offers. The attribute is <c>file-type</c>. The default is <see cref="FilePickerType.Any"/>.</summary>
     [HtmlAttributeName("file-type")]
     public FilePickerType FileType { get; set; } = FilePickerType.Any;
 
@@ -40,9 +35,7 @@ public sealed class FilePickerTagHelper : TagHelper
     [HtmlAttributeName("file-root")]
     public string? FileRoot { get; set; }
 
-    /// <summary>
-    /// Gets or sets the view context.
-    /// </summary>
+    /// <summary>The current view. The startup scripts are written once for this request.</summary>
     [ViewContext]
     [HtmlAttributeNotBound]
     public ViewContext ViewContext { get; set; } = default!;

@@ -5,24 +5,18 @@ namespace Pickstack.FileManager;
 /// </summary>
 public enum FilePickerType
 {
-    /// <summary>
-    /// The any value.
-    /// </summary>
+    /// <summary>No type filter. The browser script receives <c>any</c>.</summary>
     Any,
-    /// <summary>
-    /// The file value.
-    /// </summary>
+
+    /// <summary>A file. The browser script receives <c>file</c>.</summary>
     File,
-    /// <summary>
-    /// The image value.
-    /// </summary>
+
+    /// <summary>An image. A file field also shows a preview when the value is already set. The browser script receives <c>image</c>.</summary>
     Image,
-    /// <summary>
-    /// The media value.
-    /// </summary>
+
+    /// <summary>Media. The browser script receives <c>media</c>.</summary>
     Media,
-    /// <summary>
-    /// The folder value.
-    /// </summary>
+
+    /// <summary>Directories. Opening a folder navigates into it, and choosing the open folder writes its path. The browser script receives <c>folder</c>.</summary>
     Folder
 }

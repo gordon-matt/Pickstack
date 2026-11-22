@@ -8,20 +8,15 @@ namespace Pickstack.Abstractions;
 /// </summary>
 public static class ClientAssets
 {
-    /// <summary>
-    /// The runtime script URL constant.
-    /// </summary>
+    /// <summary>Address of the shared browser script. The value is <c>/pickstack/assets/pickstack.js</c>.</summary>
     public const string RuntimeScriptUrl = "/pickstack/assets/pickstack.js";
 
-    /// <summary>
-    /// The runtime item key constant.
-    /// </summary>
+    /// <summary>Item key that records the runtime script as already written. The value is <c>Pickstack.RuntimeIncluded</c>.</summary>
     public const string RuntimeItemKey = "Pickstack.RuntimeIncluded";
 
-    /// <summary>
-    /// Appends the runtime.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
+    /// <summary>Appends a script tag for <see cref="RuntimeScriptUrl"/>.</summary>
+    /// <param name="builder">The markup being built.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <see langword="null"/>.</exception>
     public static void AppendRuntime(StringBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -29,10 +24,12 @@ public static class ClientAssets
     }
 
     /// <summary>
-    /// Appends the runtime once.
+    /// Appends the runtime script unless <paramref name="items"/> already contains <see cref="RuntimeItemKey"/>.
+    /// The key is then set, so a later call on the same dictionary writes nothing.
     /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="items">The items.</param>
+    /// <param name="builder">The markup being built.</param>
+    /// <param name="items">The request or page items used to remember that the script was written.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="builder"/> or <paramref name="items"/> is <see langword="null"/>.</exception>
     public static void AppendRuntimeOnce(StringBuilder builder, IDictionary<object, object?> items)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -47,11 +44,10 @@ public static class ClientAssets
         AppendRuntime(builder);
     }
 
-    /// <summary>
-    /// Appends the value.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assets">The assets.</param>
+    /// <summary>Appends a <c>link</c> for each style and a <c>script</c> for each script. Addresses are HTML-encoded.</summary>
+    /// <param name="builder">The markup being built.</param>
+    /// <param name="assets">The assets, in the order they should load.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="builder"/> or <paramref name="assets"/> is <see langword="null"/>.</exception>
     public static void Append(StringBuilder builder, IEnumerable<ClientAsset> assets)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -71,12 +67,14 @@ public static class ClientAssets
     }
 
     /// <summary>
-    /// Appends the provider.
+    /// Appends a JSON script block, then the provider script. The JSON is written as supplied, so it must already be HTML-safe.
     /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="elementId">The element identifier.</param>
-    /// <param name="configuration">The configuration.</param>
-    /// <param name="scriptUrl">The script URL.</param>
+    /// <param name="builder">The markup being built.</param>
+    /// <param name="elementId">The <c>id</c> of the JSON script element.</param>
+    /// <param name="configuration">The JSON the provider script reads.</param>
+    /// <param name="scriptUrl">Address of the provider script.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="builder"/> or <paramref name="configuration"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="elementId"/> or <paramref name="scriptUrl"/> is <see langword="null"/> or empty.</exception>
     public static void AppendProvider(StringBuilder builder, string elementId, string configuration, string scriptUrl)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -91,10 +89,12 @@ public static class ClientAssets
     }
 
     /// <summary>
-    /// Appends the value.
+    /// Appends each include. <c>style</c> and <c>script</c> use the address. <c>json</c> writes <see cref="ClientInclude.Content"/> inside a script element whose <c>id</c> is <see cref="ClientInclude.Id"/>.
+    /// Any other kind is skipped. Addresses and ids are HTML-encoded. JSON content is written as supplied.
     /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="includes">The includes.</param>
+    /// <param name="builder">The markup being built.</param>
+    /// <param name="includes">The includes, in the order they should appear.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="builder"/> or <paramref name="includes"/> is <see langword="null"/>.</exception>
     public static void Append(StringBuilder builder, IEnumerable<ClientInclude> includes)
     {
         ArgumentNullException.ThrowIfNull(builder);

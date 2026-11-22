@@ -4,32 +4,28 @@ using Pickstack.Abstractions;
 
 namespace Pickstack.FileManager;
 
-/// <summary>
-/// Provides file manager assets.
-/// </summary>
+/// <summary>Markup for the registered file manager and the shared runtime.</summary>
 public static class FileManagerAssets
 {
-    /// <summary>
-    /// The runtime script URL constant.
-    /// </summary>
+    /// <summary>Address of the shared browser script. The same value as <see cref="ClientAssets.RuntimeScriptUrl"/>.</summary>
     public const string RuntimeScriptUrl = ClientAssets.RuntimeScriptUrl;
-    /// <summary>
-    /// The provider element identifier constant.
-    /// </summary>
+
+    /// <summary>The <c>id</c> of the JSON element the file-manager provider script reads. The value is <c>pickstack-file-provider</c>.</summary>
     public const string ProviderElementId = "pickstack-file-provider";
-    /// <summary>
-    /// The runtime item key constant.
-    /// </summary>
+
+    /// <summary>Item key that records the runtime script as already written. The same value as <see cref="ClientAssets.RuntimeItemKey"/>.</summary>
     public const string RuntimeItemKey = ClientAssets.RuntimeItemKey;
 
     private const string StartupItemKey = "Pickstack.FileManager.Startup";
 
     /// <summary>
-    /// Appends the startup.
+    /// Appends the runtime and this file manager's includes once per request.
+    /// A second call for the same request writes nothing.
     /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="httpContext">The HTTP context.</param>
-    /// <param name="fileManager">The file manager.</param>
+    /// <param name="builder">The markup being built.</param>
+    /// <param name="httpContext">The request. Its items remember that the startup was written.</param>
+    /// <param name="fileManager">The registered file manager.</param>
+    /// <exception cref="ArgumentNullException">Any argument is <see langword="null"/>.</exception>
     public static void AppendStartup(StringBuilder builder, HttpContext httpContext, IFileManager fileManager)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -46,10 +42,12 @@ public static class FileManagerAssets
     }
 
     /// <summary>
-    /// Renders the standalone startup.
+    /// Markup for a page that has no host layout: jQuery from the CDN, the shared runtime, and the file manager.
+    /// The CKEditor browse window uses this.
     /// </summary>
-    /// <param name="fileManager">The file manager.</param>
-    /// <returns>The standalone startup.</returns>
+    /// <param name="fileManager">The registered file manager.</param>
+    /// <returns>The elements.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="fileManager"/> is <see langword="null"/>.</exception>
     public static string RenderStandaloneStartup(IFileManager fileManager)
     {
         ArgumentNullException.ThrowIfNull(fileManager);

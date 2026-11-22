@@ -3,45 +3,36 @@ using Pickstack.FileManager;
 
 namespace Pickstack.RichTextEditor.CkEditor;
 
-/// <summary>
-/// Provides ck editor routes.
-/// </summary>
+/// <summary>Address of the CKEditor browse window.</summary>
 public static class CkEditorRoutes
 {
-    /// <summary>
-    /// The prefix constant.
-    /// </summary>
+    /// <summary>Route prefix of the browse controller. The value is <c>pickstack/ckeditor</c>.</summary>
     public const string Prefix = "pickstack/ckeditor";
 
-    /// <summary>
-    /// The browse path constant.
-    /// </summary>
+    /// <summary>The browse page CKEditor opens. The value is <c>/pickstack/ckeditor/browse</c>.</summary>
     public const string BrowsePath = "/pickstack/ckeditor/browse";
 }
 
-/// <summary>
-/// Represents the ck editor browser controller.
-/// </summary>
+/// <summary>A standalone page that hosts the registered file manager for CKEditor's Browse Server button.</summary>
 [Route(CkEditorRoutes.Prefix)]
 public sealed class CkEditorBrowserController : Controller
 {
     private readonly IFileManager _fileManager;
 
-    /// <summary>
-    /// Initializes a new instance of the CkEditorBrowserController class.
-    /// </summary>
-    /// <param name="fileManager">The file manager.</param>
+    /// <summary>Uses the registered file manager for the page scripts.</summary>
+    /// <param name="fileManager">The registered file manager.</param>
     public CkEditorBrowserController(IFileManager fileManager)
     {
         _fileManager = fileManager;
     }
 
     /// <summary>
-    /// Gets the browse.
+    /// Returns the browse page. A chosen file is passed to <c>CKEDITOR.tools.callFunction</c> and the window closes.
+    /// An unknown <paramref name="type"/> becomes <c>any</c>. <paramref name="root"/> is written into the browser as a relative folder.
     /// </summary>
-    /// <param name="type">The type.</param>
-    /// <param name="root">The root.</param>
-    /// <returns>The browse.</returns>
+    /// <param name="type"><c>image</c>, <c>media</c>, <c>file</c>, <c>folder</c>, or anything else for every file.</param>
+    /// <param name="root">The relative folder to open. A blank root opens the upload folder.</param>
+    /// <returns>The HTML page.</returns>
     [HttpGet("browse")]
     public ContentResult Browse(string? type, string? root)
     {

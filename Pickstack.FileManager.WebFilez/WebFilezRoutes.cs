@@ -1,17 +1,11 @@
 namespace Pickstack.FileManager.WebFilez;
 
-/// <summary>
-/// Provides web filez routes.
-/// </summary>
+/// <summary>Address of the WebFilez browser page.</summary>
 public static class WebFilezRoutes
 {
-    /// <summary>
-    /// The prefix constant.
-    /// </summary>
+    /// <summary>Route prefix of the browser controller. The value is <c>pickstack/webfilez</c>.</summary>
     public const string Prefix = "pickstack/webfilez";
 
-    /// <summary>
-    /// The browser path constant.
-    /// </summary>
+    /// <summary>The browser page opened in the frame. The value is <c>/pickstack/webfilez</c>.</summary>
     public const string BrowserPath = "/pickstack/webfilez";
 }

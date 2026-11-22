@@ -12,10 +12,12 @@ namespace Pickstack;
 public static class PickstackPageScripts
 {
     /// <summary>
-    /// Resolves the value.
+    /// The runtime script, then the registered file manager, then the registered editor.
+    /// The list is empty when neither component is registered, and the runtime is omitted in that case.
     /// </summary>
-    /// <param name="services">The services.</param>
-    /// <returns>The client includes.</returns>
+    /// <param name="services">The application services.</param>
+    /// <returns>The includes, in load order.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="services"/> is <see langword="null"/>.</exception>
     public static IReadOnlyList<ClientInclude> Resolve(IServiceProvider services)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -42,11 +44,9 @@ public static class PickstackPageScripts
         return includes;
     }
 
-    /// <summary>
-    /// Gets the HTML.
-    /// </summary>
-    /// <param name="services">The services.</param>
-    /// <returns>The HTML.</returns>
+    /// <summary>The markup for <see cref="Resolve"/>.</summary>
+    /// <param name="services">The application services.</param>
+    /// <returns>The elements. Empty when neither component is registered.</returns>
     public static string Html(IServiceProvider services)
     {
         var builder = new StringBuilder();

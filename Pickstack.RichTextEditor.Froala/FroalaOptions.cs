@@ -22,9 +22,7 @@ public sealed class FroalaOptions
     /// <summary>URL of the stylesheet shipped in the version package. Used when <see cref="StyleUrl"/> fails to load.</summary>
     public string? FallbackStyleUrl { get; set; }
 
-    /// <summary>
-    /// Gets or sets the height.
-    /// </summary>
+    /// <summary>Editor height in pixels. The default is 420. A field can override it.</summary>
     public int Height { get; set; } = 420;
 
     /// <summary>
@@ -42,9 +40,7 @@ public sealed class FroalaOptions
     /// <summary>Froala license key. Leave empty for an unlicensed editor.</summary>
     public string? LicenseKey { get; set; }
 
-    /// <summary>
-    /// Gets or sets the plugins.
-    /// </summary>
+    /// <summary>Plugin names passed as <c>pluginsEnabled</c>. The default includes the formatting, media, table, and code plugins.</summary>
     public List<string> Plugins { get; set; } =
     [
         "align",
@@ -77,9 +73,7 @@ public sealed class FroalaOptions
         "wordPaste"
     ];
 
-    /// <summary>
-    /// Gets or sets the toolbar.
-    /// </summary>
+    /// <summary>Toolbar buttons passed as <c>toolbarButtons</c>. <c>|</c> is a separator.</summary>
     public List<string> Toolbar { get; set; } =
     [
         "bold",
@@ -107,55 +101,45 @@ public sealed class FroalaOptions
     /// <summary>Extra Froala init values. Structured settings are applied after these, and file picking stays wired to Pickstack.</summary>
     public Dictionary<string, object?> CustomOptions { get; } = [];
 
-    /// <summary>
-    /// Returns a copy with the script.
-    /// </summary>
-    /// <param name="url">The URL.</param>
-    /// <returns>The script.</returns>
+    /// <summary>Sets <see cref="ScriptUrl"/> and returns this instance.</summary>
+    /// <param name="url">The script address loaded first.</param>
+    /// <returns>This instance.</returns>
     public FroalaOptions WithScript(string url)
     {
         ScriptUrl = url;
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the fallback.
-    /// </summary>
-    /// <param name="url">The URL.</param>
-    /// <returns>The fallback.</returns>
+    /// <summary>Sets <see cref="FallbackUrl"/> and returns this instance.</summary>
+    /// <param name="url">The local script. <see langword="null"/> leaves no fallback.</param>
+    /// <returns>This instance.</returns>
     public FroalaOptions WithFallback(string? url)
     {
         FallbackUrl = url;
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the style.
-    /// </summary>
-    /// <param name="url">The URL.</param>
-    /// <returns>The style.</returns>
+    /// <summary>Sets <see cref="StyleUrl"/> and returns this instance.</summary>
+    /// <param name="url">The stylesheet address loaded first.</param>
+    /// <returns>This instance.</returns>
     public FroalaOptions WithStyle(string url)
     {
         StyleUrl = url;
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the style fallback.
-    /// </summary>
-    /// <param name="url">The URL.</param>
-    /// <returns>The style fallback.</returns>
+    /// <summary>Sets <see cref="FallbackStyleUrl"/> and returns this instance.</summary>
+    /// <param name="url">The local stylesheet. <see langword="null"/> leaves no fallback.</param>
+    /// <returns>This instance.</returns>
     public FroalaOptions WithStyleFallback(string? url)
     {
         FallbackStyleUrl = url;
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the height.
-    /// </summary>
-    /// <param name="pixels">The pixels.</param>
-    /// <returns>The height.</returns>
+    /// <summary>Sets <see cref="Height"/> and returns this instance.</summary>
+    /// <param name="pixels">The height, in pixels.</param>
+    /// <returns>This instance.</returns>
     public FroalaOptions WithHeight(int pixels)
     {
         Height = pixels;
@@ -180,25 +164,27 @@ public sealed class FroalaOptions
         return this;
     }
 
-    /// <summary>
-    /// Returns a copy with the license key.
-    /// </summary>
-    /// <param name="licenseKey">The license key.</param>
-    /// <returns>The license key.</returns>
+    /// <summary>Sets <see cref="LicenseKey"/> and returns this instance. A blank key is not sent, which leaves the editor unlicensed.</summary>
+    /// <param name="licenseKey">The Froala license key.</param>
+    /// <returns>This instance.</returns>
     public FroalaOptions WithLicenseKey(string licenseKey)
     {
         LicenseKey = licenseKey;
         return this;
     }
 
-    /// <summary>Replaces the plugin list.</summary>
+    /// <summary>Replaces the plugin list and returns this instance.</summary>
+    /// <param name="plugins">The plugin names.</param>
+    /// <returns>This instance.</returns>
     public FroalaOptions WithPlugins(params string[] plugins)
     {
         Plugins = [.. plugins];
         return this;
     }
 
-    /// <summary>Adds plugins that are not already listed.</summary>
+    /// <summary>Adds plugins that are not already listed and returns this instance. The comparison ignores case.</summary>
+    /// <param name="plugins">The plugin names to add.</param>
+    /// <returns>This instance.</returns>
     public FroalaOptions AddPlugins(params string[] plugins)
     {
         foreach (string plugin in plugins)
@@ -212,14 +198,18 @@ public sealed class FroalaOptions
         return this;
     }
 
-    /// <summary>Replaces the toolbar. <c>|</c> is a separator.</summary>
+    /// <summary>Replaces the toolbar and returns this instance. <c>|</c> is a separator.</summary>
+    /// <param name="buttons">The buttons, in order.</param>
+    /// <returns>This instance.</returns>
     public FroalaOptions WithToolbar(params string[] buttons)
     {
         Toolbar = [.. buttons];
         return this;
     }
 
-    /// <summary>Adds toolbar buttons that are not already listed.</summary>
+    /// <summary>Adds toolbar buttons that are not already listed and returns this instance. The comparison is case-sensitive, so <c>|</c> can be added once.</summary>
+    /// <param name="buttons">The buttons to add.</param>
+    /// <returns>This instance.</returns>
     public FroalaOptions AddToolbarButtons(params string[] buttons)
     {
         foreach (string button in buttons)
@@ -234,11 +224,13 @@ public sealed class FroalaOptions
     }
 
     /// <summary>
-    /// Sets the value.
+    /// Stores one Froala init value and returns this instance.
+    /// A structured setting written later, such as the toolbar, replaces the same name. Image, video, and file upload stay off so picking goes through Pickstack.
     /// </summary>
-    /// <param name="name">The name.</param>
-    /// <param name="value">The value.</param>
-    /// <returns>The froala options.</returns>
+    /// <param name="name">The init property name.</param>
+    /// <param name="value">The value passed through to Froala.</param>
+    /// <returns>This instance.</returns>
+    /// <exception cref="ArgumentException"><paramref name="name"/> is <see langword="null"/> or white space.</exception>
     public FroalaOptions Set(string name, object? value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);

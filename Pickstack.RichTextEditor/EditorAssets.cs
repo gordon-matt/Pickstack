@@ -4,32 +4,28 @@ using Pickstack.Abstractions;
 
 namespace Pickstack.RichTextEditor;
 
-/// <summary>
-/// Provides editor assets.
-/// </summary>
+/// <summary>Markup for the registered editor and the shared runtime.</summary>
 public static class EditorAssets
 {
-    /// <summary>
-    /// The runtime script URL constant.
-    /// </summary>
+    /// <summary>Address of the shared browser script. The same value as <see cref="ClientAssets.RuntimeScriptUrl"/>.</summary>
     public const string RuntimeScriptUrl = ClientAssets.RuntimeScriptUrl;
-    /// <summary>
-    /// The runtime item key constant.
-    /// </summary>
+
+    /// <summary>Item key that records the runtime script as already written. The same value as <see cref="ClientAssets.RuntimeItemKey"/>.</summary>
     public const string RuntimeItemKey = ClientAssets.RuntimeItemKey;
-    /// <summary>
-    /// The provider element identifier constant.
-    /// </summary>
+
+    /// <summary>The <c>id</c> of the JSON element the editor provider script reads. The value is <c>pickstack-editor-provider</c>.</summary>
     public const string ProviderElementId = "pickstack-editor-provider";
 
     private const string StartupItemKey = "Pickstack.Editor.Startup";
 
     /// <summary>
-    /// Appends the startup.
+    /// Appends the runtime and this editor's includes once per request.
+    /// A second editor on the same request writes nothing. The runtime is also skipped when a file manager already wrote it.
     /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="httpContext">The HTTP context.</param>
-    /// <param name="editor">The editor.</param>
+    /// <param name="builder">The markup being built.</param>
+    /// <param name="httpContext">The request. Its items remember that the startup was written.</param>
+    /// <param name="editor">The registered editor.</param>
+    /// <exception cref="ArgumentNullException">Any argument is <see langword="null"/>.</exception>
     public static void AppendStartup(StringBuilder builder, HttpContext httpContext, IRichTextEditor editor)
     {
         ArgumentNullException.ThrowIfNull(builder);

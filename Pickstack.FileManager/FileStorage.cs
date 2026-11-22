@@ -3,19 +3,16 @@ using Microsoft.Extensions.Options;
 
 namespace Pickstack.FileManager;
 
-/// <summary>
-/// Represents the file storage.
-/// </summary>
+/// <summary>The upload folder under the web root, from <see cref="FileStorageOptions"/>.</summary>
 public sealed class FileStorage : IFileStorage
 {
     private readonly string _webRoot;
     private readonly FileStorageOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the FileStorage class.
-    /// </summary>
-    /// <param name="environment">The environment.</param>
-    /// <param name="options">The options.</param>
+    /// <summary>Reads the web root and rejects a thumbnail folder that sits inside the upload folder, or the other way around.</summary>
+    /// <param name="environment">The host environment. Its web root is the parent of both folders.</param>
+    /// <param name="options">The storage options.</param>
+    /// <exception cref="InvalidOperationException">The web root is missing, a folder path is not under the web root, or the two folders overlap.</exception>
     public FileStorage(IWebHostEnvironment environment, IOptions<FileStorageOptions> options)
     {
         if (string.IsNullOrEmpty(environment.WebRootPath))
@@ -34,46 +31,29 @@ public sealed class FileStorage : IFileStorage
         }
     }
 
-    /// <summary>
-    /// Gets the physical path.
-    /// </summary>
+    /// <inheritdoc/>
     public string PhysicalPath => Path.Combine(_webRoot, NormalizeFolder(_options.WebRootFolder, "media"));
 
-    /// <summary>
-    /// Gets the request path.
-    /// </summary>
+    /// <inheritdoc/>
     public string RequestPath => NormalizeRequestPath(_options.RequestPath, "/media/");
 
-    /// <summary>
-    /// Gets the thumbnail physical path.
-    /// </summary>
+    /// <inheritdoc/>
     public string ThumbnailPhysicalPath => Path.Combine(_webRoot, NormalizeFolder(_options.ThumbnailWebRootFolder, "media-thumbs"));
 
-    /// <summary>
-    /// Gets the thumbnail request path.
-    /// </summary>
+    /// <inheritdoc/>
     public string ThumbnailRequestPath => NormalizeRequestPath(_options.ThumbnailRequestPath, "/media-thumbs/");
 
-    /// <summary>
-    /// Ensures the created.
-    /// </summary>
+    /// <inheritdoc/>
     public void EnsureCreated()
     {
         Directory.CreateDirectory(PhysicalPath);
         Directory.CreateDirectory(ThumbnailPhysicalPath);
     }
 
-    /// <summary>
-    /// Ensures the root.
-    /// </summary>
-    /// <param name="root">The root.</param>
+    /// <inheritdoc/>
     public void EnsureRoot(string? root) => Directory.CreateDirectory(ResolvePhysicalPath(root));
 
-    /// <summary>
-    /// Resolves the physical path.
-    /// </summary>
-    /// <param name="root">The root.</param>
-    /// <returns>The physical path.</returns>
+    /// <inheritdoc/>
     public string ResolvePhysicalPath(string? root)
     {
         string? relative = FileRoots.Normalize(root);
@@ -93,11 +73,7 @@ public sealed class FileStorage : IFileStorage
         return full;
     }
 
-    /// <summary>
-    /// Resolves the request path.
-    /// </summary>
-    /// <param name="root">The root.</param>
-    /// <returns>The request path.</returns>
+    /// <inheritdoc/>
     public string ResolveRequestPath(string? root)
     {
         string? relative = FileRoots.Normalize(root);

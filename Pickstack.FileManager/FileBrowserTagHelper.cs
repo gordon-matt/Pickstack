@@ -6,25 +6,22 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Pickstack.FileManager;
 
 /// <summary>
-/// Represents the file browser tag helper.
+/// A <c>pickstack-files</c> browser. It opens the registered file manager without writing a chosen file into a field.
+/// <c>data-select</c> is false.
 /// </summary>
 [HtmlTargetElement("pickstack-files", TagStructure = TagStructure.WithoutEndTag)]
 public sealed class FileBrowserTagHelper : TagHelper
 {
     private readonly IFileManager _fileManager;
 
-    /// <summary>
-    /// Initializes a new instance of the FileBrowserTagHelper class.
-    /// </summary>
-    /// <param name="fileManager">The file manager.</param>
+    /// <summary>Uses the registered file manager for the startup scripts written into the browser.</summary>
+    /// <param name="fileManager">The registered file manager.</param>
     public FileBrowserTagHelper(IFileManager fileManager)
     {
         _fileManager = fileManager;
     }
 
-    /// <summary>
-    /// Gets or sets the file type.
-    /// </summary>
+    /// <summary>What the browser offers. The attribute is <c>file-type</c>. The default is <see cref="FilePickerType.Any"/>.</summary>
     [HtmlAttributeName("file-type")]
     public FilePickerType FileType { get; set; } = FilePickerType.Any;
 
@@ -32,9 +29,7 @@ public sealed class FileBrowserTagHelper : TagHelper
     [HtmlAttributeName("file-root")]
     public string? FileRoot { get; set; }
 
-    /// <summary>
-    /// Gets or sets the view context.
-    /// </summary>
+    /// <summary>The current view. The startup scripts are written once for this request.</summary>
     [ViewContext]
     [HtmlAttributeNotBound]
     public ViewContext ViewContext { get; set; } = default!;

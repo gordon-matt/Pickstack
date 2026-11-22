@@ -5,15 +5,11 @@ using Pickstack.FileManager;
 
 namespace Pickstack;
 
-/// <summary>
-/// Represents the pickstack runtime assets.
-/// </summary>
+/// <summary>The embedded browser scripts: <c>pickstack.js</c>, <c>load.js</c>, and <c>editor.js</c>.</summary>
 public sealed class PickstackRuntimeAssets : IPickstackAssetSource
 {
-    /// <summary>
-    /// Gets the assets.
-    /// </summary>
-    /// <returns>The assets.</returns>
+    /// <summary>The three embedded scripts, served from <c>/pickstack/assets/{name}</c>.</summary>
+    /// <returns>The scripts. Opening one throws when the embedded resource is missing.</returns>
     public IEnumerable<PickstackAsset> GetAssets() => [
         PickstackAssets.Script(typeof(PickstackRuntimeAssets).Assembly, "pickstack.js", "pickstack.js"),
         PickstackAssets.Script(typeof(PickstackRuntimeAssets).Assembly, "load.js", "load.js"),
@@ -21,15 +17,15 @@ public sealed class PickstackRuntimeAssets : IPickstackAssetSource
     ];
 }
 
-/// <summary>
-/// Represents the pickstack startup.
-/// </summary>
+/// <summary>Creates the upload folders and serves the shared browser scripts.</summary>
 public sealed class PickstackStartup : IPickstackStartup
 {
     /// <summary>
-    /// Uses the value.
+    /// Creates the upload and thumbnail folders, maps <c>GET /pickstack/files/root</c>, and maps <c>GET /pickstack/assets/{name}</c>.
+    /// The root endpoint creates the requested folder and answers 204. An unsafe root answers 400.
+    /// An unknown asset name answers 404. A served asset uses its content type and <c>Cache-Control: no-cache</c>.
     /// </summary>
-    /// <param name="app">The app.</param>
+    /// <param name="app">The application being started.</param>
     public void Use(WebApplication app)
     {
         app.Services.GetRequiredService<IFileStorage>().EnsureCreated();
@@ -67,16 +63,15 @@ public sealed class PickstackStartup : IPickstackStartup
     }
 }
 
-/// <summary>
-/// Provides extension methods for web applications.
-/// </summary>
+/// <summary>Runs every registered <see cref="IPickstackStartup"/>.</summary>
 public static class WebApplicationExtensions
 {
     /// <summary>
-    /// Uses the pickstack.
+    /// Creates the upload folders, serves the shared scripts, and runs each adapter startup in registration order.
     /// </summary>
-    /// <param name="app">The app.</param>
-    /// <returns>The pickstack.</returns>
+    /// <param name="app">The application being started.</param>
+    /// <returns>The same application.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="app"/> is <see langword="null"/>.</exception>
     public static WebApplication UsePickstack(this WebApplication app)
     {
         ArgumentNullException.ThrowIfNull(app);

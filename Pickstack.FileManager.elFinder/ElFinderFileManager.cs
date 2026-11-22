@@ -4,41 +4,29 @@ using Pickstack.Abstractions;
 
 namespace Pickstack.FileManager.elFinder;
 
-/// <summary>
-/// Represents the el finder file manager.
-/// </summary>
+/// <summary>elFinder 2 as <see cref="IFileManager"/>. The connector URL and the upload folder stay owned by Pickstack.</summary>
 public sealed class ElFinderFileManager : IFileManager, IPickstackAssetSource
 {
-    /// <summary>
-    /// The key constant.
-    /// </summary>
+    /// <summary>The configuration name and the value of <see cref="Name"/>. The value is <c>elFinder</c>.</summary>
     public const string Key = "elFinder";
 
     private readonly ElFinderOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the ElFinderFileManager class.
-    /// </summary>
-    /// <param name="options">The options.</param>
+    /// <summary>Reads the client options.</summary>
+    /// <param name="options">The elFinder options.</param>
     public ElFinderFileManager(IOptions<ElFinderOptions> options)
     {
         _options = options.Value;
     }
 
-    /// <summary>
-    /// Gets the name.
-    /// </summary>
+    /// <summary>The display name. The value is <see cref="Key"/>.</summary>
     public string Name => Key;
 
-    /// <summary>
-    /// Gets the provider script URL.
-    /// </summary>
+    /// <summary>The embedded provider script. The value is <c>/pickstack/assets/elfinder.js</c>.</summary>
     public string ProviderScriptUrl => "/pickstack/assets/elfinder.js";
 
-    /// <summary>
-    /// Gets the client assets.
-    /// </summary>
-    /// <returns>The client assets.</returns>
+    /// <summary>jQuery UI, then the elFinder stylesheet, theme, jQuery UI script, and elFinder script, in that order.</summary>
+    /// <returns>The assets. The page must already have loaded jQuery.</returns>
     public IReadOnlyList<ClientAsset> GetClientAssets() => [
         new ClientAsset { Url = _options.JQueryUiStyleUrl, Kind = ClientAssetKind.Style },
         new ClientAsset { Url = _options.StyleUrl, Kind = ClientAssetKind.Style },
@@ -48,9 +36,10 @@ public sealed class ElFinderFileManager : IFileManager, IPickstackAssetSource
     ];
 
     /// <summary>
-    /// Gets the provider configuration.
+    /// JSON for the provider script: the connector address, client directory, toolbar, disabled commands, and the dialog flags.
+    /// A <see cref="ElFinderOptions.BaseUrl"/> without a trailing slash is given one.
     /// </summary>
-    /// <returns>The provider configuration.</returns>
+    /// <returns>The JSON.</returns>
     public string GetProviderConfiguration()
     {
         string baseUrl = _options.BaseUrl.EndsWith('/') ? _options.BaseUrl : _options.BaseUrl + "/";
@@ -67,10 +56,8 @@ public sealed class ElFinderFileManager : IFileManager, IPickstackAssetSource
         });
     }
 
-    /// <summary>
-    /// Gets the assets.
-    /// </summary>
-    /// <returns>The assets.</returns>
+    /// <summary>The embedded <c>elfinder.js</c> provider script.</summary>
+    /// <returns>The asset.</returns>
     public IEnumerable<PickstackAsset> GetAssets() => [
         PickstackAssets.Script(typeof(ElFinderFileManager).Assembly, "elfinder.js", "elfinder.js")
     ];

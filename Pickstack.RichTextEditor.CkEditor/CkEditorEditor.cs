@@ -4,56 +4,40 @@ using Pickstack.Abstractions;
 
 namespace Pickstack.RichTextEditor.CkEditor;
 
-/// <summary>
-/// Represents the ck editor editor.
-/// </summary>
+/// <summary>CKEditor 4 as <see cref="IRichTextEditor"/>. Browse Server opens the registered file manager.</summary>
 public sealed class CkEditorEditor : IRichTextEditor, IPickstackAssetSource
 {
-    /// <summary>
-    /// The key constant.
-    /// </summary>
+    /// <summary>The display name. The value is <c>CKEditor</c>.</summary>
     public const string Key = "CKEditor";
 
     private readonly CkEditorOptions _options;
 
-    /// <summary>
-    /// Initializes a new instance of the CkEditorEditor class.
-    /// </summary>
-    /// <param name="options">The options.</param>
+    /// <summary>Reads the CKEditor options.</summary>
+    /// <param name="options">The CKEditor options.</param>
     public CkEditorEditor(IOptions<CkEditorOptions> options)
     {
         _options = options.Value;
     }
 
-    /// <summary>
-    /// Gets the name.
-    /// </summary>
+    /// <summary>The display name. The value is <see cref="Key"/>.</summary>
     public string Name => Key;
 
-    /// <summary>
-    /// Gets the provider script URL.
-    /// </summary>
+    /// <summary>The embedded provider script. The value is <c>/pickstack/assets/ckeditor.js</c>.</summary>
     public string ProviderScriptUrl => "/pickstack/assets/ckeditor.js";
 
-    /// <summary>
-    /// Gets the client assets.
-    /// </summary>
-    /// <returns>The client assets.</returns>
+    /// <summary>The CKEditor script from <see cref="CkEditorOptions.ScriptUrl"/>.</summary>
+    /// <returns>That one script.</returns>
     public IReadOnlyList<ClientAsset> GetClientAssets() =>
     [
         new ClientAsset { Url = _options.ScriptUrl, Kind = ClientAssetKind.Script }
     ];
 
-    /// <summary>
-    /// Gets the provider configuration.
-    /// </summary>
-    /// <returns>The provider configuration.</returns>
+    /// <summary>JSON for the provider script: height, browse-window size, and any toolbar or plugin lists that were set.</summary>
+    /// <returns>The JSON.</returns>
     public string GetProviderConfiguration() => JsonSerializer.Serialize(_options.CreateConfig());
 
-    /// <summary>
-    /// Gets the assets.
-    /// </summary>
-    /// <returns>The assets.</returns>
+    /// <summary>The embedded <c>ckeditor.js</c> provider script.</summary>
+    /// <returns>The asset.</returns>
     public IEnumerable<PickstackAsset> GetAssets() =>
     [
         PickstackAssets.Script(typeof(CkEditorEditor).Assembly, "ckeditor.js", "ckeditor.js")
