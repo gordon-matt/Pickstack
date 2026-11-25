@@ -15,7 +15,10 @@
 
         return loadScript(config.fallbackUrl);
     }).then(function (loadedUrl) {
-        var baseUrl = loadedUrl.replace(/\/tinymce(\.min)?\.js.*$/, "");
+        // Absolute, and not the page's <base href>. A host mounted at /admin/email/ would otherwise
+        // send themes, plugins and skins to /admin/email/themes/... where they do not exist.
+        var baseUrl = libraryBase(loadedUrl);
+        installBaseGuard(baseUrl);
 
         window.Pickstack.editors.use({
             init: function (element, options) {
@@ -80,6 +83,65 @@
         console.error("Pickstack TinyMCE could not load.");
     });
 
+    function absoluteUrl(url) {
+        return new URL(url, window.location.origin).href;
+    }
+
+    function libraryBase(url) {
+        return absoluteUrl(url).replace(/\/tinymce(\.min)?\.js.*$/, "");
+    }
+
+    // TinyMCE asks the browser for themes/plugins/skins with relative addresses. A document
+    // <base> sends those to the mount path. Rewrite them onto the real TinyMCE directory.
+    function installBaseGuard(libraryBaseUrl) {
+        var root = libraryBaseUrl.replace(/\/$/, "");
+        function fix(value) {
+            if (typeof value !== "string" || value.length === 0) {
+                return value;
+            }
+
+            var url;
+            try {
+                url = new URL(value, document.baseURI);
+            } catch (e) {
+                return value;
+            }
+
+            var tail = url.pathname.match(/(?:^|\/)((?:themes|plugins|models|skins|icons)\/.*)$/);
+            if (!tail || url.pathname.indexOf("/_content/Pickstack.RichTextEditor.TinyMce") !== -1 || url.pathname.indexOf("/npm/tinymce") !== -1) {
+                return value;
+            }
+
+            return root + "/" + tail[1] + url.search + url.hash;
+        }
+
+        function wrap(prototype, property) {
+            var descriptor = Object.getOwnPropertyDescriptor(prototype, property);
+            if (!descriptor || !descriptor.set || descriptor.set._pickstackTinyMce) {
+                return;
+            }
+
+            var set = descriptor.set;
+            function wrapped(value) {
+                set.call(this, fix(value));
+            }
+            wrapped._pickstackTinyMce = true;
+            try {
+                Object.defineProperty(prototype, property, {
+                    configurable: true,
+                    enumerable: descriptor.enumerable,
+                    get: descriptor.get,
+                    set: wrapped
+                });
+            } catch (e) {
+                // A browser that will not expose the setter still gets the absolute base set before TinyMCE starts.
+            }
+        }
+
+        wrap(HTMLScriptElement.prototype, "src");
+        wrap(HTMLLinkElement.prototype, "href");
+    }
+
     function loadScript(url) {
         return new Promise(function (resolve, reject) {
             if (!url) {
@@ -87,9 +149,14 @@
                 return;
             }
 
+            var absolute = absoluteUrl(url);
+            var base = libraryBase(absolute);
+            // Read by TinyMCE as it starts, before it scans script tags and can latch onto this provider file.
+            window.tinyMCEPreInit = { base: base, suffix: /\.min\.js(\?|#|$)/.test(absolute) ? ".min" : "" };
+
             var script = document.createElement("script");
-            script.src = url;
-            script.onload = function () { resolve(url); };
+            script.src = absolute;
+            script.onload = function () { resolve(absolute); };
             script.onerror = function () {
                 script.remove();
                 reject(new Error(url));
